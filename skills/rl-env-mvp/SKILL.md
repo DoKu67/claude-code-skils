@@ -268,8 +268,8 @@ vocabulary; see [`notes`](../notes/SKILL.md) for how they divide.
 - **`journal/learnings.md`** — traps that cost time, so they cost it once.
 
 They live in one directory because they are read together and cross-reference constantly.
-`PLAN.md` stays at the root — it is the entry document, not a record. (`ml_logging` shows
-these flat at the repo root; the directory is this skill's choice and overrides that.)
+`PLAN.md` stays at the root — it is the entry document, not a record. `ml_logging` places
+`journal/experiments.md` in the same directory, so there is one location and no override.
 
 Timestamp every entry to the **minute**, not the day. A day-resolution log cannot
 reconstruct which config produced which number when three runs happened in an afternoon.

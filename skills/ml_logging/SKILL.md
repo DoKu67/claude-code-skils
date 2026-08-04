@@ -277,7 +277,7 @@ are project decisions.
 The run name matches the template and is used as W&B name, directory, and
 checkpoint prefix; the resolved config is on disk under that name, in
 `configs/{run_name}.{ext}`, and in `wandb.config`; the run has an entry in
-`experiments.md` naming its config and its headline metric; every metric name
+`journal/experiments.md` naming its config and its headline metric; every metric name
 comes from `METRIC_SPEC.md` with `/` separators; the core pack plus the task's
 pack are all declared; `run/status` is set on every exit path; and killing W&B
 auth mid-run leaves training unaffected with metrics still landing in

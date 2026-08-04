@@ -44,13 +44,20 @@ preflight() {
   # https remote needing a credential prompt will fail silently every time.
   case "$remote" in
     git@*|ssh://*)
-      if ! ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
-        say "WARNING: ssh to github.com did not authenticate non-interactively."
-        say "         The timer cannot answer a passphrase prompt. Check your key,"
-        say "         or add it to an agent that persists across logins."
-      else
-        say "auth:    ssh key works non-interactively"
-      fi
+      # `ssh -T git@github.com` exits 1 even when auth succeeds, so the exit
+      # status says nothing — only the banner does. Capture it and match on the
+      # text, with no pipe, since `set -o pipefail` would surface ssh's 1.
+      local probe
+      probe="$(ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1)"
+      case "$probe" in
+        *"successfully authenticated"*)
+          say "auth:    ssh key works non-interactively" ;;
+        *)
+          say "WARNING: ssh to github.com did not authenticate non-interactively."
+          say "         The timer cannot answer a passphrase prompt. Check your key,"
+          say "         or add it to an agent that persists across logins."
+          say "         ssh said: ${probe%%$'\n'*}" ;;
+      esac
       ;;
     https://*)
       say "WARNING: remote is https. Unattended pushes need a credential helper"
