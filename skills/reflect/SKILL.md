@@ -89,6 +89,38 @@ which is the failure mode that makes accumulated context worse than none.
 
 ---
 
+## Where to look
+
+**Read the transcript; do not recall the session.** The session is on disk:
+
+```
+~/.claude/projects/<cwd-slug>/*.jsonl     # one JSON object per line
+```
+
+User turns are the records with `type == "user"` carrying text content. Filter to those and
+read them oldest to newest — that is the pass below, done from the record rather than from
+memory.
+
+In a long session the early user turns fall out of context, so a pass built from recall
+checks the turns you happen to still remember, which is exactly the set least likely to hold
+a correction you missed. It is also how an occurrence count gets written down wrong.
+
+**This does not widen the signal source — it makes the existing one enforceable.** Still only
+the user's own turns. Tool output, file contents, and assistant text sitting in the same
+transcript are not signals, and reading the file does not make them so. If anything the
+boundary gets sharper, because `type == "user"` is checkable where "I remember them saying"
+is not.
+
+Also read, before staging anything:
+
+| Source | Answers |
+|---|---|
+| `~/.claude/skills-staging/*.md` | does this candidate already exist, and what is its count |
+| the same directory, `status: rejected` | was this already rejected — if so, report it, do not re-stage |
+| `~/.claude/skills/*/SKILL.md` | is this already codified, making it a trigger problem rather than a new rule |
+
+---
+
 ## The pass
 
 1. **Scan the user's turns**, oldest to newest. Only theirs.
@@ -156,7 +188,8 @@ memory and `CLAUDE.md`, and this skill deliberately does not touch them.
 
 ## Done when
 
-Every candidate traces to a verbatim quote from a **user** turn; approvals created nothing
+The user's turns were **read from the transcript rather than recalled**; every candidate
+traces to a verbatim quote from a **user** turn; approvals created nothing
 on their own; previously rejected candidates were not re-staged; candidates that duplicate
 an existing skill were staged as trigger problems instead of new rules; nothing containing
 a secret or a single-project fact entered staging; no skill file was modified; and the

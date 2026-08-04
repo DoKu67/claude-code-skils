@@ -112,6 +112,28 @@ material belongs inside one of those instead. That is also the most common failu
 put in a skill that never loads is worse than the same rule written nowhere, because it
 reads as covered.
 
+### 1b. Check the rule does not already exist
+
+**Before writing a line, grep the concept across every skill.** Not the candidate's wording —
+the idea, in the words the skills would use for it.
+
+```
+rg -i '<the concept>' ~/.claude/skills/*/SKILL.md
+```
+
+Two hits means the rule already has an owner. The delta is then a **pointer from the second
+skill to the first**, never a second copy — two skills stating the same rule agree on the day
+they are written and drift silently afterwards, and nothing tells a reader which one is
+current.
+
+This is not hypothetical. `rl-env-mvp` and `tune-loop` both defined the frozen-control / axis
+/ observed split and the block structure for an unknown length of time; the duplication was
+found by grep, not by reading either file. Deleting the copy and pointing at the owner removed
+78 lines.
+
+**After applying, run the same grep again** and confirm exactly one skill defines it. That is
+the check; the delta is not done until it passes.
+
 ### 2. Write the delta
 
 - **One rule per promotion.** Two rules is two promotions, each individually approvable and
@@ -217,9 +239,9 @@ Finding signals — [`reflect`](../reflect/SKILL.md). Deciding what to remove �
 
 ## Done when
 
-The candidate met its threshold and the user approved this specific diff; the delta is one
-rule, under twenty lines, in the voice of its host, placed where it fires rather than
-appended; it carries its why and its falsifier; the candidate file records the outcome with
+The candidate met its threshold and the user approved this specific diff; **exactly one skill
+defines the rule**, verified by grep before and after; the delta is one rule, under twenty
+lines, in the voice of its host, placed where it fires rather than appended; it carries its why and its falsifier; the candidate file records the outcome with
 the date and the target; a rejection kept its file and its reason; `LEDGER.md` is current;
 the change is one commit; and any edit to `reflect`, `codify` or `skill-audit` was named as
 a meta-edit and confirmed as one.
