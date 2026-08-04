@@ -102,6 +102,9 @@ which is the failure mode that makes accumulated context worse than none.
    - **Previously rejected candidate:** do **not** re-stage. Report that it was rejected,
      when, and why. If this occurrence is real new evidence, say so and let the user decide
      to reopen it — that is their call, not the reflector's.
+   - **Already promoted:** a promoted candidate's file is **deleted**, so staging will not
+     match it — check `LEDGER.md`'s promoted table before concluding a rule is new. A match
+     there means the rule exists and is not firing, which is step 4's trigger problem.
    - **New:** write a new candidate file per the format in
      [`codify`](../codify/SKILL.md), starting at `occurrences: 1`.
 4. **Check for redundancy** against the skills that already exist. A candidate that

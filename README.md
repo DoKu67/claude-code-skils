@@ -12,7 +12,7 @@ and then follows it. There is no runtime, no framework, and — with one excepti
 | Directory | Holds |
 |---|---|
 | `skills/` | Active skills. Each is a directory with a `SKILL.md`, plus optional reference files |
-| `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded |
+| `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded. A queue, not an archive — once promoted, a candidate's file is deleted and its provenance lives in the promotion commit |
 | `skills-disabled/` | Skills kept for reference but not active |
 
 Only these three directories are tracked. Everything else under `~/.claude` — session

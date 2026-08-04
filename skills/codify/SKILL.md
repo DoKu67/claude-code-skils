@@ -28,10 +28,13 @@ promoted.
 ```
 ~/.claude/skills-staging/
     LEDGER.md                       # index: one line per candidate, newest first
-    ask-before-new-dependency.md    # a rule delta
+    ask-before-new-dependency.md    # a rule delta, still accumulating evidence
     tune-sanity/                    # a budding skill: a whole SKILL.md not yet promoted
         SKILL.md
 ```
+
+**Only pending and rejected candidates live here.** A promoted one is deleted — see
+*Record the outcome* below. The directory is a queue, not an archive.
 
 ### Candidate format
 
@@ -41,7 +44,7 @@ id: ask-before-new-dependency
 target: coding-standards          # a skill name, or `new`, or `new:tune-sanity`
 kind: rule | trigger | new-skill
 signal: explicit | correction | silent-edit | denial | revert | repetition
-status: staged | promoted | rejected | superseded
+status: staged | rejected | superseded   # promoted files are deleted, not marked | superseded
 occurrences: 3
 threshold: 2                      # 2 for explicit rules, 3 otherwise
 ---
@@ -135,13 +138,25 @@ answer with a yes.
 
 | Outcome | Do |
 |---|---|
-| **Approved** | Apply the delta. Set `status: promoted`, add the promotion date and target file. Update `LEDGER.md`. Commit |
-| **Reworded** | Apply the user's wording, verbatim. Record the original alongside it — the gap between what was inferred and what was meant is the most useful training signal this system produces |
+| **Approved** | Apply the delta. Then **delete the candidate file** and update its `LEDGER.md` row to point at the skill it became. Commit the whole thing together |
+| **Reworded** | Apply the user's wording, verbatim. Record the original in the commit message — the gap between what was inferred and what was meant is the most useful training signal this system produces |
 | **Rejected** | Set `status: rejected` with the reason. **Keep the file.** [`reflect`](../reflect/SKILL.md) reads rejections and will not re-propose it |
+
+**A promoted candidate leaves staging.** Its rule now lives in a skill, so the file is a
+duplicate that makes `skills-staging/` read as a backlog when it is really a queue of
+pending work. After promotion, `ls skills-staging/` should answer *"what is still waiting?"*
+with nothing else in the way.
+
+**So the promotion commit carries the provenance** — the occurrence list, the verbatim
+quotes and the session ids go in the commit body, because deleting the file without moving
+them would destroy the evidence a rule was built on. `git log` becomes the provenance store;
+the receipt does not need to be a working file to survive.
 
 **Rejections are kept forever.** A system that forgets what was rejected re-proposes it
 every few weeks, which is how a helpful loop becomes an irritating one. The rejection
-reason is also the sharpest description available of where the inference went wrong.
+reason is also the sharpest description available of where the inference went wrong. This is
+the one asymmetry in staging, and it is deliberate: a promoted rule is remembered by the
+skill it became, a rejected one is remembered by nothing else.
 
 ---
 
@@ -183,7 +198,9 @@ id. That is the whole rollback story: a promotion that turns out to be wrong is
 reverted, and the candidate returns to staging with the revert as evidence rather than
 disappearing.
 
-Commit message: `codify: <id> → <target skill>`, with the occurrence count in the body.
+Commit message: `codify: <id> → <target skill>`. The body carries the full occurrence list
+with its verbatim quotes and session ids — since the candidate file is deleted on promotion,
+this commit is the only surviving record of what the rule was built on.
 
 ---
 
