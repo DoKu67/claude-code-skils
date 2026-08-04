@@ -81,6 +81,12 @@ negotiable is that a run declares which it treated it as.
 Seven steps. Steps 1 and 6 are the ones that get skipped, and they are the ones that make
 the rest worth doing.
 
+**Keep the iteration visible as a tracked todo list** — one task per queue item, not one
+per step, moved to `in_progress` at step 1 and to `completed` only when step 6's entry is
+written. A task that closes at launch records the opposite of this skill's rule: an
+experiment whose read is unwritten is not done. See [`mvp`](../mvp/SKILL.md) for why the
+list is kept live rather than recalled.
+
 ### 1. Write the prediction before the run
 
 **The prediction is the Queue row for this experiment**, written before launching. There is
