@@ -23,6 +23,7 @@ train.py                 the loop; algorithm selected from config
 run_logger.py            per ml_logging — run name, config snapshot, metrics.jsonl
 
 scripts/probe.py         is this configuration trainable? (no training)
+scripts/verify_metrics.py  do the metrics mean what their names say — see ml_logging
 scripts/sweep.py         runs a declared grid — the tuning session's tool, not this one's
 sweeps/*.yaml            grid specs, one per hypothesis
 

@@ -34,6 +34,7 @@ History only — the files are gone, the rules live in the skills below, and `gi
 
 | candidate | became | promoted | note |
 |---|---|---|---|
+| verify-declared-metrics | [`ml_logging`](../skills/ml_logging/SKILL.md) + [`rl-env-mvp`](../skills/rl-env-mvp/references/LAYOUT.md) pointer | 2026-08-04 | direct request; "declare metrics up front" was a promise nothing checked, and three metrics in one session lied about what they measured. Enforcement is a global PostToolUse hook, not a rule — rules in this territory had already failed to fire twice |
 | tldr-reads-the-state | [`tldr`](../skills/tldr/SKILL.md) | 2026-08-03 | direct request; the format was general, its references were not, and nothing said where state lives |
 | refresh-coverage-with-every-row | [`tune-loop`](../skills/tune-loop/SKILL.md) | 2026-08-03 | below threshold (1/3) — went live as closing condition 3 of step 6 while the entry format was being written, rather than as its own promotion |
 | summary-reaches-wandb | [`ml_logging`](../skills/ml_logging/SKILL.md) | 2026-08-03 | direct request; `run/status` and the headline metric were reaching disk but not the dashboard |

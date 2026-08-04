@@ -48,6 +48,22 @@ A genuinely unavailable network is already handled: `online` degrades on its own
 logged as `nan` when unavailable. A missing metric must show as a gap in a panel,
 never as a metric that silently does not exist.
 
+**And verify the declaration held.** A project ships `scripts/verify_metrics.py`, run after
+every training run, asserting three things against the run's own `metrics.jsonl`: every
+declared metric carries numeric values, the x-axis exists and advances, and no two
+differently-named series are bit-identical.
+
+Because the declaration above is a promise nobody checks. On one project three metrics
+reached a log under a name implying something they were not measuring — a trainer emitting
+`grad_norm` where the vocabulary declared `train/grad_norm`, an x-axis metric that reached
+disk but never the dashboard, and a metric whose name said post-filter while it scored the
+pre-filter batch. **Every one was found by a human reading raw values**, none by the rule
+above, because each needs *two things compared* rather than one thing read. The third check
+is the only mechanical handle on a name that lies.
+
+*Falsified if:* the checks fire mostly on benign aliases, so the output gets ignored — then
+the allow-lists are doing the work and the check is theatre.
+
 ## Run name
 
 ```
