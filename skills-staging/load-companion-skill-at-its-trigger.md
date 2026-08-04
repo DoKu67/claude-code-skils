@@ -38,9 +38,34 @@ slows the loop without changing an outcome.
   config default still set to a learning rate the project had already documented as wrong,
   and a `PLAN.md` budget claim wrong by 48%.
 
-**Note on target.** Staged against `tune-loop` because that is where the pointer is most
-explicit (step 5, "Triage — `run-triage`, early"). The second occurrence is `consistency`,
-whose description is already clear about its trigger — so if the fix is a description edit,
-`tune-loop` is the place; if the pattern recurs against skills whose descriptions are
-already unambiguous, the defect is not in any description and this candidate should be
-reconsidered rather than promoted again.
+- 2026-08-03 · session 01PqXfrt · correction · "please apply this to the current files in
+  @journal/" — the provenance backfill had been reported as done and committed while
+  `experiments.md` was untouched. `consistency` was not run before reporting, for the third
+  time. Worse: the audit script I *did* run printed `experiments.md: 3 entries, 0 provenance
+  markers` and I committed past it.
+
+**Threshold reached — 3/3 — and its own falsification test fires with it.**
+
+The note below asked what a third occurrence would mean if it landed against a skill whose
+description is already unambiguous. It has. `consistency`'s description says, in its own
+words, *"Run it before reporting a multi-file change as done."* There is no wording that
+makes that clearer, so **the defect is not in any description and this must not be promoted
+as a description edit.**
+
+What the three occurrences actually share is not a vague trigger. It is that the companion
+was skipped at the exact moment its own output would have been inconvenient — mid-run when
+triage would have slowed a launch, and at report time when a sweep would have delayed a
+"done". The third occurrence sharpens it further: the check was not merely skipped, it was
+*run and its output not read*. A rule that says "load the companion" would not have caught
+that; the audit was loaded and printed the answer.
+
+**Recommendation: reconsider, do not promote.** Either reword this candidate as a rule about
+acting on verification output rather than loading skills, or reject it and let the three
+occurrences stand as evidence for whatever replaces it. That is the user's call.
+
+**Original note on target, kept.** Staged against `tune-loop` because that is where the
+pointer is most explicit (step 5, "Triage — `run-triage`, early"). The second occurrence is
+`consistency`, whose description is already clear about its trigger — so if the fix is a
+description edit, `tune-loop` is the place; if the pattern recurs against skills whose
+descriptions are already unambiguous, the defect is not in any description and this candidate
+should be reconsidered rather than promoted again.
