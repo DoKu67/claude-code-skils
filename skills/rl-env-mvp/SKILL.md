@@ -273,6 +273,10 @@ They live in one directory because they are read together and cross-reference co
 
 Timestamp every entry to the **minute**, not the day. A day-resolution log cannot
 reconstruct which config produced which number when three runs happened in an afternoon.
+**This applies to table rows too, not only prose entries** — every run row carries a
+`started` column and every block header states when it opened and when it was last added
+to. A rule that only reaches the paragraphs leaves the run log, which is the part actually
+compared, undated.
 
 ### `journal/prompts.md`
 
@@ -336,6 +340,7 @@ earlier number quietly stops meaning what it used to.
 ```markdown
 ## Block 2 — prompt:search · shape:solve_dominant
 
+**Opened 2026-08-03 14:02.** Last row 2026-08-03 17:41.
 **Frozen:** qwen-3b · bf16 · LoRA r=16 · prompt `search` · reward `solve_dominant`
 **Eval:** greedy, cap 1024, 200 held-out problems, noise floor ±0.01
 **Baseline under these controls:** 0.115
@@ -344,11 +349,11 @@ Block 1 numbers are not comparable to these.
 
 ### Axis search
 
-| run | lr | prompts/step | k | cap | temp | **task metric** | step s | dead grp | trunc | note |
-|---|---|---|---|---|---|---|---|---|---|---|
-| `brave-mantis` | 5e-5 | 8 | 8 | 1024 | 1.0 | **0.140** | 16 | 0.02 | 0.04 | first real movement |
-| `calm-heron`   | 1e-4 | 8 | 8 | 1024 | 1.0 | **0.155** | 16 | 0.03 | 0.05 | best so far |
-| `witty-otter`  | 5e-5 | 4 | 8 | 1024 | 1.0 | 0.121 | 9 | 0.02 | 0.04 | halving batch costs ~0.02 |
+| started | run | lr | prompts/step | k | cap | temp | **task metric** | step s | dead grp | trunc | note |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 08-03 14:02 | `brave-mantis` | 5e-5 | 8 | 8 | 1024 | 1.0 | **0.140** | 16 | 0.02 | 0.04 | first real movement |
+| 08-03 15:19 | `calm-heron`   | 1e-4 | 8 | 8 | 1024 | 1.0 | **0.155** | 16 | 0.03 | 0.05 | best so far |
+| 08-03 17:41 | `witty-otter`  | 5e-5 | 4 | 8 | 1024 | 1.0 | 0.121 | 9 | 0.02 | 0.04 | halving batch costs ~0.02 |
 
 ### Coverage within this block
 
@@ -374,6 +379,7 @@ config snapshot:
 
 | Field | Why it is on the row |
 |---|---|
+| **started, to the minute** | the run name already encodes it, and nobody decodes a name. A column is what makes "which of these ran after the fix" and "how long was the gap" answerable at a glance, and it is what lets a block state when it opened and when it was last touched |
 | learning rate | the axis you will sweep most |
 | **prompts per gradient step** | the *derived* batch number, not per-device x accumulation — the config's figure is routinely several times larger than the real one |
 | rollouts per prompt (k) | trades solves-per-group against number of groups |

@@ -107,14 +107,18 @@ the noise floor; the block's axes are exhausted.
 **Changed from block 1:** prompt terse → search. Block 1 rows are not comparable; the bridge
 run is `brave-mantis`.
 
-| run | lr | prompts/step | k | temp | **metric** | Δ vs best | step s | peak GB | dead grp | status |
-|---|---|---|---|---|---|---|---|---|---|---|
-| `bold-pika`   | 1e-4 | 8 | 16 | 1.0 | **0.158** | +0.003 (noise) | 31 | 74 | 0.01 | ok |
-| `calm-heron`  | 1e-4 | 8 | 8 | 1.0 | **0.155** | — | 16 | 61 | 0.03 | ok |
-| `wry-tapir`   | 1e-4 | 8 | 8 | 0.7 | 0.151 | −0.004 (noise) | 16 | 61 | 0.06 | ok |
-| `swift-lynx`  | 2e-4 | 8 | 8 | 1.0 | 0.149 | −0.006 (noise) | 16 | 61 | 0.09 | ok |
-| `brave-mantis`| 5e-5 | 8 | 8 | 1.0 | 0.140 | −0.015 | 16 | 61 | 0.02 | ok |
-| `witty-otter` | 5e-5 | 4 | 8 | 1.0 | 0.121 | −0.034 | 9 | 42 | 0.02 | ok |
+| started | run | lr | prompts/step | k | temp | **metric** | Δ vs best | step s | peak GB | dead grp | status |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 08-03 19:55 | `bold-pika`   | 1e-4 | 8 | 16 | 1.0 | **0.158** | +0.003 (noise) | 31 | 74 | 0.01 | ok |
+| 08-03 15:19 | `calm-heron`  | 1e-4 | 8 | 8 | 1.0 | **0.155** | — | 16 | 61 | 0.03 | ok |
+| 08-03 18:30 | `wry-tapir`   | 1e-4 | 8 | 8 | 0.7 | 0.151 | −0.004 (noise) | 16 | 61 | 0.06 | ok |
+| 08-03 17:02 | `swift-lynx`  | 2e-4 | 8 | 8 | 1.0 | 0.149 | −0.006 (noise) | 16 | 61 | 0.09 | ok |
+| 08-03 14:02 | `brave-mantis`| 5e-5 | 8 | 8 | 1.0 | 0.140 | −0.015 | 16 | 61 | 0.02 | ok |
+| 08-03 16:11 | `witty-otter` | 5e-5 | 4 | 8 | 1.0 | 0.121 | −0.034 | 9 | 42 | 0.02 | ok |
+
+**Ranked by the metric, dated by `started`** — two different orders, on purpose. The ranking
+answers "what won"; the dates answer "what did we know when", which is what makes a row taken
+before a bug fix visibly different from one taken after.
 | `glum-shrew`  | 1e-4 | 16 | 8 | 1.0 | — | — | — | **79 (OOM @ step 3)** | — | **crashed** |
 
 ### Coverage

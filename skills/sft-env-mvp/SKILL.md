@@ -179,7 +179,10 @@ to [`tune-loop`](../tune-loop/SKILL.md) and [`tune-report`](../tune-report/SKILL
 skill's only obligation is to leave the first block's header filled in: frozen controls,
 fixed experiment budget, and the baseline from L6.
 
-Timestamp every entry to the **minute**.
+Timestamp every entry to the **minute** — table rows as well as prose. Every run row carries
+a `started` column and every block header states when it opened and when it was last added
+to; a rule that only reaches the paragraphs leaves the run log, which is the part actually
+compared, undated.
 
 ---
 
