@@ -25,11 +25,12 @@ and then follows it. There is no runtime, no framework, and — with one excepti
 | `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded. A queue, not an archive — once promoted, a candidate's file is deleted and its provenance lives in the promotion commit |
 | `skills-disabled/` | Skills kept for reference but not active |
 | `scripts/` | Machine setup that must travel with a clone — currently the background sync (see below) |
+| `hooks/` | Hook scripts, plus `hooks.json`, the tracked registration that `settings.json` cannot carry. See `hooks/README.md` |
 
-Only these four directories are tracked. Everything else under `~/.claude` — session
+Only these five directories are tracked. Everything else under `~/.claude` — session
 transcripts, memories, cache — is excluded by an allowlist `.gitignore`. That allowlist is
 also the safety property behind the sync: `git add -A` physically cannot stage a transcript
-or a credential, because nothing outside the four is visible to git in the first place.
+or a credential, because nothing outside the five is visible to git in the first place.
 
 ## Keeping machines in sync
 
@@ -46,13 +47,24 @@ git clone git@github.com:DoKu88/claude-code-skils.git ~/.claude   # or pull into
 |---|---|
 | `scripts/sync-skills.sh` | The sync itself. Commits tracked changes, rebases on the remote, pushes. A no-op when nothing changed |
 | `scripts/install-sync.sh` | Installs the timer — a systemd user timer on Linux, a launch agent on macOS. Idempotent; `--uninstall` removes it |
+| `scripts/install-hooks.sh` | Merges `hooks/hooks.json` into `settings.json`. Called by `install-sync.sh`; run it directly after editing `hooks.json` |
 
-Two properties are deliberate. **It never destroys work**: no `reset --hard`, no `clean`, no
-`restore`, no force-push — when a rebase conflicts it aborts, leaves the local commit intact
-and unpushed, and says so, because a sync that resolves a conflict on its own is a sync that
-can silently lose an afternoon. And **a missed run is caught at boot**: the timer is a
-calendar timer with `Persistent=true`, so a machine that was powered off through a scheduled
-slot syncs on next boot rather than waiting for the following one.
+Three properties are deliberate.
+
+**It never commits a file that is still being written.** Every changed file must have gone
+`QUIET_SECONDS` (120 by default) without a write before anything is staged. If something is
+still moving the run waits, and if it is still moving after `MAX_WAIT` (240s) the run defers
+to the next slot having staged nothing — because a run that lands mid-edit pushes half a
+skill, and the repo briefly holds a state that was never a finished thought.
+
+**It never destroys work**: no `reset --hard`, no `clean`, no `restore`, no force-push — when
+a rebase conflicts it aborts, leaves the local commit intact and unpushed, and says so,
+because a sync that resolves a conflict on its own is a sync that can silently lose an
+afternoon. Deferring is likewise the safe failure: nothing is staged, so nothing is at risk.
+
+**A missed run is caught at boot**: the timer is a calendar timer with `Persistent=true`, so a
+machine that was powered off through a scheduled slot syncs on next boot rather than waiting
+for the following one.
 
 Check on it with `systemctl --user list-timers claude-skills-sync.timer` and
 `journalctl --user -u claude-skills-sync.service` (Linux), or
