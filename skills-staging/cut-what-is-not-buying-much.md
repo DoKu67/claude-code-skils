@@ -34,3 +34,19 @@ that one says do not offer a reduced first build, this one says do not keep what
 paying. They are compatible — build the whole agreed scope, then cut what turns out not to
 earn its place — but if a third occurrence of either arrives, check whether one wording
 covers both before promoting two rules.
+
+**Counter-instance, 2026-08-04 · session 33c950a9 — does NOT increment the count.** Asked
+what to do about `tune-report`, which duplicates four of its five sections with
+`journal/experiments.md` and has never fired, the user chose neither of this rule's two
+options: *"don't create remport.md just don't use /tune-report at the moment / don't
+deprecate it either yet, just wait to see what happens."*
+
+Had this rule been live it would have produced the wrong action — it would have had me
+propose deprecating `tune-report`, which the user explicitly declined. **Wait-and-see is a
+third option the rule's binary framing does not have**, and it is the right one when the
+thing costs nothing to keep and the evidence that would settle it has not arrived yet
+(here: no sweep has run to completion, so nothing has ever exercised the skill).
+
+Before promoting, the wording must carry that boundary: propose cutting what is not earning
+its place **and is costing something to keep** — maintenance, ambiguity, or a reader's
+attention. Something inert and unfinished is not yet a candidate for cutting.
