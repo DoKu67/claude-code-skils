@@ -9,7 +9,7 @@
 #   * a background timer that commits and pushes skill changes every 6 hours
 #   * the hooks that let an editing session hold off that sync until it is done
 #
-# Deliberately NOT installed here: the daily reflect pass. It spends model
+# Deliberately NOT installed here: the reflect pass. It spends model
 # tokens and stages rules without being asked, so it is opt-in per machine —
 #     ./scripts/install-reflect.sh
 # --check reports it and --uninstall removes it either way, because a timer the

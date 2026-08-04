@@ -29,7 +29,7 @@ git fetch origin && git checkout -f main
 | `./install.sh` | Installs the sync timer and the hooks, then runs one sync to prove it works |
 | `./install.sh --check` | Reports what is installed and when it last ran. Changes nothing |
 | `./install.sh --uninstall` | Removes both timers. Leaves the repository and skills on disk |
-| `./scripts/install-reflect.sh` | **Opt-in.** The daily 05:00 pass that mines finished sessions — see [Mining sessions automatically](#mining-sessions-automatically) |
+| `./scripts/install-reflect.sh` | **Opt-in.** The 6-hourly pass that mines finished sessions — see [Mining sessions automatically](#mining-sessions-automatically) |
 
 **The skills need no install step** — they work the moment they are on disk. `install.sh` only
 sets up the background sync described under [Keeping machines in sync](#keeping-machines-in-sync),
@@ -67,7 +67,7 @@ per machine; it is idempotent, so re-running it after a `git pull` is safe.
 | `skills/` | Active skills. Each is a directory with a `SKILL.md`, plus optional reference files |
 | `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded. A queue, not an archive — once promoted, a candidate's file is deleted and its provenance lives in the promotion commit |
 | `skills-disabled/` | Skills kept for reference but not active |
-| `scripts/` | Machine setup that must travel with a clone — the background sync, and the daily reflect pass (see below) |
+| `scripts/` | Machine setup that must travel with a clone — the background sync, and the reflect pass (see below) |
 | `hooks/` | Hook scripts, plus `hooks.json`, the tracked registration that `settings.json` cannot carry. See `hooks/README.md` |
 
 Only these five directories are tracked. Everything else under `~/.claude` — session
@@ -130,7 +130,7 @@ durable rules:
 ```
 your correction ──> /reflect ──> candidate staged (occurrence 1)
                      ▲                  │
-       daily, 05:00  │    recurs ───────┤
+        every 6h     │    recurs ───────┤
                      │                  │
                                    threshold met
                                         │
@@ -146,9 +146,19 @@ Rejections are kept forever so the same idea is never re-proposed.
 ### Mining sessions automatically
 
 `reflect` only ever ran when someone remembered to type `/reflect`, which is why no candidate
-had accumulated across a session boundary. A daily timer now reads the sessions nobody
-reflected. Claude Code does not need to be running — the timer is an OS-level scheduler that
-launches `claude -p` headlessly.
+had accumulated across a session boundary. A timer now reads the sessions nobody reflected,
+**every 6 hours at 05:30, 11:30, 17:30 and 23:30** — 30 minutes before each sync slot. Claude
+Code does not need to be running: the timer is an OS-level scheduler that launches `claude -p`
+headlessly, and `Persistent=true` covers the slots the machine was off through.
+
+Six-hourly rather than daily because **a pass with nothing pending never invokes the model**.
+It greps the transcripts, finds no new lines and exits, so cost tracks session volume rather
+than timer frequency — the extra slots are close to free, and a finished session waits ~6h to
+be mined instead of ~24h.
+
+The 30-minute offset is a backstop rather than the mechanism. A headless pass fires
+`SessionEnd` when it exits, which already kicks a sync; the offset only guarantees staged
+candidates reach the remote if that hook ever fails to fire.
 
 | File | Role |
 |---|---|
@@ -179,6 +189,11 @@ new ones.
 move timestamps without changing content, and appends can leave mtime looking untouched. Each
 entry stores a hash of the lines already read; if that hash stops matching, the transcript was
 rewritten rather than appended, and the pass reports it instead of guessing.
+
+**A session must look parked, not merely paused.** Because the pass runs during working hours
+and not only overnight, a transcript is skipped unless it has been untouched for
+`QUIET_SECONDS` (3600). A correction read out of a session someone is still in can be
+superseded by what they do twenty minutes later, and the pass cannot know that.
 
 **At-least-once, on purpose.** State is recorded only after a pass succeeds, so a crash
 re-reads those sessions rather than losing them. That is the safe direction for everything

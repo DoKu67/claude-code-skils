@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the daily timer that mines finished sessions for candidate rules.
+# Install the timer that mines finished sessions for candidate rules.
 #
 # Run once per machine, from anywhere:
 #     ~/.claude/scripts/install-reflect.sh
@@ -17,7 +17,20 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 RUNNER="${REPO}/scripts/reflect-batch.sh"
 LOG="${REPO}/hooks/reflect.log"
 LABEL="claude-reflect"
-HOUR="05:00:00"
+
+# Every 6 hours, 30 minutes before each sync slot (00:00/06:00/12:00/18:00).
+#
+# Six-hourly rather than daily because a pass with nothing pending never invokes
+# the model — it greps the transcripts, finds no new lines and exits. Cost
+# tracks session volume, not timer frequency, so the extra slots are close to
+# free and a finished session waits ~6h to be mined instead of ~24h.
+#
+# The offset is a backstop, not the mechanism. A headless pass fires SessionEnd
+# when it exits, which already kicks a sync — verified. The 30 minutes only
+# guarantee the staged candidates reach the remote even if that hook does not
+# fire.
+HOURS="05,11,17,23"
+MINUTE="30"
 UNINSTALL=0
 [ "${1:-}" = "--uninstall" ] && UNINSTALL=1
 
@@ -32,7 +45,8 @@ preflight() {
   command -v claude >/dev/null 2>&1 || fail "the claude CLI is not on PATH"
   say "runner:  ${RUNNER}"
   say "log:     ${LOG}"
-  say "when:    daily at ${HOUR%%:*}:00, and on next boot if the machine was off"
+  say "when:    ${HOURS}:${MINUTE} — every 6h, 30min before each sync slot"
+  say "         and on next boot if the machine was off through one"
 }
 
 # ------------------------------------------------------------------- linux ---
@@ -66,10 +80,10 @@ EOF
   # a queue, so one pass after three days off still sees all three days.
   cat > "${dir}/${LABEL}.timer" <<EOF
 [Unit]
-Description=Daily reflect pass over unread session transcripts
+Description=Reflect pass over unread session transcripts, every 6 hours
 
 [Timer]
-OnCalendar=*-*-* ${HOUR}
+OnCalendar=*-*-* ${HOURS}:${MINUTE}:00
 Persistent=true
 OnBootSec=10min
 RandomizedDelaySec=300
@@ -83,8 +97,8 @@ EOF
   # last-elapse stamp against the schedule, and with no stamp at all it treats
   # the timer as infinitely overdue and fires the moment it is enabled — so
   # installing would kick off a live pass over the whole backlog as a side
-  # effect. Writing the stamp with mtime=now makes the first fire the first
-  # genuine 05:00. Catch-up after that works normally.
+  # effect. Writing the stamp with mtime=now makes the first fire the next
+  # genuine slot. Catch-up after that works normally.
   local stampdir="${XDG_DATA_HOME:-$HOME/.local/share}/systemd/timers"
   mkdir -p "$stampdir"
   : > "${stampdir}/stamp-${LABEL}.timer"
@@ -122,7 +136,16 @@ install_launchd() {
   mkdir -p "$HOME/Library/LaunchAgents"
 
   # StartCalendarInterval is launchd's Persistent= equivalent: if the machine
-  # was asleep or off at the scheduled time, the job runs once on wake.
+  # was asleep or off at the scheduled time, the job runs once on wake. Several
+  # slots need an ARRAY of dicts — a single dict with a comma in Hour is not
+  # valid and silently never fires.
+  local slots=""
+  local h
+  for h in ${HOURS//,/ }; do
+    slots="${slots}        <dict><key>Hour</key><integer>${h}</integer><key>Minute</key><integer>${MINUTE}</integer></dict>
+"
+  done
+
   cat > "$plist" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -131,10 +154,8 @@ install_launchd() {
     <key>Label</key>            <string>com.${LABEL}</string>
     <key>ProgramArguments</key> <array><string>${RUNNER}</string></array>
     <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>   <integer>${HOUR%%:*}</integer>
-        <key>Minute</key> <integer>0</integer>
-    </dict>
+    <array>
+${slots}    </array>
     <key>StandardOutPath</key>  <string>${LOG}</string>
     <key>StandardErrorPath</key><string>${LOG}</string>
 </dict>

@@ -54,9 +54,14 @@ PROJECTS="${REFLECT_PROJECTS:-${CLAUDE_HOME}/projects}"
 LOCKDIR="${CLAUDE_HOME}/.sync-locks"
 
 # A transcript still being appended to is a live session. Reading one is not
-# harmful — the line count means the next pass picks up the rest — but it wastes
-# a read, so leave anything touched recently alone.
-QUIET_SECONDS=${QUIET_SECONDS:-600}
+# harmful — the line count means the next pass picks up the rest — so this is a
+# threshold for how *parked* a session must look before it is worth reading.
+#
+# An hour rather than a few minutes because the pass runs during working hours,
+# not only overnight. A correction read out of a session someone is still in can
+# be superseded by what they do twenty minutes later, and the pass cannot know
+# that. Waiting an hour means a session is usually abandoned rather than paused.
+QUIET_SECONDS=${QUIET_SECONDS:-3600}
 
 # A session below this many records has no room for a correction. The count is
 # every `"type":"user"` line, harness-injected ones included, so it is a coarse
