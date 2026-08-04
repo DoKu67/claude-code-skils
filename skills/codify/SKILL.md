@@ -172,8 +172,9 @@ is the only thing that helps when it is not.
 
 ## Version control
 
-`~/.claude/skills/` is a git repository, and every promotion is one commit naming the
-candidate id. That is the whole rollback story: a promotion that turns out to be wrong is
+`~/.claude/` is a git repository tracking `skills/`, `skills-staging/` and
+`skills-disabled/` and nothing else, and every promotion is one commit naming the candidate
+id. That is the whole rollback story: a promotion that turns out to be wrong is
 reverted, and the candidate returns to staging with the revert as evidence rather than
 disappearing.
 
