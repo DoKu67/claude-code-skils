@@ -5,8 +5,13 @@ kind: trigger
 signal: correction
 status: staged
 occurrences: 2
-threshold: 1
+threshold: 3
 ---
+
+**Threshold raised 1 → 3 by the user, 2026-08-03**, along with every non-direct-request
+candidate. Not ready. The third occurrence is also the test the note at the bottom of this
+file asks for: if it lands against a skill whose description is already unambiguous, the
+defect is not in any description and this should be reconsidered rather than promoted.
 
 **Rule:** When a loaded skill names a companion and the moment it fires — "after every
 launch", "before reporting a multi-file change as done" — load the companion at that

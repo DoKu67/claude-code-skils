@@ -46,7 +46,7 @@ kind: rule | trigger | new-skill
 signal: explicit | correction | silent-edit | denial | revert | repetition
 status: staged | rejected | superseded   # promoted files are deleted, not marked | superseded
 occurrences: 3
-threshold: 2                      # 2 for explicit rules, 3 otherwise
+threshold: 3                      # always 3, unless the user asked for the rule directly
 ---
 
 **Rule:** Ask before adding a runtime dependency; propose the stdlib version first.
@@ -72,10 +72,13 @@ evidence cannot be re-read becomes folklore, and folklore cannot be revised.
 | Candidate | Promotes at |
 |---|---|
 | **Direct request** — the user asks for a rule, in their own words, now | **1** — there is no inference to validate |
-| Explicit rule — "always", "never", "from now on" | **2** occurrences |
-| Everything else | **3** occurrences |
-| Trigger problem (an existing rule that did not fire) | **1** — it is already a codified rule; only its trigger is being fixed |
-| Budding skill | **3** occurrences *or* one deliberate trial the user judged useful |
+| **Everything else** — an explicit rule said in passing, a correction, a trigger problem, a budding skill | **3** occurrences |
+
+There are two tiers and no others. Anything short of the user asking for the change waits
+for three occurrences, including signals that look conclusive on their own — a stated
+"always", or an existing rule that visibly failed to fire. Those used to promote sooner; the
+user raised them deliberately, because a candidate that is obviously right at occurrence one
+is exactly the kind that turns out to be right about the instance and wrong about the class.
 
 The first time you hit something, learn from it. The second time, notice it. The third
 time, codify it. Rules written after a single occurrence are usually right about the

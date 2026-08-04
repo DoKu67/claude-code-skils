@@ -16,7 +16,7 @@ Rejected candidates keep their file forever, so the same idea is never re-propos
 
 | candidate | target | occ / threshold | signal | status | last seen |
 |---|---|---|---|---|---|
-| [load-companion-skill-at-its-trigger](load-companion-skill-at-its-trigger.md) | `tune-loop` | **2 / 1** | correction | staged — **ready** | 2026-08-03 |
+| [load-companion-skill-at-its-trigger](load-companion-skill-at-its-trigger.md) | `tune-loop` | 2 / 3 | correction | staged | 2026-08-03 |
 | [name-the-path-of-written-records](name-the-path-of-written-records.md) | `notes` | 2 / 3 | correction | staged | 2026-08-03 |
 | [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
 

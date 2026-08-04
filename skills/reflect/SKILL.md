@@ -43,7 +43,7 @@ conversation.
 
 | Signal | The tell | Weight |
 |---|---|---|
-| **Explicit rule** | "always", "never", "from now on", "going forward", "use X instead of Y" | **Strong** — promotes at 2 |
+| **Explicit rule** | "always", "never", "from now on", "going forward", "use X instead of Y" | **Strong** — but still waits for 3; only a rule the user asks for directly promotes sooner |
 | **Correction** | The user restates a request after seeing output, with a constraint added | **Strong** |
 | **Silent edit** | The user edits a file the assistant just wrote, within minutes, in the same region | **Strong** — the highest-value indirect signal |
 | **Permission denial** | A tool call denied, then the user does it a different way | **Strong** |

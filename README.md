@@ -35,9 +35,9 @@ your correction ──> /reflect ──> candidate staged (occurrence 1)
                                  /skill-audit ──> prunes what never fires
 ```
 
-Thresholds: **1** for a rule you ask for directly, **2** for an explicit "always/never" said
-in passing, **3** for anything inferred from indirect signals. Rejections are kept forever
-so the same idea is never re-proposed.
+Two thresholds and no others: **1** for a rule you ask for directly, **3** for everything
+else — an "always/never" said in passing, a correction, a trigger problem, a budding skill.
+Rejections are kept forever so the same idea is never re-proposed.
 
 ---
 
@@ -434,7 +434,8 @@ Every promotion is a **delta, never a rewrite** — regenerating a skill replace
 detail with the model's summary of itself, which reads well and is worse. One rule per
 promotion, twenty lines maximum, placed where it fires rather than appended to a "Learnings"
 section, carrying its *why* so a future reader can tell a live rule from a stale one.
-Thresholds gate inference, not instruction: a direct request promotes at 1. Rejections keep
+Thresholds gate inference, not instruction: a direct request promotes at 1, everything else
+waits for 3. Rejections keep
 their file and reason forever. Edits to `reflect`, `codify` or `skill-audit` are
 **privileged** — they require confirmation naming the file and may never loosen an approval
 requirement, a threshold, or the signal-source boundary by inference.
