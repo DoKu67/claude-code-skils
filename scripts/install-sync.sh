@@ -185,6 +185,15 @@ case "$(uname -s)" in
   *)      fail "unsupported platform: $(uname -s). Supported: Linux (systemd), macOS (launchd)." ;;
 esac
 
+
+# Hook registration lives in the repo but has to be merged into settings.json,
+# which does not. Do it here so one command sets up a new machine completely.
+if [ -x "${REPO}/scripts/install-hooks.sh" ]; then
+  echo
+  echo "Hooks:"
+  "${REPO}/scripts/install-hooks.sh"
+fi
+
 echo
 echo "Done. Running one sync now to prove it works:"
 "$SYNC"

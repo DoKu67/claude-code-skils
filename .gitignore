@@ -7,4 +7,6 @@
 !/skills-staging/
 !/skills-disabled/
 !/scripts/
+!/hooks/
 skills/**/.backups/
+hooks/*.log

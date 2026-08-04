@@ -28,9 +28,59 @@ if [ -d "$(git rev-parse --git-path rebase-merge)" ] ||
   exit 1
 fi
 
+# --------------------------------------------------------- quiescence gate --
+#
+# Never commit a file that is still being written. A run that lands in the
+# middle of an edit would push a half-finished skill, and the next run would
+# push the rest as a second commit — so the repo would briefly hold a state
+# that never existed as a finished thought.
+#
+# The test is modification time: every changed file must have been untouched
+# for QUIET_SECONDS. If something is still moving, wait — but only up to
+# MAX_WAIT, because a long editing session should defer to the next run rather
+# than hold this one open.
+
+QUIET_SECONDS=${QUIET_SECONDS:-120}
+MAX_WAIT=${MAX_WAIT:-240}
+POLL=15
+
+mtime_of() {
+  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null
+}
+
+# Seconds since the most recently touched changed file. Empty if nothing changed.
+seconds_since_last_edit() {
+  local now newest=0 m f
+  now="$(date +%s)"
+  while IFS= read -r f; do
+    [ -e "$f" ] || continue
+    m="$(mtime_of "$f")"
+    [ -n "$m" ] && [ "$m" -gt "$newest" ] && newest="$m"
+  done < <({ git diff --name-only
+             git diff --cached --name-only
+             git ls-files --others --exclude-standard; } | sort -u)
+  [ "$newest" = 0 ] && return 1
+  echo $(( now - newest ))
+}
+
+waited=0
+while true; do
+  age="$(seconds_since_last_edit)" || break   # nothing changed; nothing to wait for
+  [ "$age" -ge "$QUIET_SECONDS" ] && break    # quiet long enough; safe to commit
+
+  if [ "$waited" -ge "$MAX_WAIT" ]; then
+    log "still being edited after ${MAX_WAIT}s (last write ${age}s ago). Deferring to the next run; nothing committed."
+    exit 0
+  fi
+  [ "$waited" = 0 ] && log "edit in progress (last write ${age}s ago), waiting for it to settle"
+  sleep "$POLL"
+  waited=$(( waited + POLL ))
+done
+[ "$waited" -gt 0 ] && log "settled after ${waited}s"
+
 # Stage everything. The .gitignore allowlist is what makes this safe: only
-# README.md, .gitignore, scripts/ and the three skill directories can ever be
-# staged, no matter what else is sitting in ~/.claude.
+# README.md, .gitignore, scripts/, hooks/ and the three skill directories can
+# ever be staged, no matter what else is sitting in ~/.claude.
 git add -A
 
 if git diff --cached --quiet; then
