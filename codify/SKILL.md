@@ -68,6 +68,7 @@ evidence cannot be re-read becomes folklore, and folklore cannot be revised.
 
 | Candidate | Promotes at |
 |---|---|
+| **Direct request** — the user asks for a rule, in their own words, now | **1** — there is no inference to validate |
 | Explicit rule — "always", "never", "from now on" | **2** occurrences |
 | Everything else | **3** occurrences |
 | Trigger problem (an existing rule that did not fire) | **1** — it is already a codified rule; only its trigger is being fixed |
@@ -77,6 +78,11 @@ The first time you hit something, learn from it. The second time, notice it. The
 time, codify it. Rules written after a single occurrence are usually right about the
 instance and wrong about the class — the variations that the rule has to cover have not
 been seen yet.
+
+**Thresholds gate inference, not instruction.** They exist because a rule inferred from one
+occurrence is usually right about the instance and wrong about the class. When the user
+states the rule themselves there is no inference to be wrong, so waiting is pure delay — a
+direct request promotes immediately, and the approval step still applies.
 
 **A threshold is a floor, not a trigger.** Reaching it means the candidate may be
 proposed; the user still approves.
