@@ -1,1 +1,8 @@
-.backups/
+# Track only the skill surfaces. Everything else in ~/.claude is machine state,
+# session transcripts, or cache and must never be committed.
+/*
+!/.gitignore
+!/skills/
+!/skills-staging/
+!/skills-disabled/
+skills/**/.backups/
