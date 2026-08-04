@@ -10,6 +10,7 @@ Written by [`reflect`](../skills/reflect/SKILL.md), promoted by
 
 | candidate | target | occ / threshold | signal | status | last seen |
 |---|---|---|---|---|---|
+| [consistency](consistency.md) | **new skill** | 1 / 1 | direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [prior-work](prior-work.md) | **new skill** | 1 / 1 | explicit + direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
 | [show-the-concrete-artifact](show-the-concrete-artifact.md) | `codify` | 1 / 1 | direct request | **promoted** 2026-08-03 | 2026-08-03 |
