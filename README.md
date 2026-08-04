@@ -28,11 +28,17 @@ git fetch origin && git checkout -f main
 |---|---|
 | `./install.sh` | Installs the sync timer and the hooks, then runs one sync to prove it works |
 | `./install.sh --check` | Reports what is installed and when it last ran. Changes nothing |
-| `./install.sh --uninstall` | Removes the timer. Leaves the repository and skills on disk |
+| `./install.sh --uninstall` | Removes both timers. Leaves the repository and skills on disk |
+| `./scripts/install-reflect.sh` | **Opt-in.** The daily 05:00 pass that mines finished sessions — see [Mining sessions automatically](#mining-sessions-automatically) |
 
 **The skills need no install step** — they work the moment they are on disk. `install.sh` only
 sets up the background sync described under [Keeping machines in sync](#keeping-machines-in-sync),
 so skipping it costs you the automatic push and nothing else.
+
+The reflect pass is deliberately not part of `install.sh`: it spends model tokens and stages
+rules without being asked, which should be a per-machine decision. `--check` reports it and
+`--uninstall` removes it either way, because a timer the documented uninstall leaves running
+is a trap.
 
 If you are not the author of this repository, **fork it first** and point `origin` at your
 fork. Otherwise the sync will commit correctly and fail at every push:
@@ -61,7 +67,7 @@ per machine; it is idempotent, so re-running it after a `git pull` is safe.
 | `skills/` | Active skills. Each is a directory with a `SKILL.md`, plus optional reference files |
 | `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded. A queue, not an archive — once promoted, a candidate's file is deleted and its provenance lives in the promotion commit |
 | `skills-disabled/` | Skills kept for reference but not active |
-| `scripts/` | Machine setup that must travel with a clone — currently the background sync (see below) |
+| `scripts/` | Machine setup that must travel with a clone — the background sync, and the daily reflect pass (see below) |
 | `hooks/` | Hook scripts, plus `hooks.json`, the tracked registration that `settings.json` cannot carry. See `hooks/README.md` |
 
 Only these five directories are tracked. Everything else under `~/.claude` — session
@@ -81,7 +87,6 @@ by [`./install.sh`](#install), and the configuration lives in this repo so a clo
 | `scripts/sync-skills.sh` | The sync itself. Commits tracked changes, rebases on the remote, pushes. A no-op when nothing changed |
 | `scripts/install-sync.sh` | Installs the timer — a systemd user timer on Linux, a launch agent on macOS. Idempotent; `--uninstall` removes it |
 | `scripts/install-hooks.sh` | Merges `hooks/hooks.json` into `settings.json`. Called by `install-sync.sh`; run it directly after editing `hooks.json` |
-
 | `hooks/edit-lock.sh` | Taken by the editor. Marks a session as actively editing |
 | `hooks/session-end.sh` | Releases that mark and kicks a sync |
 
@@ -124,9 +129,9 @@ durable rules:
 
 ```
 your correction ──> /reflect ──> candidate staged (occurrence 1)
-                                        │
-                          recurs ───────┤
-                                        │
+                     ▲                  │
+       daily, 05:00  │    recurs ───────┤
+                     │                  │
                                    threshold met
                                         │
                                  /codify ──> you approve a diff ──> committed to a skill
@@ -137,6 +142,53 @@ your correction ──> /reflect ──> candidate staged (occurrence 1)
 Two thresholds and no others: **1** for a rule you ask for directly, **3** for everything
 else — an "always/never" said in passing, a correction, a trigger problem, a budding skill.
 Rejections are kept forever so the same idea is never re-proposed.
+
+### Mining sessions automatically
+
+`reflect` only ever ran when someone remembered to type `/reflect`, which is why no candidate
+had accumulated across a session boundary. A daily timer now reads the sessions nobody
+reflected. Claude Code does not need to be running — the timer is an OS-level scheduler that
+launches `claude -p` headlessly.
+
+| File | Role |
+|---|---|
+| `scripts/reflect-batch.sh` | The pass. Finds unread transcripts, invokes `/reflect` on them, records what it read |
+| `scripts/install-reflect.sh` | Installs the timer — systemd on Linux, launchd on macOS. Idempotent; `--uninstall` removes it |
+| `reflect-state.json` | The dictionary of what has been read. Machine state, untracked |
+| `hooks/reflect.log` | Output of every pass |
+
+```
+reflect-batch.sh --status      what is due, and what has been read
+reflect-batch.sh --dry-run     show the batch and the prompt; invoke nothing
+reflect-batch.sh --mark-seen   record every current session as read WITHOUT reading it
+reflect-batch.sh --limit N     cap sessions per pass (default 8)
+```
+
+**The transcripts are the queue.** There is no list of pending work — the pass scans
+`projects/*/*.jsonl` and diffs against the state dictionary, so a session that predates the
+install, or one whose hook never fired, is still found. A marker file would be a second
+source of truth that can drift from the first.
+
+**Keyed by session id, not by a watermark.** Sessions end concurrently and out of order, so a
+"last processed" timestamp silently skips any session that ended before the mark but was
+written after it. The dictionary also records *how many lines* were read, because a session
+resumed after being reflected keeps its id and gains lines — the next pass reads only the
+new ones.
+
+**Staleness is content, never mtime.** `git checkout`, `rsync` and restore-from-backup all
+move timestamps without changing content, and appends can leave mtime looking untouched. Each
+entry stores a hash of the lines already read; if that hash stops matching, the transcript was
+rewritten rather than appended, and the pass reports it instead of guessing.
+
+**At-least-once, on purpose.** State is recorded only after a pass succeeds, so a crash
+re-reads those sessions rather than losing them. That is the safe direction for everything
+except the occurrence counter, which increments and gates promotion — so `reflect` is told not
+to append an occurrence whose session id and quote it already holds. Until that check lives in
+the skill itself rather than in the prompt, treat early passes as proposals to read rather
+than counts to trust.
+
+Check on it with `systemctl --user list-timers claude-reflect.timer` and
+`tail -f ~/.claude/hooks/reflect.log`.
 
 ---
 

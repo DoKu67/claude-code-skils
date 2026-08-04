@@ -55,6 +55,8 @@ block, and test by running the script by hand first.
 |---|---|---|
 | `edit-lock.sh` | `PreToolUse` on `Edit\|Write\|NotebookEdit` | Marks this session as editing, so the sync will not commit a half-written file |
 | `session-end.sh` | `SessionEnd` | Drops this session's mark, then kicks a sync |
+| `sync.log` | — | Output of `scripts/sync-skills.sh`. Untracked |
+| `reflect.log` | — | Output of `scripts/reflect-batch.sh`. **Not written by a hook** — it lives here so both background logs sit together. Untracked |
 
 Together these are the **write side of the sync lock**. `scripts/sync-skills.sh` cannot tell
 on its own whether a file is finished — mtime says when a write last happened, not whether

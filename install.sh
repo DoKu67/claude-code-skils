@@ -9,6 +9,12 @@
 #   * a background timer that commits and pushes skill changes every 6 hours
 #   * the hooks that let an editing session hold off that sync until it is done
 #
+# Deliberately NOT installed here: the daily reflect pass. It spends model
+# tokens and stages rules without being asked, so it is opt-in per machine —
+#     ./scripts/install-reflect.sh
+# --check reports it and --uninstall removes it either way, because a timer the
+# documented uninstall leaves running is a trap.
+#
 # The skills themselves need no installation — Claude Code reads them from
 # ~/.claude/skills the moment they are on disk.
 
@@ -64,16 +70,24 @@ if [ "$MODE" = "--check" ]; then
   case "$(uname -s)" in
     Linux)
       if systemctl --user is-enabled claude-skills-sync.timer >/dev/null 2>&1; then
-        say "timer:   enabled"
+        say "sync:    enabled"
         systemctl --user list-timers claude-skills-sync.timer --no-pager 2>/dev/null | sed -n '2p' | sed 's/^/    /'
       else
-        say "timer:   not installed"
+        say "sync:    not installed"
+      fi
+      if systemctl --user is-enabled claude-reflect.timer >/dev/null 2>&1; then
+        say "reflect: enabled"
+        systemctl --user list-timers claude-reflect.timer --no-pager 2>/dev/null | sed -n '2p' | sed 's/^/    /'
+      else
+        say "reflect: not installed (opt in with ./scripts/install-reflect.sh)"
       fi
       say "linger:  $(loginctl show-user "$USER" -p Linger --value 2>/dev/null || echo unknown)"
       ;;
     Darwin)
       launchctl list 2>/dev/null | grep -q claude-skills-sync \
-        && say "launch agent: loaded" || say "launch agent: not installed"
+        && say "sync:    loaded" || say "sync:    not installed"
+      launchctl list 2>/dev/null | grep -q claude-reflect \
+        && say "reflect: loaded" || say "reflect: not installed (opt in with ./scripts/install-reflect.sh)"
       ;;
   esac
   "${HERE}/scripts/install-hooks.sh" --dry-run 2>/dev/null | sed 's/^/  /'
@@ -88,6 +102,9 @@ fi
 if [ "$MODE" = "--uninstall" ]; then
   bold "Uninstalling"
   [ -x "${HERE}/scripts/install-sync.sh" ] && "${HERE}/scripts/install-sync.sh" --uninstall
+  # Removed even though it is not installed here — otherwise the documented
+  # uninstall leaves a timer that invokes claude every night.
+  [ -x "${HERE}/scripts/install-reflect.sh" ] && "${HERE}/scripts/install-reflect.sh" --uninstall
   # Clear hook registration by emptying the merge source, then re-merging.
   if command -v python3 >/dev/null 2>&1 && [ -f "${HERE}/hooks/hooks.json" ]; then
     say "leaving hooks/hooks.json alone; to unregister the hooks run:"
