@@ -16,6 +16,8 @@ Rejected candidates keep their file forever, so the same idea is never re-propos
 
 | candidate | target | occ / threshold | signal | status | last seen |
 |---|---|---|---|---|---|
+| [cut-what-is-not-buying-much](cut-what-is-not-buying-much.md) | `mvp` | 2 / 3 | correction | staged | 2026-08-03 |
+| [say-when-you-depart-from-a-skill-default](say-when-you-depart-from-a-skill-default.md) | `coding-standards` | 1 / 3 | correction | staged | 2026-08-03 |
 | [load-companion-skill-at-its-trigger](load-companion-skill-at-its-trigger.md) | `tune-loop` | 3 / 3 | correction | **REJECTED 2026-08-03** — reached threshold and falsified itself; the defect was a check run and ignored, not a skill unloaded. Kept so it is never re-proposed | 2026-08-03 |
 | [name-the-path-of-written-records](name-the-path-of-written-records.md) | `notes` | 2 / 3 | correction | staged | 2026-08-03 |
 | [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
