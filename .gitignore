@@ -2,6 +2,7 @@
 # session transcripts, or cache and must never be committed.
 /*
 !/.gitignore
+!/README.md
 !/skills/
 !/skills-staging/
 !/skills-disabled/
