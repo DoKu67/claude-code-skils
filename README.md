@@ -7,6 +7,43 @@ themselves improve from use.
 Skills are markdown files. Claude loads one when the situation matches its `description`,
 and then follows it. There is no runtime, no framework, and — with one exception — no code.
 
+## Install
+
+```sh
+git clone git@github.com:DoKu88/claude-code-skils.git ~/.claude
+cd ~/.claude
+./install.sh
+```
+
+**Clone into `~/.claude`.** Claude Code reads skills from there and nowhere else; a checkout
+anywhere else installs a working sync for skills that never load. If `~/.claude` already
+exists, adopt it in place rather than cloning over it:
+
+```sh
+cd ~/.claude && git init && git remote add origin <your-fork>
+git fetch origin && git checkout -f main
+```
+
+| Command | Does |
+|---|---|
+| `./install.sh` | Installs the sync timer and the hooks, then runs one sync to prove it works |
+| `./install.sh --check` | Reports what is installed and when it last ran. Changes nothing |
+| `./install.sh --uninstall` | Removes the timer. Leaves the repository and skills on disk |
+
+**The skills need no install step** — they work the moment they are on disk. `install.sh` only
+sets up the background sync described under [Keeping machines in sync](#keeping-machines-in-sync),
+so skipping it costs you the automatic push and nothing else.
+
+If you are not the author of this repository, **fork it first** and point `origin` at your
+fork. Otherwise the sync will commit correctly and fail at every push:
+
+```sh
+git remote set-url origin git@github.com:<you>/claude-code-skils.git
+```
+
+Requires `git`, `bash`, and either systemd (Linux) or launchd (macOS). Run `install.sh` once
+per machine; it is idempotent, so re-running it after a `git pull` is safe.
+
 ## The skills
 
 | Category | Skills | What the category covers |
@@ -35,16 +72,12 @@ or a credential, because nothing outside the five is visible to git in the first
 ## Keeping machines in sync
 
 A background timer commits and pushes skill changes every 6 hours, so edits made on one
-machine reach the others without anyone remembering to push. It is installed **per machine**,
-once, and the configuration lives in this repo so a clone carries it:
-
-```
-git clone git@github.com:DoKu88/claude-code-skils.git ~/.claude   # or pull into an existing ~/.claude
-~/.claude/scripts/install-sync.sh
-```
+machine reach the others without anyone remembering to push. It is installed **per machine**
+by [`./install.sh`](#install), and the configuration lives in this repo so a clone carries it.
 
 | File | Role |
 |---|---|
+| `install.sh` | The front door. Delegates to the two installers below |
 | `scripts/sync-skills.sh` | The sync itself. Commits tracked changes, rebases on the remote, pushes. A no-op when nothing changed |
 | `scripts/install-sync.sh` | Installs the timer — a systemd user timer on Linux, a launch agent on macOS. Idempotent; `--uninstall` removes it |
 | `scripts/install-hooks.sh` | Merges `hooks/hooks.json` into `settings.json`. Called by `install-sync.sh`; run it directly after editing `hooks.json` |
