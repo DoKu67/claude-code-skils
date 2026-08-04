@@ -13,6 +13,48 @@ cd "$REPO" || exit 1
 
 log() { printf '%s  %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
 
+LOCKDIR="${REPO}/.sync-locks"
+mkdir -p "$LOCKDIR"
+
+# A session that crashes cannot release its lock, so every lock expires. Without
+# this, one hard kill would stop syncing forever — silently, which is the worst
+# way for a backup to fail.
+STALE_AFTER=${STALE_AFTER:-900}
+
+mtime_of() {
+  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null
+}
+
+# ------------------------------------------------- lock 1: one sync at a time --
+#
+# The timer, the SessionEnd hook and a manual run can all fire at once. Two
+# syncs interleaving `git add`/`commit`/`rebase` on one repo is how a working
+# tree ends up in a state neither run intended. Non-blocking on purpose: if a
+# sync is already running, this one has nothing to add.
+
+if command -v flock >/dev/null 2>&1; then
+  exec 9>"${LOCKDIR}/sync.lock"
+  if ! flock -n 9; then
+    log "another sync is already running; nothing to do"
+    exit 0
+  fi
+else
+  # macOS has no flock(1). mkdir is atomic on every POSIX filesystem.
+  SYNC_LOCK="${LOCKDIR}/sync.lock.d"
+  if ! mkdir "$SYNC_LOCK" 2>/dev/null; then
+    held="$(mtime_of "$SYNC_LOCK")"
+    if [ -n "$held" ] && [ $(( $(date +%s) - held )) -gt "$STALE_AFTER" ]; then
+      log "removing a stale sync lock (older than ${STALE_AFTER}s)"
+      rmdir "$SYNC_LOCK" 2>/dev/null
+      mkdir "$SYNC_LOCK" 2>/dev/null || { log "could not take the sync lock"; exit 0; }
+    else
+      log "another sync is already running; nothing to do"
+      exit 0
+    fi
+  fi
+  trap 'rmdir "$SYNC_LOCK" 2>/dev/null' EXIT
+fi
+
 BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
 if [ -z "$BRANCH" ] || [ "$BRANCH" = "HEAD" ]; then
   log "ERROR: not on a branch (detached HEAD or not a git repo). Doing nothing."
@@ -28,25 +70,46 @@ if [ -d "$(git rev-parse --git-path rebase-merge)" ] ||
   exit 1
 fi
 
+# --------------------------------------- lock 2: sessions that are editing --
+#
+# The real writer is a Claude Code session, and it will not respect a lock it
+# does not know about — so the editing side takes this one, via the PreToolUse
+# hook in hooks/. Each active session holds a marker here, refreshed on every
+# edit and removed at SessionEnd.
+#
+# Deferring is cheap because release is prompt: the SessionEnd hook drops the
+# marker and immediately kicks a sync, so "wait for the edit to finish" costs
+# seconds, not the six hours until the next timer slot.
+
+held_by=0
+for lock in "$LOCKDIR"/session-*.edit; do
+  [ -e "$lock" ] || continue
+  m="$(mtime_of "$lock")"
+  [ -z "$m" ] && continue
+  if [ $(( $(date +%s) - m )) -gt "$STALE_AFTER" ]; then
+    log "clearing a stale edit lock: $(basename "$lock")"
+    rm -f "$lock"
+    continue
+  fi
+  held_by=$(( held_by + 1 ))
+done
+
+if [ "$held_by" -gt 0 ]; then
+  log "${held_by} session(s) currently editing; deferring. A sync runs when the last one ends."
+  exit 0
+fi
+
 # --------------------------------------------------------- quiescence gate --
 #
-# Never commit a file that is still being written. A run that lands in the
-# middle of an edit would push a half-finished skill, and the next run would
-# push the rest as a second commit — so the repo would briefly hold a state
-# that never existed as a finished thought.
-#
-# The test is modification time: every changed file must have been untouched
-# for QUIET_SECONDS. If something is still moving, wait — but only up to
-# MAX_WAIT, because a long editing session should defer to the next run rather
-# than hold this one open.
+# The backstop for writers that take no lock at all — a `vim` edit, a script,
+# another tool. Every changed file must have been untouched for QUIET_SECONDS
+# before anything is staged. If something is still moving, wait, but only up to
+# MAX_WAIT; a long edit should defer to the next run rather than hold this one
+# open.
 
 QUIET_SECONDS=${QUIET_SECONDS:-120}
 MAX_WAIT=${MAX_WAIT:-240}
 POLL=15
-
-mtime_of() {
-  stat -c %Y "$1" 2>/dev/null || stat -f %m "$1" 2>/dev/null
-}
 
 # Seconds since the most recently touched changed file. Empty if nothing changed.
 seconds_since_last_edit() {

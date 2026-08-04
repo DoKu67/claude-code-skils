@@ -49,13 +49,27 @@ git clone git@github.com:DoKu88/claude-code-skils.git ~/.claude   # or pull into
 | `scripts/install-sync.sh` | Installs the timer — a systemd user timer on Linux, a launch agent on macOS. Idempotent; `--uninstall` removes it |
 | `scripts/install-hooks.sh` | Merges `hooks/hooks.json` into `settings.json`. Called by `install-sync.sh`; run it directly after editing `hooks.json` |
 
+| `hooks/edit-lock.sh` | Taken by the editor. Marks a session as actively editing |
+| `hooks/session-end.sh` | Releases that mark and kicks a sync |
+
 Three properties are deliberate.
 
-**It never commits a file that is still being written.** Every changed file must have gone
-`QUIET_SECONDS` (120 by default) without a write before anything is staged. If something is
-still moving the run waits, and if it is still moving after `MAX_WAIT` (240s) the run defers
-to the next slot having staged nothing — because a run that lands mid-edit pushes half a
-skill, and the repo briefly holds a state that was never a finished thought.
+**It never commits a file that is still being written.** A script cannot tell from the
+outside whether a write is the last one — mtime says when a write happened, not whether
+another is coming. Only the editor knows, so the editor marks it. Three layers, in order:
+
+| Layer | Guards against | Mechanism |
+|---|---|---|
+| Sync lock | Two syncs interleaving `add`/`commit`/`rebase` | `flock`, non-blocking; `mkdir` fallback on macOS |
+| Edit lock | Committing a file a session is still writing | `PreToolUse` hook marks the session; sync defers while any mark is live |
+| Quiescence | Writers that take no lock — `vim`, scripts, other tools | Every changed file untouched for `QUIET_SECONDS` (120) before staging |
+
+Deferring is cheap because release is prompt: `SessionEnd` drops the mark and immediately
+kicks a sync, so a deferred run costs seconds rather than the six hours to the next slot.
+
+**Every lock expires.** A mark older than `STALE_AFTER` (900s) is deleted and ignored, because
+a session that crashes cannot release its own lock — and a lock nobody can release would stop
+the backup forever, silently, which is the worst way for a backup to fail.
 
 **It never destroys work**: no `reset --hard`, no `clean`, no `restore`, no force-push — when
 a rebase conflicts it aborts, leaves the local commit intact and unpushed, and says so,

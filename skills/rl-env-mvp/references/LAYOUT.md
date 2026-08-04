@@ -34,6 +34,7 @@ journal/                 the written record — the only place conclusions live
   experiments.md         run log + coverage table + combination table + queue
   notes.md               what results mean; predictions written before runs
   prompts.md             every prompt considered, its full text, and what it measured
+  rewards.md             every reward shape, its full tier table, and reward vs task metric
   learnings.md           traps, so they cost time once
 output/                  everything a run produces; nothing here is hand-edited
   runs/<run_name>/       config.yaml, metrics.jsonl, summary.json, checkpoints/
@@ -53,7 +54,7 @@ run then localises the problem before you have read a line.
 
 ## What goes in each module
 
-**`journal/`** — The project's written record, kept together because the four files are
+**`journal/`** — The project's written record, kept together because the five files are
 read together and cross-reference each other constantly. `PLAN.md` stays at the root: it is
 the entry document, not a record.
 
@@ -63,6 +64,13 @@ the least likely thing to be written down. Code holds only the *active* prompt s
 trying to elicit, what it measured, and the verdict. **A rejected prompt keeps its entry
 after it is deleted from code**, because "we tried that and it was worse" is exactly the
 knowledge a later session cannot reconstruct from a diff.
+
+`journal/rewards.md` exists because the reward shape is a **frozen control** — each shape
+lives in its own block, so `experiments.md` cannot compare them without a bridge run, and
+the comparison has to live somewhere. It holds every shape's full tier table verbatim, and
+for each run under it, **`reward/mean` beside the task metric and the gap between them**.
+That pairing is the reward-hacking detector: a gap that widens while the task metric
+flattens means the policy is farming partial credit, and neither column shows it alone.
 
 **`data/`** — Input data and anything else that is an *input* rather than logic: raw or
 downloaded files, cached generations, hand-written fixtures for the harness gate, a prompt

@@ -1,20 +1,33 @@
 {
   "_readme": "Tracked registration for the hooks in this directory. scripts/install-hooks.sh merges the 'hooks' key below into ~/.claude/settings.json, replacing {{CLAUDE_HOME}} with the real path. Keys starting with _ are ignored. To enable something from _examples, move it into 'hooks' and re-run the installer.",
 
-  "hooks": {},
-
-  "_examples": {
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "{{CLAUDE_HOME}}/hooks/edit-lock.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "SessionEnd": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "{{CLAUDE_HOME}}/hooks/sync-on-session-end.sh",
-            "timeout": 60
+            "command": "{{CLAUDE_HOME}}/hooks/session-end.sh",
+            "timeout": 30
           }
         ]
       }
-    ],
+    ]
+  },
+
+  "_examples": {
     "PostToolUse": [
       {
         "matcher": "Edit|Write",

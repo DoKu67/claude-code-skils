@@ -257,7 +257,7 @@ fix it.
 
 ## Tracking
 
-Four files in `journal/`, and they are not interchangeable. See
+Five files in `journal/`, and they are not interchangeable. See
 [`ml_logging`](../ml_logging/SKILL.md) for run naming, config snapshots and the metric
 vocabulary; see [`notes`](../notes/SKILL.md) for how they divide.
 
@@ -265,6 +265,8 @@ vocabulary; see [`notes`](../notes/SKILL.md) for how they divide.
 - **`journal/notes.md`** — what results mean, open questions, and predictions written
   *before* the run that tests them.
 - **`journal/prompts.md`** — every prompt style considered, in full. Below.
+- **`journal/rewards.md`** — every reward shape considered, and **what the task metric did
+  under it**. Below.
 - **`journal/learnings.md`** — traps that cost time, so they cost it once.
 
 They live in one directory because they are read together and cross-reference constantly.
@@ -317,6 +319,59 @@ Three rules make it worth keeping:
   it was worse" is exactly what a later session cannot reconstruct from a diff.
 - **Record what it cost, not just what it scored.** A prompt that buys 3x the metric for 4x
   the step time is a different decision from one that buys it for free.
+
+### `journal/rewards.md`
+
+The reward shape is a **frozen control**, so every shape lives in a different block and
+`experiments.md` cannot legitimately compare them. This is the file where that comparison
+belongs, and it is the only place in the project where the shapes are ranked against each
+other.
+
+It exists for one measurement that no other file pairs up: **the reward the shape paid,
+beside the task metric it produced.** Reward alone cannot distinguish a policy that learned
+the task from one that learned to collect partial credit, and the task metric alone cannot
+say which shape was responsible. Together they can.
+
+```markdown
+## `graded` — active
+
+**2026-08-03 18:20 · chosen · blocks 1**
+
+    no_answer 0.0 · unparseable 0.05 · illegal_numbers 0.10
+    wrong_value 0.20 + closeness_bonus 0.30 · correct 1.0
+
+**Trying to elicit:** gradient in the 55% of rollouts that never reach an answer, which
+`sparse` would score a uniform zero — a group with no variance contributes no gradient.
+
+| run | `reward/mean` | **task metric** | gap | reading |
+|---|---|---|---|---|
+| untrained | 0.219 | 0.160 | 0.059 | — |
+| `simple-lemur` | 0.410 | 0.313 | 0.097 | moving together |
+| `deep-shrew` | 0.770 | 0.660 | 0.110 | moving together |
+
+**Verdict:** healthy. The gap is the partial credit collected without solving; it grew, but
+`correct` grew faster. Watch for the gap widening while the task metric flattens.
+
+## `sparse` — defined, never trained
+
+**Why it is still here:** it is the honest control. If `graded` is not beating it, the tiers
+are decoration and the extra surface is a liability.
+```
+
+Three rules, and the third is the one that earns the file:
+
+- **The full tier table, verbatim**, not "the graded one". A shape is a set of numbers and
+  the numbers are the thing that changed.
+- **A rejected shape keeps its entry.** Reward shapes get revisited more than prompts,
+  because a disappointing run makes changing one feel obvious.
+- **Reward and task metric on the same row, always, with the gap.** A shape whose gap widens
+  while the task metric flattens is being farmed, and that is invisible in either column
+  alone. This is the project's reward-hacking detector, and it only works if both numbers
+  are recorded for every run under every shape.
+
+**Never change the reward shape in response to a disappointing run without opening a new
+block.** That is redesign, not tuning, and it needs a re-measured baseline — see the
+hyperparameter tables below.
 
 ### The hyperparameter tables
 

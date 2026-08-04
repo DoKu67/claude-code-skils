@@ -51,10 +51,22 @@ block, and test by running the script by hand first.
 
 ## What's here
 
-| File | Registered | Does |
+| File | Event | Does |
 |---|---|---|
-| `sync-on-session-end.sh` | No — opt in | Pushes skill changes when a session ends, instead of waiting for the 6-hour timer |
+| `edit-lock.sh` | `PreToolUse` on `Edit\|Write\|NotebookEdit` | Marks this session as editing, so the sync will not commit a half-written file |
+| `session-end.sh` | `SessionEnd` | Drops this session's mark, then kicks a sync |
 
-To turn it on, move the `SessionEnd` block from `_examples` into `hooks` in `hooks.json`, then
-run `scripts/install-hooks.sh`. JSON has no comments, so disabled entries live under
-`_examples`; the installer ignores every key starting with `_`.
+Together these are the **write side of the sync lock**. `scripts/sync-skills.sh` cannot tell
+on its own whether a file is finished — mtime says when a write last happened, not whether
+another is coming. Only the editor knows, so the editor is what marks it.
+
+The marker's mtime is a heartbeat, and `sync-skills.sh` deletes any marker older than
+`STALE_AFTER` (900s). **A lock nobody can release is worse than no lock**: without expiry, one
+crashed session would stop the backup forever, silently.
+
+`edit-lock.sh` runs before *every* edit, so it does nothing but `sed` one field out of stdin
+and touch a file. It always exits 0 — a `PreToolUse` hook that exits non-zero blocks the tool
+call, and nothing this script can fail at is worth blocking an edit over.
+
+JSON has no comments, so disabled entries live under `_examples`; the installer ignores every
+key starting with `_`. To enable one, move it into `hooks` and re-run `scripts/install-hooks.sh`.
