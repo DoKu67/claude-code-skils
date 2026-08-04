@@ -112,6 +112,21 @@ material belongs inside one of those instead. That is also the most common failu
 put in a skill that never loads is worse than the same rule written nowhere, because it
 reads as covered.
 
+**Ask how it will be reached — do not infer it.** When the surface is a new skill, put the
+question to the user before writing the delta: *which existing skills should name and link
+this at their trigger, or will you invoke it yourself?* Record the answer in the promotion
+and add the pointer in the same commit. A skill with no caller declares `orphan: true` in
+its own frontmatter, meaning *the user invokes it directly*. **Every skill stays directly
+invocable either way** — the declaration records the likely path, never a restriction on
+how it can be called.
+
+Ask rather than infer, because the inference is what failed. `consistency`, `prior-work`
+and `checkpoint-commits` were each promoted on direct request with no inbound pointer, and
+each sat at zero invocations across 83 sessions. Nothing in `prior-work`'s own text says
+`mvp` should offer it at stage 1 — only the user knew that, and nobody asked. The
+convention is borrowed from Sphinx, where a document outside the navigation tree marks
+itself `:orphan:` and is still fully built and reachable by direct URL.
+
 ### 1b. Check the rule does not already exist
 
 **Before writing a line, grep the concept across every skill.** Not the candidate's wording —
@@ -242,6 +257,8 @@ Finding signals — [`reflect`](../reflect/SKILL.md). Deciding what to remove �
 The candidate met its threshold and the user approved this specific diff; **exactly one skill
 defines the rule**, verified by grep before and after; the delta is one rule, under twenty
 lines, in the voice of its host, placed where it fires rather than appended; it carries its why and its falsifier; the candidate file records the outcome with
-the date and the target; a rejection kept its file and its reason; `LEDGER.md` is current;
+the date and the target; a new skill's inbound callers came from asking the user rather than
+from inference, and the pointer landed in the same commit; a rejection kept its file and its
+reason; `LEDGER.md` is current;
 the change is one commit; and any edit to `reflect`, `codify` or `skill-audit` was named as
 a meta-edit and confirmed as one.

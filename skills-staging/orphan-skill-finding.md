@@ -42,7 +42,7 @@ the identical 90-day problem.
 
 - **Sphinx** — `orphan: true` declared in the skill's own frontmatter is the exemption, so a
   skill with zero inbound links and no marker is the finding. See
-  [[new-skill-needs-an-inbound-caller]].
+  the "Ask how it will be reached" rule in [`codify`](../skills/codify/SKILL.md).
 - **Vulture** — reports dead code with a **confidence score of 60–100%** and an
   auto-generated whitelist rather than a binary verdict. Our detector needs the same: the
   static check run this session produced 9 hits, all worked examples, so a binary
@@ -59,5 +59,5 @@ is the load-bearing part of this candidate, not the check.
 **Boundary.** Zero invocations is not automatically a defect — `tune-report` has never fired
 because no sweep has run to completion, which is a fair reason, and the user has explicitly
 chosen to leave it unused and not deprecate it while evidence accumulates (2026-08-04). The
-finding reports; it does not retire. Pairs with [[new-skill-needs-an-inbound-caller]], which
+finding reports; it does not retire. Pairs with the "Ask how it will be reached" rule in [`codify`](../skills/codify/SKILL.md), which
 is the prevention half.
