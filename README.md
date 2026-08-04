@@ -56,7 +56,7 @@ per machine; it is idempotent, so re-running it after a `git pull` is safe.
 |---|---|---|
 | [Development](#development) | `mvp`, `coding-standards`, `consistency`, `explain`, `call-tree`, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, the house rules, and the sweeps that say a change is actually done |
 | [Version control](#version-control) | `checkpoint-commits` | Keeping work safe as it is made, and deciding what shape the history ends up in |
-| [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr` | Finding out what already exists, and keeping the written record of what was tried and what it meant |
+| [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr`, `report` | Finding out what already exists, keeping the written record of what was tried and what it meant, and turning any of it into a durable document |
 | [Fine-tuning and RL](#fine-tuning-and-reinforcement-learning) | `sft-env-mvp`, `rl-env-mvp`, `tune-loop`, `tune-preflight`, `run-triage`, `tune-report`, `hparam-priors`, `escalate` | A pipeline: scaffold an environment, prove it works, then run the hyperparameter search as a recorded loop |
 | [Self-improvement](#self-improvement) | `reflect`, `codify`, `skill-audit` | Turning corrections into durable rules, and pruning the ones that never fire |
 
@@ -428,6 +428,36 @@ absent *Blockers* section is ambiguous between "nothing is blocked" and "nobody 
 blocker must name what would unblock it; a next step starts with a verb and says who does
 it; the Figures table must carry information found nowhere else. Honesty rules separate done
 from believed-done and require failures at the same weight as successes.
+
+## report
+
+### Description
+Write the current work up as a markdown report in a fixed five-section research-paper format —
+Title, Abstract, Background, Method, References — with numbered figures and tables.
+
+### What it does
+Turns what just happened into a file instead of a scrollback. **It is a sink, not a source**,
+and it composes: `/prior-work` then `/report`, `/explain` then `/report`, an afternoon of
+debugging then `/report`. The upstream command decides what is true; this one decides where it
+goes and what it looks like, and never researches or re-derives to fill a section. Distinct
+from its two neighbours: `tldr` prints a 30-second status and writes no file, and `tune-report`
+owns hyperparameter sweeps, whose grid and coverage tables are the point.
+
+### How it works
+Five numbered sections, always all five, each heading labelled with its slot and carrying its
+value — `Title:` states the finding rather than the topic, `Method:` names the approach,
+`References:` carries a count that must match the list beneath it, so a list that grew while
+the number stayed put is a visible defect. An empty section says `None` **and why**, because an
+absent *Background* is ambiguous between "nothing exists" and "nobody looked". Every bulleted
+section uses the same two-level shape — a one-line bold title bullet over indented sub-bullets,
+split whenever a bullet wraps past two lines — so reading only the bold bullets gives the
+argument. Figures and tables are numbered separately, captioned **below** and centered, and
+each must be referenced from the text at least once. Frontmatter carries **`source` and
+`inputs`**: which command produced the report, and everything it read. No surveyed markdown
+format records that — they capture *author* and *date*, which is enough for a human memo and
+not enough to tell whether an agent-written explanation still describes the current code. Files
+land at `reports/YYYY-MM-DD-HHMM-<slug>.md` and are **never overwritten**; a second report on a
+subject is a new dated file carrying `supersedes:`, and the old one gains a superseded-by line.
 
 ---
 
