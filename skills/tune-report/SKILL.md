@@ -12,9 +12,11 @@ It is not a summary of the runs. A summary answers "what happened"; this answers
 still unknown, and what is the cheapest way to find out". The coverage table and the queue
 are the parts that do that, and they are the parts that get left off.
 
-Written from the record: `experiments.md` for the rows, `notes.md` for the reads, the run
-directories and `configs/` for anything the journal is missing — see
-[`ml_logging`](../ml_logging/SKILL.md) and [`notes`](../notes/SKILL.md). Produced at the end
+Written from the record: `journal/experiments.md` for the entries and their reads,
+`journal/learnings.md` for the traps, the run directories and `configs/` for anything the
+journal is missing — see [`ml_logging`](../ml_logging/SKILL.md) and
+[`notes`](../notes/SKILL.md). The entry format itself is
+[`tune-loop`](../tune-loop/SKILL.md) step 6. Produced at the end
 of a block, on escalation, and whenever asked.
 
 **No code.** The report is written by reading the record. If reconstructing it from run
@@ -116,10 +118,11 @@ run is `brave-mantis`.
 | 08-03 14:02 | `brave-mantis`| 5e-5 | 8 | 8 | 1.0 | 0.140 | −0.015 | 16 | 61 | 0.02 | ok |
 | 08-03 16:11 | `witty-otter` | 5e-5 | 4 | 8 | 1.0 | 0.121 | −0.034 | 9 | 42 | 0.02 | ok |
 
+| 08-03 20:41 | `glum-shrew`  | 1e-4 | 16 | 8 | 1.0 | — | — | — | **79 (OOM @ step 3)** | — | **crashed** |
+
 **Ranked by the metric, dated by `started`** — two different orders, on purpose. The ranking
 answers "what won"; the dates answer "what did we know when", which is what makes a row taken
 before a bug fix visibly different from one taken after.
-| `glum-shrew`  | 1e-4 | 16 | 8 | 1.0 | — | — | — | **79 (OOM @ step 3)** | — | **crashed** |
 
 ### Coverage
 
@@ -147,7 +150,7 @@ Ranked by information per hour: #1 is cheap and pays for itself in budget if it 
 - **prompts/step 16** needs gradient checkpointing (+~25% step time) — block-surviving, but
   it changes the budget arithmetic. Decision needed.
 - **Every remaining candidate opens a new block.** This block is done; see the escalation
-  in `notes.md` 2026-08-03 17:25.
+  on the `calm-heron` entry, 2026-08-03 17:25.
 ```
 
 ---

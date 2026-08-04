@@ -31,8 +31,7 @@ tests/integration/       seams — real data across a real boundary
 
 PLAN.md                  the six inputs, decisions, build order, the big risk
 journal/                 the written record — the only place conclusions live
-  experiments.md         run log + coverage table + combination table + queue
-  notes.md               what results mean; predictions written before runs
+  experiments.md         run log, the reasoning about it, coverage and the live queue
   prompts.md             every prompt considered, its full text, and what it measured
   rewards.md             every reward shape, its full tier table, and reward vs task metric
   learnings.md           traps, so they cost time once
@@ -54,7 +53,7 @@ run then localises the problem before you have read a line.
 
 ## What goes in each module
 
-**`journal/`** — The project's written record, kept together because the five files are
+**`journal/`** — The project's written record, kept together because the four files are
 read together and cross-reference each other constantly. `PLAN.md` stays at the root: it is
 the entry document, not a record.
 

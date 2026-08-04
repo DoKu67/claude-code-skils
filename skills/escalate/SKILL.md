@@ -125,7 +125,8 @@ apologising for the interruption makes the interruption harder to act on.
 
 ## Record it
 
-The escalation and its answer go in `notes.md` per [`notes`](../notes/SKILL.md), with the
+The escalation and its answer go in `journal/experiments.md` per
+[`notes`](../notes/SKILL.md), with the
 date and the runs it came from. It is the moment the project changed direction, and the
 reasoning that produced it is exactly what a later session cannot reconstruct from the
 grid alone.
@@ -148,5 +149,6 @@ an escalation is triggered and unplanned.
 The message leads with the situation in one line; the grid is there and is small; measured
 and believed are separated; there are two or three priced options each marked for whether
 it invalidates the block; one is recommended with a reason; the no-answer default is
-stated and is "nothing runs" for anything in the danger class; and the escalation is in
-`notes.md` with the runs that produced it.
+stated and is "nothing runs" for anything in the danger class; and the escalation is
+recorded in `journal/experiments.md` — on the entry it arose from, or as its own entry if it
+arose between runs — with the runs that produced it.

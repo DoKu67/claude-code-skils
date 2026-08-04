@@ -24,8 +24,16 @@ Four companions, read when their pointer fires:
 - [`ml_logging`](../ml_logging/SKILL.md) — run names, config snapshots, the metric
   vocabulary, the grid-as-data spec. Read before naming anything.
 
-Findings land per [`notes`](../notes/SKILL.md): the row in `experiments.md`, the read of
-it in `notes.md`, the trap in `learnings.md`.
+Findings land in `journal/`: the entry *and its read* in `experiments.md`, the trap in
+`learnings.md`. See [`notes`](../notes/SKILL.md) for what each file is for; the entry format
+itself is defined at step 6 below and is the same in every file.
+
+**There is no separate `notes.md` in a tuning project.** Once an entry carries its own
+Summary and Things-to-try-next, a second file holding the read of the same run is a duplicate
+record free to drift — and it does, most visibly as two lists of what to try next that no
+longer agree. Reasoning that spans runs goes in the entry it most belongs to; a hypothesis a
+run rejected becomes an **Update** on that run's entry, so the belief and the evidence that
+killed it sit together.
 
 ---
 
@@ -41,7 +49,7 @@ otherwise, and come back.
 | A **baseline** under the current frozen controls | Every later claim is a delta against it |
 | A **smoke run** that completed with finite gradients | You would be tuning a broken loop |
 | A **fixed experiment budget** — steps or wall clock | Rows measured over different budgets are not comparable |
-| A **journal** — `experiments.md`, `notes.md`, `learnings.md` | A result not written down gets re-run in three weeks |
+| A **journal** — `journal/experiments.md` and `journal/learnings.md` at minimum | A result not written down gets re-run in three weeks |
 
 **The experiment budget is a constant, declared in the block header.** Every run in a
 block trains for the same number of steps *or* the same wall clock — pick one, say which,
@@ -75,14 +83,19 @@ the rest worth doing.
 
 ### 1. Write the prediction before the run
 
-In `notes.md`, before launching:
+**The prediction is the Queue row for this experiment**, written before launching. There is
+no entry to put it in yet — that is the point — so it lives in the one place that describes
+work not yet done:
 
 ```markdown
-**Next: lr 1e-4 → 2e-4.** Expect the metric to keep climbing — 5e-5 → 1e-4 bought
-+0.015, and dead-group fraction has not moved, so the step size is not yet the
-constraint. **Falsified if** the metric lands within ±0.012 of 0.155, or dead-group
-rises above 0.05.
+| # | Experiment | Hypothesis, and what falsifies it | Cost |
+|---|---|---|---|
+| 1 | lr 1e-4 → 2e-4 | Still climbing: 5e-5 → 1e-4 bought +0.015 and dead-group fraction has not moved, so step size is not yet the constraint. *Falsified by* the metric landing within ±0.012 of 0.155, or dead-group rising above 0.05 | 1 h |
 ```
+
+At step 6 the run's **Summary** says whether it survived, and the Queue row is struck through
+with its answer. Prediction and verdict end up in the same file, which is what makes a
+rationalisation visible: the words that were written before are still there, unedited.
 
 A prediction with no falsifier is a chore, not an experiment. If you cannot say what
 result would change your mind, you do not yet have a hypothesis — you have a habit.
@@ -125,15 +138,81 @@ that point is spent proving something already known.
 
 ### 6. Record — immediately, not at end of day
 
-Append the row to `experiments.md`. Then write the read in `notes.md`: what moved, what
-did not, and **whether the prediction from step 1 survived**.
+Write the entry into `journal/experiments.md` while the result still stings. A result that
+contradicts the prediction is the highest-value output available and the one most easily
+rationalised away an hour later.
 
-A result that contradicts the prediction is the highest-value output available and the one
-most easily rationalised away an hour later. Write it while it stings.
+**A crashed or OOM'd run is an entry.** It records where the configuration became unstable,
+which is usually the boundary you were looking for. Dropping it leaves a grid that reads as
+complete.
 
-**A crashed or OOM'd run is a row.** It records where the configuration became unstable,
-which is usually the boundary you were looking for. Dropping it leaves a grid that reads
-as complete.
+#### The entry format
+
+**Every entry in every journal file has this shape**, so a reader who has seen one knows
+where to look in all of them:
+
+```markdown
+### <timestamp> · <source> · <what changed>
+
+**<Descriptive title — the claim, not the topic>**
+
+**Goal**            — what this run was for, as bullets
+**What was tried**  — the one axis that moved, and what stayed frozen
+**Results**         — numbers, not adjectives
+**Summary**         — one or two sentences: what it means, and whether step 1's prediction survived
+**Things to try next**
+**Figures**         — tables and plots, each with a line of text under it saying what to see
+```
+
+**`<source>`, not `<run name>`.** Most entries name a run, but the highest-value ones often
+do not: a baseline names its eval command, a probe sweep names its script, an analysis of
+saved outputs names the script and the artifact it read. Demanding a run name excludes
+exactly the entries that cost no GPU and explain everything else.
+
+**`<timestamp>` comes from the artifact, never from recollection.** A run-directory name, an
+eval file's mtime, a commit date, or `date` at the moment of writing. Times written from a
+sense of elapsed time drift, and the drift grows through a session.
+
+**Newest first, in every file.** The exception is a file whose entries revise each other in
+sequence; there, keep the order and append **Updates** to the entry being revised rather
+than rewriting it — a hypothesis that looked right and the evidence that killed it is worth
+more than a clean record.
+
+#### Blocks, and prepend-only
+
+A **block** is one set of frozen controls; its entries are the runs measured under them.
+Blocks are **prepend-only**: when a frozen control changes, a new block goes on top — Block 2
+above Block 1 — and the block below is never edited again. An old block that keeps changing
+is an old block whose numbers have quietly stopped meaning what they said.
+
+Each block header carries its own frozen controls, experiment budget, baseline and **measured**
+noise floor. A pre-tuning sweep that *varied* what the block freezes is not an entry in it —
+it is an earlier block, and its rows are not comparable to any row above.
+
+#### One live queue, and frozen per-entry lists
+
+Per-entry **Things to try next** is frozen at write time: it records what that run suggested
+*then*. A single **Queue** section at the top of `experiments.md` is the list kept current,
+deduplicated and reordered as evidence arrives. **When they disagree, the Queue wins** — say
+so in the file. Without that rule the lists silently diverge and nothing designates one as
+authoritative.
+
+#### The entry is not written until all of these hold
+
+Conditions, not actions — a check that ran and was not read has not been satisfied.
+
+| | Condition |
+|---|---|
+| 1 | The entry exists, with its timestamp, source and the axis that changed |
+| 2 | Its Summary says whether step 1's prediction survived |
+| 3 | The **coverage table matches the entries above it** — every value tried appears, and `untested` names what does not |
+| 4 | Any trap that cost real time is in `learnings.md`, with its tell |
+| 5 | Any file tracking a frozen control the run exercised has its row |
+| 6 | The run is visible where results are read, with its headline metric and `run/status` |
+| 7 | The work is committed |
+
+Only then step 7. A verdict decided against a half-written record is a verdict about the
+record.
 
 ### 7. Decide
 

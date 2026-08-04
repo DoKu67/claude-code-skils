@@ -169,10 +169,17 @@ perfectly plausible loss curve, which is exactly what makes it expensive.
 
 ## Tracking
 
-Four files in `journal/`, as [`rl-env-mvp`](../rl-env-mvp/SKILL.md) defines them:
-`experiments.md` (the run log and the grid), `notes.md` (what results mean),
-`prompts.md` (every prompt or template style considered, in full, including rejected ones),
-`learnings.md` (traps that cost time). `PLAN.md` stays at the root.
+Three files in `journal/`. The **entry format they share** — the sections, newest-first,
+prepend-only blocks and the closing conditions — is defined at
+[`tune-loop`](../tune-loop/SKILL.md) step 6; see [`notes`](../notes/SKILL.md) for what each
+file is for. `PLAN.md` stays at the root.
+
+- `experiments.md` — the run log **and the reasoning about it**. An entry is one thing that
+  happened: a run, an eval, or an analysis. There is deliberately no separate `notes.md` —
+  once an entry carries its own Summary and Things-to-try-next, a second file holding the
+  read of the same run is a duplicate free to drift.
+- `prompts.md` — every prompt or template style considered, in full, including rejected ones.
+- `learnings.md` — traps that cost time, as watch-out cards rather than reports.
 
 The grid's structure — frozen controls, axes, observed, one block per control set — belongs
 to [`tune-loop`](../tune-loop/SKILL.md) and [`tune-report`](../tune-report/SKILL.md). This

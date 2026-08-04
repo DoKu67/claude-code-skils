@@ -38,6 +38,19 @@ dirty), `run/seed`, `run/argv`, `run/status`, `env/python`, `env/torch`,
 
 ## Task packs
 
+**The pack also decides which figures a journal entry carries.** A project declares its pack
+once and the plot panels follow — `rl` gives reward and entropy, `grpo` adds the within-group
+spread, `rlvr` adds the verifier decomposition, `lm`/`sft` gives loss and perplexity,
+`preference` gives the margin and accuracies. Derived rather than hand-listed per project, so
+a new project gets the right panels without anyone choosing again.
+
+Two rules on the plots themselves, because neither failure is visible by looking at the
+chart: **one chart per metric, one series per run** — that is what makes runs comparable and
+is how the same curves read on a dashboard — and **never two metrics of different units on
+one chart**, because a dual axis makes unrelated series look correlated and is the most
+common charting mistake there is.
+
+
 Layered onto core, selected by the project's task. Log the whole pack or none of
 it — a partially-populated pack is what makes two runs incomparable.
 

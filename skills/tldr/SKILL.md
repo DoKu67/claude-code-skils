@@ -115,7 +115,7 @@ Figures:
 ## Out of scope
 
 **This skill prints; it does not write files.** A durable record belongs to
-[`notes`](../notes/SKILL.md) — `notes.md` for what results mean, `experiments.md` for the
+[`notes`](../notes/SKILL.md) — the project's journal: `experiments.md` for the
 run log. Write one to a file only when asked.
 
 When the subject is a hyperparameter search, the deliverable is

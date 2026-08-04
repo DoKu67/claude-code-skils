@@ -249,6 +249,11 @@ cheap. Neither can be replaced by an aggregate metric, because the failures they
 invisible in aggregates by construction — a harness that scores every correct answer zero
 produces a perfectly plausible mean reward.
 
+**The probe writes its report to `output/`, not only to stdout.** Its numbers choose the
+frozen controls for the whole first block, and a control chosen on a table that exists
+nowhere cannot be re-checked once the code has moved. A gate result that lives only in a
+terminal scrollback is not a gate result.
+
 L4 is the go/no-go before spending real compute. A probe that shows a solve rate of zero,
 or every group scoring identically, means training cannot work and no learning rate will
 fix it.
@@ -257,13 +262,17 @@ fix it.
 
 ## Tracking
 
-Five files in `journal/`, and they are not interchangeable. See
+Four files in `journal/`, and they are not interchangeable. The **entry format they all
+share** — the sections, newest-first, prepend-only blocks, and the closing conditions — is
+defined at [`tune-loop`](../tune-loop/SKILL.md) step 6 and is not restated here. See
 [`ml_logging`](../ml_logging/SKILL.md) for run naming, config snapshots and the metric
-vocabulary; see [`notes`](../notes/SKILL.md) for how they divide.
+vocabulary; see [`notes`](../notes/SKILL.md) for what each file is for.
 
-- **`journal/experiments.md`** — the run log and the hyperparameter tables. Below.
-- **`journal/notes.md`** — what results mean, open questions, and predictions written
-  *before* the run that tests them.
+- **`journal/experiments.md`** — the run log **and the reasoning about it**. An entry is one
+  thing that happened: a run, an eval, or an analysis. Reasoning that spans runs lives in the
+  entry it most belongs to, and a hypothesis a run rejected becomes an **Update** on that
+  run's entry. There is deliberately no separate `notes.md` — see `tune-loop` step 6 for why
+  a second file holding the read of the same run drifts.
 - **`journal/prompts.md`** — every prompt style considered, in full. Below.
 - **`journal/rewards.md`** — every reward shape considered, and **what the task metric did
   under it**. Below.
@@ -380,89 +389,34 @@ Three rules, and the third is the one that earns the file:
 block.** That is redesign, not tuning, and it needs a re-measured baseline — see the
 hyperparameter tables below.
 
-### The hyperparameter tables
+### The hyperparameter tables and the entry format — owned by `tune-loop`
 
-Three kinds of setting, and conflating them is what makes a tuning log unreadable:
+**Not restated here.** [`tune-loop`](../tune-loop/SKILL.md) defines the three kinds of
+setting (frozen control / axis / observed), the block structure and when to open a new one,
+the coverage table, and the entry format every `journal/` file uses — see its step 6.
+[`tune-report`](../tune-report/SKILL.md) defines the ranked grid at the end.
 
-| Kind | What it is | Example |
-|---|---|---|
-| **Frozen control** | held constant on purpose. Changing one **invalidates every earlier row** | model, quantization, adapter rank, prompt style, reward shape, eval protocol |
-| **Axis** | what you are actually searching | learning rate, prompts/step, k, cap, temperature |
-| **Observed** | not set by anyone — a *consequence* of the two above | step time, peak memory, dead-group fraction, truncation rate, mean length |
+This skill's obligation is narrower: **leave the first block's header filled in** before
+tuning starts — frozen controls, the fixed experiment budget, the L6 baseline, and the noise
+floor with an explicit note on whether it was measured or is only the eval set's sampling
+error.
 
-So `journal/experiments.md` is organised as **one block per frozen-control set, and inside
-it a table searching the axes.** A block is a self-contained question: *given this setup,
-what are the best axis values?* Rows inside a block are comparable to each other and to
-nothing outside it.
+Two things this skill does own, because they are specific to RL rather than to searching:
 
-**When a frozen control changes, start a new block.** Do not append to the old one. This is
-the whole point — it is what stops the failure where a baseline silently moves and every
-earlier number quietly stops meaning what it used to.
-
-```markdown
-## Block 2 — prompt:search · shape:solve_dominant
-
-**Opened 2026-08-03 14:02.** Last row 2026-08-03 17:41.
-**Frozen:** qwen-3b · bf16 · LoRA r=16 · prompt `search` · reward `solve_dominant`
-**Eval:** greedy, cap 1024, 200 held-out problems, noise floor ±0.01
-**Baseline under these controls:** 0.115
-**Changed from block 1:** prompt terse -> search, shape graded -> solve_dominant.
-Block 1 numbers are not comparable to these.
-
-### Axis search
-
-| started | run | lr | prompts/step | k | cap | temp | **task metric** | step s | dead grp | trunc | note |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| 08-03 14:02 | `brave-mantis` | 5e-5 | 8 | 8 | 1024 | 1.0 | **0.140** | 16 | 0.02 | 0.04 | first real movement |
-| 08-03 15:19 | `calm-heron`   | 1e-4 | 8 | 8 | 1024 | 1.0 | **0.155** | 16 | 0.03 | 0.05 | best so far |
-| 08-03 17:41 | `witty-otter`  | 5e-5 | 4 | 8 | 1024 | 1.0 | 0.121 | 9 | 0.02 | 0.04 | halving batch costs ~0.02 |
-
-### Coverage within this block
-
-| axis | tried | best | untested |
-|---|---|---|---|
-| learning rate | 5e-5, 1e-4 | 1e-4 | 2e-4 — is it still climbing? |
-| prompts/step | 4, 8 | 8 | 16 |
-| k | 8 | — | 4, 16 |
-| cap | 1024 | — | 768 (cheaper) |
-```
-
-Three rules make the structure hold:
-
-- **The block header states its own baseline**, measured under its own frozen controls. A
-  baseline from a different block is not a baseline.
-- **An axis with one value tried is untested, not settled.** The `untested` column is what
-  stops a default from being mistaken for a decision.
-- **Observed columns sit beside the metric, never in the coverage table.** They are outputs.
-  They explain a ranking; they are not something you search over.
-
-Which axis fields are non-negotiable on a run row, and why they are duplicated from the
-config snapshot:
-
-| Field | Why it is on the row |
-|---|---|
-| **started, to the minute** | the run name already encodes it, and nobody decodes a name. A column is what makes "which of these ran after the fix" and "how long was the gap" answerable at a glance, and it is what lets a block state when it opened and when it was last touched |
-| learning rate | the axis you will sweep most |
-| **prompts per gradient step** | the *derived* batch number, not per-device x accumulation — the config's figure is routinely several times larger than the real one |
-| rollouts per prompt (k) | trades solves-per-group against number of groups |
-| **generation cap** | sets step time, and gates truncation — a cap change silently moves the reward |
-| **temperature** | exploration; interacts with k, and a run at a different temperature is a different experiment |
-
-Adapter rank, reward shape and prompt style live in the **block header**, not the row — they
-are frozen controls, and a run that changed one belongs in a different block.
-
-The config snapshot in `output/configs/` holds all of this and more. The row exists anyway,
-because a table you can read is what makes you *notice* two runs differ; a snapshot you have
-to `diff` is what you reach for once you already suspect it.
-
-**Queue** — what is next, the hypothesis it tests, **what would falsify it**, and the cost.
-A queued experiment with no falsifier is a chore, not an experiment.
-
+- **`journal/prompts.md` and `journal/rewards.md` exist at all**, and what goes in them.
+  Both are below.
+- **Which figures a run's entry carries.** Panels follow the task pack the project declares
+  in [`ml_logging`](../ml_logging/SKILL.md)'s `METRIC_SPEC.md` — `rl` gives reward and
+  entropy, `grpo` adds the within-group spread, `rlvr` adds the verifier decomposition — so
+  the plot set is derived rather than hand-listed. Entropy and the dead-group fraction are
+  different units and get **separate charts**; a dual-axis plot of the two is the single
+  most common way to make unrelated series look correlated.
 ### After every experiment
 
-Not at the end of the day. Append the row, then write the read of it in `journal/notes.md` —
-what moved, what did not, and whether it confirms or kills the prediction that was written
-before it ran. A result that contradicts the prediction is the most valuable output
+Not at the end of the day. Write the entry, including its **Summary** — what moved, what did
+not, and whether it confirms or kills the prediction written before the run. The closing
+conditions are at [`tune-loop`](../tune-loop/SKILL.md) step 6; the entry is not done until
+the coverage table matches it. A result that contradicts the prediction is the most valuable output
 available and it is the one most easily rationalised away an hour later.
 
 **Record failures with the same weight as successes.** A run that closes a door
