@@ -269,6 +269,18 @@ in the W&B table, which is how a broken sweep gets read as a real result.
 `finish()` writes `summary.json` and closes W&B on every path, including the
 exception path.
 
+**Everything in `summary.json` reaches W&B's run summary as well.** `finish()` pushes the
+whole summary dict up *before* closing, not only to disk. `run/status` is set after the last
+`set_summary` call, so a logger that writes locally and then closes W&B leaves every run on
+the dashboard looking identical whether it completed, crashed or OOM'd — the exact failure
+this section exists to prevent, reintroduced one layer down.
+
+That includes metrics computed in a **separate process**. A held-out eval that runs after
+training attaches to the run — `wandb.init(id=..., resume="allow")`, with the id recorded in
+`summary.json` at init — and writes its result into that run's summary. Otherwise the
+dashboard carries the training proxy and not the headline metric, and every ranking has to
+be read out of local files whose path only one person knows.
+
 Out of scope for this skill: resume and checkpoint retention policy. Those
 are project decisions.
 
