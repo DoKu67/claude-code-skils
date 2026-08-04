@@ -27,6 +27,9 @@ History only — the files are gone, the rules live in the skills below, and `gi
 
 | candidate | became | promoted | note |
 |---|---|---|---|
+| summary-reaches-wandb | [`ml_logging`](../skills/ml_logging/SKILL.md) | 2026-08-03 | direct request; `run/status` and the headline metric were reaching disk but not the dashboard |
+| wandb-mode-always-online | [`ml_logging`](../skills/ml_logging/SKILL.md) | 2026-08-03 | direct request; `offline` is the fallback, never a config choice |
+| journal-path-for-experiments-md | [`ml_logging`](../skills/ml_logging/SKILL.md) + [`rl-env-mvp`](../skills/rl-env-mvp/SKILL.md) | 2026-08-03 | direct request; the two skills disagreed on where the run log lives |
 | commit-at-checkpoints | [`checkpoint-commits`](../skills/checkpoint-commits/SKILL.md) | 2026-08-03 | below threshold on direct instruction; overrides a harness default |
 | consistency | [`consistency`](../skills/consistency/SKILL.md) | 2026-08-03 | direct request |
 | prior-work | [`prior-work`](../skills/prior-work/SKILL.md) | 2026-08-03 | direct request; first live use of its own method |
