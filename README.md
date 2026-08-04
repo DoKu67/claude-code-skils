@@ -24,9 +24,39 @@ and then follows it. There is no runtime, no framework, and — with one excepti
 | `skills/` | Active skills. Each is a directory with a `SKILL.md`, plus optional reference files |
 | `skills-staging/` | Candidate rules and budding skills that have **not** been promoted. Nothing here is loaded. A queue, not an archive — once promoted, a candidate's file is deleted and its provenance lives in the promotion commit |
 | `skills-disabled/` | Skills kept for reference but not active |
+| `scripts/` | Machine setup that must travel with a clone — currently the background sync (see below) |
 
-Only these three directories are tracked. Everything else under `~/.claude` — session
-transcripts, memories, cache — is excluded by an allowlist `.gitignore`.
+Only these four directories are tracked. Everything else under `~/.claude` — session
+transcripts, memories, cache — is excluded by an allowlist `.gitignore`. That allowlist is
+also the safety property behind the sync: `git add -A` physically cannot stage a transcript
+or a credential, because nothing outside the four is visible to git in the first place.
+
+## Keeping machines in sync
+
+A background timer commits and pushes skill changes every 6 hours, so edits made on one
+machine reach the others without anyone remembering to push. It is installed **per machine**,
+once, and the configuration lives in this repo so a clone carries it:
+
+```
+git clone git@github.com:DoKu88/claude-code-skils.git ~/.claude   # or pull into an existing ~/.claude
+~/.claude/scripts/install-sync.sh
+```
+
+| File | Role |
+|---|---|
+| `scripts/sync-skills.sh` | The sync itself. Commits tracked changes, rebases on the remote, pushes. A no-op when nothing changed |
+| `scripts/install-sync.sh` | Installs the timer — a systemd user timer on Linux, a launch agent on macOS. Idempotent; `--uninstall` removes it |
+
+Two properties are deliberate. **It never destroys work**: no `reset --hard`, no `clean`, no
+`restore`, no force-push — when a rebase conflicts it aborts, leaves the local commit intact
+and unpushed, and says so, because a sync that resolves a conflict on its own is a sync that
+can silently lose an afternoon. And **a missed run is caught at boot**: the timer is a
+calendar timer with `Persistent=true`, so a machine that was powered off through a scheduled
+slot syncs on next boot rather than waiting for the following one.
+
+Check on it with `systemctl --user list-timers claude-skills-sync.timer` and
+`journalctl --user -u claude-skills-sync.service` (Linux), or
+`~/Library/Logs/claude-skills-sync.log` (macOS).
 
 ## The self-improvement loop
 

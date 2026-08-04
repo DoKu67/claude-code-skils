@@ -6,4 +6,5 @@
 !/skills/
 !/skills-staging/
 !/skills-disabled/
+!/scripts/
 skills/**/.backups/

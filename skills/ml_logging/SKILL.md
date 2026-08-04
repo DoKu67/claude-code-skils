@@ -29,6 +29,12 @@ W&B is a mirror. A logging failure never takes down a training run — every W&B
 call is wrapped, `online` degrades to `offline` on an init error, and the run
 continues.
 
+**`wandb_mode` is `online`.** Always, in every config. `offline` and `disabled` exist as
+the automatic fallback above, not as settings to choose — a config that starts at `offline`
+means the run never reaches the dashboard and the loss is noticed hours later, if at all.
+A genuinely unavailable network is already handled: `online` degrades on its own, and
+`wandb sync <run_dir>` backfills the full history afterwards.
+
 **Declare metrics up front.** A task pack's metrics are all declared at init and
 logged as `nan` when unavailable. A missing metric must show as a gap in a panel,
 never as a metric that silently does not exist.
@@ -73,7 +79,8 @@ results/runs/08_02_15_42_33_witty-otter_qwen3-4b_grpo/
     checkpoints/
 configs/
     08_02_15_42_33_witty-otter_qwen3-4b_grpo.yaml   # same file, findable by run name
-experiments.md        # one entry per run, linking its configs/ file
+journal/
+    experiments.md    # one entry per run, linking its configs/ file
 ```
 
 **`config.yaml` is the resolved config, not the file the user passed.** It is
@@ -98,7 +105,7 @@ diffable. `diff configs/A.yaml configs/B.yaml` answers "what was actually
 different between these two runs" in one command, rather than by reading a
 changelog and trusting it to be complete.
 
-## Every experiment gets a row in `experiments.md`
+## Every experiment gets a row in `journal/experiments.md`
 
 A run that produced a number and was not written down did not happen — it gets
 re-run in three weeks by someone who no longer remembers the result. Each entry
@@ -126,7 +133,7 @@ config, add it; when a project's config schema lacks it, extend the schema.
 logging:
   wandb_project: my-project
   wandb_entity: null          # null → default entity
-  wandb_mode: online          # online | offline | disabled
+  wandb_mode: online          # always; offline/disabled are the fallback, not a choice
   tags: [ablation, kl-sweep, 8xh100]
   group: grpo-kl-sweep        # null → ungrouped
   job_type: train             # train | eval | sweep | debug
