@@ -4,7 +4,7 @@ target: checkpoint-commits
 kind: trigger
 signal: explicit
 status: staged
-occurrences: 1
+occurrences: 2
 threshold: 3
 ---
 
@@ -36,3 +36,9 @@ formatting preference and not a trigger problem at all.
 - 2026-08-04 · session 1baba5b8 · explicit · *"please commit after every experiment is ran"*
   — said while setting up an unattended overnight tuning session, after four completed runs
   had been committed in two batches rather than one commit each.
+- 2026-08-04 · session 1baba5b8 · correction · *"can you please update all documents and
+  commit for this latest run?"* — said **after** the rule above had been given and accepted.
+  Block 2's result, the main finding of the overnight session, had been evaluated ~1 h
+  earlier and sat with neither its journal entry nor its commit. The instruction had been
+  received, acknowledged, and still did not fire on the next run that completed, which is
+  what makes this a trigger problem rather than a missing rule.

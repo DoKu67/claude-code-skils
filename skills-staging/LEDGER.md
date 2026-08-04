@@ -24,8 +24,8 @@ Rejected candidates keep their file forever, so the same idea is never re-propos
 | [orphan-skill-finding](orphan-skill-finding.md) | `skill-audit` | 1 / 1 | explicit | **ready to promote** — direct request | 2026-08-04 |
 | [idle-memory-is-a-finding](idle-memory-is-a-finding.md) | `tune-preflight` | 2 / 3 | correction | staged — user had to raise it twice in one session | 2026-08-04 |
 | [shrink-the-floor-before-buying-seeds](shrink-the-floor-before-buying-seeds.md) | `tune-loop` | 1 / 3 | correction | staged | 2026-08-04 |
-| [commit-after-run-not-firing](commit-after-run-not-firing.md) | `checkpoint-commits` | 1 / 3 | explicit | staged — **trigger** problem; diagnose before rewording | 2026-08-04 |
-| [launch-before-writing-up](launch-before-writing-up.md) | `tune-loop` | 1 / 3 | correction | staged | 2026-08-04 |
+| [commit-after-run-not-firing](commit-after-run-not-firing.md) | `checkpoint-commits` | 2 / 3 | correction | staged — **trigger**; 2nd occurrence came *after* the rule was given and accepted. Diagnose before rewording | 2026-08-04 |
+| [launch-before-writing-up](launch-before-writing-up.md) | `tune-loop` | 2 / 3 | explicit | staged — **trigger**; reclassified from rule. Consider merging with `commit-after-run-not-firing` | 2026-08-04 |
 
 ## Promoted
 
