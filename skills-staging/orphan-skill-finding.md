@@ -38,6 +38,24 @@ day old and stays unmeasurable until November. The invocation count is the same 
 available now, and it does not depend on the calendar. Same for `stale candidate`, which has
 the identical 90-day problem.
 
+**Prior art, surveyed 2026-08-04.** Three mechanisms worth taking:
+
+- **Sphinx** — `orphan: true` declared in the skill's own frontmatter is the exemption, so a
+  skill with zero inbound links and no marker is the finding. See
+  [[new-skill-needs-an-inbound-caller]].
+- **Vulture** — reports dead code with a **confidence score of 60–100%** and an
+  auto-generated whitelist rather than a binary verdict. Our detector needs the same: the
+  static check run this session produced 9 hits, all worked examples, so a binary
+  violation/clean output would have been 100% noise.
+- **SEO crawlers** — an orphan cannot be found from the link graph alone; discovery requires a
+  **second inventory** (sitemaps, analytics). Ours is the transcript invocation count. The
+  link graph says a path exists; only the counts say anyone walked it.
+
+**Cadence matters more than detection.** Wikipedia detects orphans perfectly well — 8.8M of
+them, ~15% of all articles — and de-orphanizes at roughly **0.5% per month**. Detection
+without a forcing cadence produces a backlog nobody works. So the every-10-promotions trigger
+is the load-bearing part of this candidate, not the check.
+
 **Boundary.** Zero invocations is not automatically a defect — `tune-report` has never fired
 because no sweep has run to completion, which is a fair reason, and the user has explicitly
 chosen to leave it unused and not deprecate it while evidence accumulates (2026-08-04). The
