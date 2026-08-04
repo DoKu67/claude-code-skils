@@ -97,9 +97,24 @@ which is the failure mode that makes accumulated context worse than none.
 ~/.claude/projects/<cwd-slug>/*.jsonl     # one JSON object per line
 ```
 
-User turns are the records with `type == "user"` carrying text content. Filter to those and
-read them oldest to newest — that is the pass below, done from the record rather than from
-memory.
+User turns are the records with `type == "user"` carrying text content — **minus everything
+the harness injects through the same channel.** Exclude any record whose text begins with:
+
+| Prefix | What it actually is |
+|---|---|
+| `Base directory for this skill:` | a skill being loaded — **its text is not a signal** |
+| `<` | a tool result, or a `<system-reminder>` |
+| `[Image:` | an attachment marker |
+| `(Re-invocation of` | a slash command re-fired |
+
+Filter, then read oldest to newest — that is the pass below, done from the record rather than
+from memory.
+
+**Verify the count before trusting the pass.** On the session that first ran this, the naive
+predicate returned 74 records and the correct one 34. A pass that skips the check is reading
+twice what it should, and the bulk of the excess is skill text — which would make a skill's
+own words look like something the user said, and let a skill argue for its own expansion.
+That is the boundary above, breached one layer down.
 
 In a long session the early user turns fall out of context, so a pass built from recall
 checks the turns you happen to still remember, which is exactly the set least likely to hold
