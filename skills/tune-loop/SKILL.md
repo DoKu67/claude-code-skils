@@ -214,6 +214,12 @@ Conditions, not actions — a check that ran and was not read has not been satis
 Only then step 7. A verdict decided against a half-written record is a verdict about the
 record.
 
+**When the record or the config change touched more than one file, run
+[`consistency`](../consistency/SKILL.md)** rather than checking conditions 3 and 5 by eye.
+Those two are a hand-rolled subset of that sweep, and the failure they miss is the one where
+a frozen control changed and only some of the files naming it were updated — which makes
+every row above compare against a control that is no longer what the header says it is.
+
 ### 7. Decide
 
 One of five, and say which out loud:

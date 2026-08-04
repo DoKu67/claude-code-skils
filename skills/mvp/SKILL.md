@@ -124,6 +124,8 @@ At the end of a stage, report in this shape:
 
 Lead with anything that disproved an assumption. That is the highest-value output of working this way, and it is worth nothing if it arrives late.
 
+**Before reporting a stage complete, if the change touched more than one file, run [`consistency`](../consistency/SKILL.md).** A stage that renamed something, changed a default, or moved a boundary has almost certainly left stale references behind — and they are cheapest to fix now, before the next stage builds on them.
+
 ## Moving between stages
 
 Say which stage you are in whenever it is not obvious, and never silently skip one — going from a working MVP straight to design patterns is the failure this style exists to prevent. Stage 3 on one module while another is still at stage 2 is normal and expected; modules mature at their own pace.
