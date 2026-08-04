@@ -5,7 +5,8 @@ description: Summarize where something stands in a fixed five-section format —
 
 # tldr
 
-One format, always the same five sections, in this order. The value is in the fixed shape —
+One format for any task — a refactor, an investigation, a migration, a training run —
+always the same five sections, in this order. The value is in the fixed shape —
 a reader who has seen one knows exactly where to look for the number, the blocker and the
 next action, and does not have to read prose to find out whether there is one.
 
@@ -77,6 +78,27 @@ Three rules against it:
 
 ---
 
+## Where to look
+
+**Read the state; do not recall it.** A TLDR written from the conversation over-reports
+done-ness — the conversation holds intentions as well as outcomes, and in hindsight they read
+alike. This changes what you read *before* writing, not how much you write.
+
+| Source | Answers |
+|---|---|
+| `TaskList` | what is in flight, what is blocked, what actually finished |
+| `git status --short`, `git log --oneline` | what landed versus what is still uncommitted |
+| Background tasks and monitors | what is still running, however finished it feels |
+| `PLAN.md` and the project's journal | the *Goal* in the user's own words; the numbers for *Figures* |
+| `~/.claude/skills-staging/LEDGER.md` | decisions waiting on the user — *Blockers* they have not seen |
+
+Not every source exists in every project, and a missing one is not a gap. **Inferring a
+source's contents instead of opening it is.** The two that change the output most:
+uncommitted work belongs in *Next Steps* rather than *Summary*, and a still-running task is
+never reported as its expected result.
+
+---
+
 ## Example
 
 ```markdown
@@ -114,9 +136,10 @@ Figures:
 
 ## Out of scope
 
-**This skill prints; it does not write files.** A durable record belongs to
-[`notes`](../notes/SKILL.md) — the project's journal: `experiments.md` for the
-run log. Write one to a file only when asked.
+**This skill prints; it does not write files.** Where a durable record belongs depends on
+the project — an entry's Summary in `journal/experiments.md` if it has a journal per
+[`notes`](../notes/SKILL.md), `PLAN.md` for a decision, a commit message otherwise. Write to
+a file only when asked.
 
 When the subject is a hyperparameter search, the deliverable is
 [`tune-report`](../tune-report/SKILL.md), not this — its grid and coverage tables are the

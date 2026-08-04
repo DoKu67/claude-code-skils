@@ -17,7 +17,6 @@ Rejected candidates keep their file forever, so the same idea is never re-propos
 | candidate | target | occ / threshold | signal | status | last seen |
 |---|---|---|---|---|---|
 | [load-companion-skill-at-its-trigger](load-companion-skill-at-its-trigger.md) | `tune-loop` | 3 / 3 | correction | **REJECTED 2026-08-03** — reached threshold and falsified itself; the defect was a check run and ignored, not a skill unloaded. Kept so it is never re-proposed | 2026-08-03 |
-| [refresh-coverage-with-every-row](refresh-coverage-with-every-row.md) | `tune-loop` | 1 / 3 | correction | staged | 2026-08-03 |
 | [name-the-path-of-written-records](name-the-path-of-written-records.md) | `notes` | 2 / 3 | correction | staged | 2026-08-03 |
 | [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
 
@@ -28,6 +27,8 @@ History only — the files are gone, the rules live in the skills below, and `gi
 
 | candidate | became | promoted | note |
 |---|---|---|---|
+| tldr-reads-the-state | [`tldr`](../skills/tldr/SKILL.md) | 2026-08-03 | direct request; the format was general, its references were not, and nothing said where state lives |
+| refresh-coverage-with-every-row | [`tune-loop`](../skills/tune-loop/SKILL.md) | 2026-08-03 | below threshold (1/3) — went live as closing condition 3 of step 6 while the entry format was being written, rather than as its own promotion |
 | summary-reaches-wandb | [`ml_logging`](../skills/ml_logging/SKILL.md) | 2026-08-03 | direct request; `run/status` and the headline metric were reaching disk but not the dashboard |
 | wandb-mode-always-online | [`ml_logging`](../skills/ml_logging/SKILL.md) | 2026-08-03 | direct request; `offline` is the fallback, never a config choice |
 | journal-path-for-experiments-md | [`ml_logging`](../skills/ml_logging/SKILL.md) + [`rl-env-mvp`](../skills/rl-env-mvp/SKILL.md) | 2026-08-03 | direct request; the two skills disagreed on where the run log lives |
