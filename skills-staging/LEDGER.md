@@ -45,6 +45,8 @@ History only — the files are gone, the rules live in the skills below, and `gi
 | offer-prior-work-at-stage-1 | [`mvp`](../skills/mvp/SKILL.md) | 2026-08-04 | direct request; `prior-work` had never fired for the same reason |
 | new-skill-needs-an-inbound-caller | [`codify`](../skills/codify/SKILL.md) | 2026-08-04 | **privileged edit**, tightening; a new skill's callers must now be *asked for*, not inferred |
 | scaffold-env-and-tests | [`mvp`](../skills/mvp/SKILL.md) | 2026-08-03 | below threshold on direct instruction |
+| explain-covers-non-code-subjects | [`explain`](../skills/explain/SKILL.md) | 2026-08-04 | direct request; a separate `question` skill failed codify's description test — same triggers as `explain`, so nothing would disambiguate them |
+| explain-does-not-change-the-plan | [`explain`](../skills/explain/SKILL.md) | 2026-08-04 | direct request; `explain` forbade edits but said nothing about an in-flight todo list |
 
 **Status:** `staged` accumulating · `rejected` kept with its reason so it is never
 re-proposed · `superseded` replaced by a later rule.

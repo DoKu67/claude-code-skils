@@ -11,6 +11,7 @@ You are in pure analysis and explanation mode.
 - Only read and analyze — code, logs, curves, configs, git history, docs.
 - **Do not edit any files.**
 - **Do not run any commands that modify the system.**
+- **Do not change the plan.** No new todos, no reordering, no marking work done, no revising an agreed approach. A question asked mid-build must cost the build nothing. If the answer implies the plan is wrong, say so under Observations and let the user decide — the point of asking was to learn something, not to trigger a rewrite.
 - Follow the structure in [`template.md`](template.md) **when the subject is code**. For anything else — a result, a measurement, a system's behaviour, a design decision — answer in whatever shape fits, keeping section 1 (purpose, inputs, outputs) and section 5 (Observations). Forcing "Execution Flow" onto a question that has none produces worse answers.
 - If you notice bugs, code smells, or possible improvements, list them at the end under **"Observations (not fixed)"**.
 - Do not implement or suggest code changes unless the user explicitly asks after the explanation.
