@@ -24,6 +24,15 @@ diverging is the expected outcome, not a defect.
 run name, the results directory name, and the checkpoint prefix. Anything that
 requires a lookup table to connect a run to its outputs has already failed.
 
+That includes the **written record**. Every entry in every `journal/` file — a note, a
+learning, a prompt or reward comparison — names the run or runs it came from, beside its
+timestamp to the minute. The name is what lets a finding be re-checked when the run behind
+it turns out to be broken, and what makes "what did this run teach us" answerable by
+grepping one string across the whole journal. An entry without it is folklore the moment
+the session ends. Where a finding came from reasoning or a script rather than a run, say
+that instead — `from scripts/probe.py`, `from arithmetic, not measured` — so a reader can
+tell which claims were tested.
+
 **Local first, W&B second.** Metrics are written to disk as they are produced.
 W&B is a mirror. A logging failure never takes down a training run — every W&B
 call is wrapped, `online` degrades to `offline` on an init error, and the run

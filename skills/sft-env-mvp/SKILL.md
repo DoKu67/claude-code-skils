@@ -184,6 +184,11 @@ a `started` column and every block header states when it opened and when it was 
 to; a rule that only reaches the paragraphs leaves the run log, which is the part actually
 compared, undated.
 
+**Every entry also names the run it came from**, per
+[`ml_logging`](../ml_logging/SKILL.md)'s one-name rule — the run name is the join key across
+the whole record, and it is what makes "what did this run teach us" answerable by grepping
+one string across `journal/`. Findings from a script or from reasoning name that instead.
+
 ---
 
 ## Style

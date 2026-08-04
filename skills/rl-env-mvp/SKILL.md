@@ -273,6 +273,13 @@ They live in one directory because they are read together and cross-reference co
 `PLAN.md` stays at the root — it is the entry document, not a record. `ml_logging` places
 `journal/experiments.md` in the same directory, so there is one location and no override.
 
+**Every entry in every one of these files carries its timestamp to the minute *and* the run
+it came from** — per [`ml_logging`](../ml_logging/SKILL.md)'s one-name rule, the run name is
+the join key across the whole record. That is what makes "what did `deep-shrew` teach us"
+answerable by grepping one string across `journal/`, and what lets a finding be retracted
+when the run behind it turns out to be broken. For a finding that came from a script or from
+reasoning, name that instead — `from scripts/probe.py`, `from arithmetic, not measured`.
+
 Timestamp every entry to the **minute**, not the day. A day-resolution log cannot
 reconstruct which config produced which number when three runs happened in an afternoon.
 **This applies to table rows too, not only prose entries** — every run row carries a

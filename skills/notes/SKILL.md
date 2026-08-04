@@ -105,6 +105,12 @@ what is next; keep the reasoning in `notes.md` and let the queue link to it.
 Traps, not conclusions. Each entry: what happened, the metric or error that identified
 it, and the fix.
 
+**Headed with its date to the minute and the run it came from**, exactly as `notes.md` is.
+A trap found during a named run is re-checkable; one attributed to nobody is not, and it is
+the entry most likely to be quietly wrong later — the fix was version-specific, or the tell
+only shows under that configuration. Where the trap came from a script or from reasoning
+rather than a run, name that instead.
+
 Two things earn their place beyond the fix itself:
 
 - **The tell.** What distinguished this failure from a normal one — "`policy/entropy` 9.04
