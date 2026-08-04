@@ -588,7 +588,7 @@ Its first question is **wrong rule or wrong trigger** — a rule that keeps bein
 usually a `description` problem, and rewriting the body of a skill that never loaded produces
 no change. Findings include never-fired rules (retired to git history), contradictions
 (newest wins, with an explicit supersede — a skill is a contract and must not carry dead
-rules), rules that drifted into naming a library version, and skills past a ~200-line cap.
+rules), rules that drifted into naming a library version, and skills past a ~500-line cap.
 **Caps are forcing functions**: breaching one triggers an audit rather than an append. The
 audit adds nothing; a new rule it discovers goes through staging like anything else. It may
 never weaken its own constraints.

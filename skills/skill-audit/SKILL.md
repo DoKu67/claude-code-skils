@@ -51,7 +51,7 @@ any value.
 | **Contradiction** | Two rules cannot both be followed | Newest wins. Supersede the older explicitly, naming the newer |
 | **Duplication** | The same rule in two skills, worded differently | Keep it in the skill that owns the job; delete the other and link |
 | **Drifted into a fact** | A rule naming a library version, a model id, a path | Rewrite as a process rule, or retire it — content rules go stale silently |
-| **Over cap** | A skill past ~200 lines or ~12 rules | Split, or cut the weakest rules. **Hitting the cap triggers an audit, never an append** |
+| **Over cap** | A skill past ~500 lines or ~12 rules | Split, or cut the weakest rules. **Hitting the cap triggers an audit, never an append** |
 | **Diluted description** | The description has grown to cover several jobs | Split the skill; each half gets a sharp trigger |
 | **Stale candidate** | Staged 90+ days at 1 occurrence | Reject with reason "did not recur" — kept, not deleted |
 | **Single-project rule** | A global rule that only ever applies to one repo | Move to that repo's `CLAUDE.md` |
@@ -72,13 +72,18 @@ in place forever: a notes file is a *story* and its history is the point; a skil
 
 | Surface | Cap | On breach |
 |---|---|---|
-| One skill | ~200 lines, ~12 rules | Audit it — split or cut. Do not append |
+| One skill | ~500 lines, ~12 rules | Audit it — split or cut. Do not append |
 | Staging | ~30 open candidates | Sweep the stale ones |
 | One promotion | 20 lines | It is a budding skill, not a delta |
 
 The caps are forcing functions rather than limits. Without one, nothing ever prunes, because
 pruning is never the most urgent thing in any individual session. A cap makes the audit
 arrive on a schedule set by the accumulation itself.
+
+The line cap was raised 200 → 500 on 2026-08-04 at the user's request, while the skill set
+is still growing and an early split would fragment jobs whose boundaries have not settled.
+It is provisional — revisit once the set stops changing shape. The ~12-rule cap is unchanged
+and is now the binding one.
 
 ---
 
@@ -101,8 +106,8 @@ arrive on a schedule set by the accumulation itself.
 rules. Both correct in context; neither says so. → one clarifying line in each, and it is a
 *new* rule, so it goes through staging.
 
-**Over cap (1)** — `rl-env-mvp` at 452 lines. Its reference files are already split; the
-body has absorbed tuning guidance that `tune-loop` now owns. Proposed cut: 60 lines.
+**Over cap (0)** — none. `rl-env-mvp` at 475 lines is closest, 25 under cap; its body has
+absorbed tuning guidance that `tune-loop` now owns, so the next append breaches. Cut: 60.
 
 **No action:** 8 skills unchanged.
 ```
