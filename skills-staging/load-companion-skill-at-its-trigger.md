@@ -3,9 +3,26 @@ id: load-companion-skill-at-its-trigger
 target: tune-loop
 kind: trigger
 signal: correction
-status: staged
-occurrences: 2
+status: rejected
+occurrences: 3
 threshold: 3
+rejected: 2026-08-03
+---
+
+**REJECTED 2026-08-03 by the user:** *"Reject load-companion-skill-at-its-trigger. If this
+comes up again later we'll rediscover the pattern."*
+
+The candidate reached 3/3 and its own falsification test fired at the same moment. The
+third occurrence landed against `consistency`, whose description already says *"Run it
+before reporting a multi-file change as done"* — no wording makes that clearer — and the
+failure was not a skill going unloaded but a check that **ran and had its output ignored**.
+A rule saying "load the companion" would not have caught it. Rejected rather than reworded,
+so the pattern is rediscovered from fresh evidence if it recurs rather than being fitted to
+a diagnosis that was already shown wrong.
+
+**Kept forever so it is never re-proposed.** The three occurrences below stand as evidence
+for whatever replaces it.
+
 ---
 
 **Threshold raised 1 → 3 by the user, 2026-08-03**, along with every non-direct-request
