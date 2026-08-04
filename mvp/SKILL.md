@@ -60,6 +60,7 @@ Rules while building:
 - **Run it constantly.** After every meaningful piece, execute it and read the actual output. Report real output, never what it should have printed. Code that has not run has proven nothing.
 - **Every module runs on its own.** Put a `__main__` at the bottom that exercises the module against real input and prints what it produced. It is how a component gets verified before anything depends on it, and it keeps earning its place afterwards as the fastest way to see what the module actually does — faster than reading it, and it cannot go stale the way a comment does.
 - **Hardcode freely.** Paths, thresholds, model names — inline, with a comment marking what will need lifting later.
+- **Environment and test command exist before the first component.** A reproducible environment file, and a test runner that executes an empty suite green. It costs two minutes at the start and is the difference between a project someone else can run and one they cannot.
 - **Flat over abstract.** No base classes, no dependency injection, no strategy objects, no premature helpers. One function that does the thing beats three that arrange to do the thing.
 - **No error handling beyond what keeps it running.** Never `try`/`except` around something you don't yet understand — the crash and its traceback are the fastest description of your problem you will get.
 
