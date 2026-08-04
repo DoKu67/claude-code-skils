@@ -1,6 +1,7 @@
 # Explanation Template
 
-Use this structure for every explanation:
+Use this structure when the subject is code. For a non-code subject, keep sections 1 and 5
+and let the middle take whatever shape the answer needs.
 
 ### 1. High-level Purpose
 One or two sentences explaining what this code is responsible for.
