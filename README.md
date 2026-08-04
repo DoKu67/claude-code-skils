@@ -7,6 +7,16 @@ themselves improve from use.
 Skills are markdown files. Claude loads one when the situation matches its `description`,
 and then follows it. There is no runtime, no framework, and — with one exception — no code.
 
+## The skills
+
+| Category | Skills | What the category covers |
+|---|---|---|
+| [Development](#development) | `mvp`, `coding-standards`, `consistency`, `explain`, `call-tree`, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, the house rules, and the sweeps that say a change is actually done |
+| [Version control](#version-control) | `checkpoint-commits` | Keeping work safe as it is made, and deciding what shape the history ends up in |
+| [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr` | Finding out what already exists, and keeping the written record of what was tried and what it meant |
+| [Fine-tuning and RL](#fine-tuning-and-reinforcement-learning) | `sft-env-mvp`, `rl-env-mvp`, `tune-loop`, `tune-preflight`, `run-triage`, `tune-report`, `hparam-priors`, `escalate` | A pipeline: scaffold an environment, prove it works, then run the hyperparameter search as a recorded loop |
+| [Self-improvement](#self-improvement) | `reflect`, `codify`, `skill-audit` | Turning corrections into durable rules, and pruning the ones that never fire |
+
 ## Layout
 
 | Directory | Holds |
@@ -56,14 +66,20 @@ It is not throwaway work — the code written in stage 2 is the code that ships,
 then faster, then scalable, across the same files.
 
 ### How it works
-Five stages. **Stage 1** writes a capability list plus an explicit out-of-scope list, then a
-one-page plan naming the decisions, the build order, and the single risk most likely to
-invalidate everything. **Stage 2** implements the simplest version, one component at a time,
-stopping at each for review — hardcode freely, stay flat, run it constantly, and never wrap
-something you don't understand in `try`/`except`. **Stage 2.5** is a subtraction-only pass:
-delete narration comments, dead code, and any abstraction with one caller. **Stage 3**
-designs, but only after measuring, and only where the measurement points. Ordering rule
-throughout: build so the cheapest disconfirming evidence comes first.
+Five stages:
+
+- **Stage 1 — Requirements.** A capability list plus an explicit out-of-scope list, then a
+  one-page plan naming the decisions, the build order, and the single risk most likely to
+  invalidate everything.
+- **Stage 2 — Make it work.** The simplest version, one component at a time, stopping at each
+  for review — hardcode freely, stay flat, run it constantly, and never wrap something you
+  don't understand in `try`/`except`.
+- **Stage 2.5 — Make it readable.** A subtraction-only pass: delete narration comments, dead
+  code, and any abstraction with one caller.
+- **Stage 3 — Make it scale.** Design, but only after measuring, and only where the
+  measurement points.
+
+Ordering rule throughout: build so the cheapest disconfirming evidence comes first.
 
 ## coding-standards
 
@@ -151,6 +167,34 @@ reports review findings and manual integration steps.
 ### How it works
 Invoked by name only — it deliberately does not trigger on general coding requests. Kept in
 `skills-disabled/` for reference.
+
+---
+
+# Version control
+
+## checkpoint-commits
+
+### Description
+Commit at each completed checkpoint without being asked, then offer — without blocking — to
+keep those commits, squash a chosen set, or fold them into one.
+
+### What it does
+Makes the safety net automatic. Work that is not committed is work that can be lost, and
+**asking permission first is what makes a safety net useless** — so the commit and the
+question about history are separated: the commit happens immediately, the shape of the
+history is decided later, at leisure.
+
+### How it works
+One commit per large task is the heuristic, and the moments that earn one are the moments
+something *became true* — a component passed its gate, a run's result was recorded, a sweep
+came back clean. The rule that never bends is that **it reshapes history and never destroys
+work**: `reset --soft` is the only reset, `--hard`, `git clean`, `git restore` and `revert`
+are all out, and if the only way to honour a request would lose work it refuses and says
+which request and why. `rebase -i` is unavailable in this harness, so squashing is
+`reset --soft <base>` plus re-commits — the same end state, and it cannot go wrong halfway.
+**Commits that exist on a remote are frozen**, since rewriting published history is the one
+reshape that genuinely destroys something. The shape question is asked once per natural
+pause, not after every commit, because a question asked too often stops being non-blocking.
 
 ---
 
