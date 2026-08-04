@@ -11,8 +11,8 @@ Written by [`reflect`](../skills/reflect/SKILL.md), promoted by
 | candidate | target | occ / threshold | signal | status | last seen |
 |---|---|---|---|---|---|
 | [prior-work](prior-work.md) | **new skill** | 1 / 1 | explicit + direct request | **promoted** 2026-08-03 | 2026-08-03 |
-| [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged | 2026-08-03 |
-| [show-the-concrete-artifact](show-the-concrete-artifact.md) | `codify` | 1 / 3 | correction | staged | 2026-08-03 |
+| [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
+| [show-the-concrete-artifact](show-the-concrete-artifact.md) | `codify` | 1 / 1 | direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [codify-direct-request-threshold](codify-direct-request-threshold.md) | `codify` **(meta)** | 1 / 1 | direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [scaffold-env-and-tests](scaffold-env-and-tests.md) | `mvp` | 1 / 2 | explicit + direct request | **promoted** 2026-08-03 | 2026-08-03 |
 

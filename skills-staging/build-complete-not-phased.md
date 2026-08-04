@@ -25,3 +25,8 @@ want.
 already agreed and cheap to execute, rather than a standing preference. That ambiguity is
 what the threshold is for — do not promote on a second instance that also happens to be
 cheap and pre-agreed.
+
+**Deferred by the user, 2026-08-03:** "I think it's fine if we don't build that now. I want
+to get more experience with `/mvp`." Not rejected — held open deliberately until there is
+enough lived experience with `mvp`'s phasing to judge whether the rule is right. Do not
+propose this again until the user has run `mvp` on real work.

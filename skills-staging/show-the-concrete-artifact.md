@@ -3,9 +3,11 @@ id: show-the-concrete-artifact
 target: codify
 kind: rule
 signal: correction
-status: staged
+status: promoted
 occurrences: 1
-threshold: 3
+threshold: 1
+promoted: 2026-08-03
+promoted_to: skills/codify/SKILL.md
 ---
 
 **Rule:** When proposing an action described in the vocabulary of a system you just built,
@@ -21,5 +23,10 @@ decision on it.
   scaffolding rule? what does this entail" — after which showing the candidate file and the
   `mvp` diff produced an immediate "yes promote it now"
 
-**Note:** medium confidence at 1 occurrence. It is inferred from a clarifying question
-rather than stated, and the evidence is one before/after within a single exchange.
+- 2026-08-03 · session 6a888c37 · direct request · "sure show-the-concrete-artifact is good"
+
+**Note:** the rule itself was inferred from a clarifying question rather than stated, and
+the supporting evidence is one before/after inside a single exchange. It promoted at 1
+because the user approved it directly, which is instruction rather than inference — but the
+inference behind the *wording* is still only one occurrence deep, so reword it freely if it
+reads wrong in practice.

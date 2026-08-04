@@ -126,6 +126,11 @@ reads as covered.
 The exact diff, the candidate's occurrence list, and the prediction. Then the user
 approves, rewords, or rejects. Nothing is applied first and reported afterwards.
 
+**Show the artifact whenever you propose an action in this system's vocabulary**, not only
+at a formal promotion. "Shall I stage this?" describes a file the user cannot see; the
+candidate file and the resulting diff, shown, turn the same question into one they can
+answer with a yes.
+
 ### 4. Record the outcome
 
 | Outcome | Do |
