@@ -39,6 +39,9 @@ History only — the files are gone, the rules live in the skills below, and `gi
 | prior-work | [`prior-work`](../skills/prior-work/SKILL.md) | 2026-08-03 | direct request; first live use of its own method |
 | show-the-concrete-artifact | [`codify`](../skills/codify/SKILL.md) | 2026-08-03 | direct request |
 | codify-direct-request-threshold | [`codify`](../skills/codify/SKILL.md) | 2026-08-03 | **meta-edit** — changed a threshold in `codify` itself |
+| skill-line-cap-500 | [`skill-audit`](../skills/skill-audit/SKILL.md) | 2026-08-04 | **meta-edit** — loosened the line cap 200 → 500, provisional |
+| sweep-consistency-at-multi-file-changes | [`mvp`](../skills/mvp/SKILL.md) + [`tune-loop`](../skills/tune-loop/SKILL.md) | 2026-08-04 | direct request; `consistency` had never fired in 83 sessions because no skill named it |
+| offer-prior-work-at-stage-1 | [`mvp`](../skills/mvp/SKILL.md) | 2026-08-04 | direct request; `prior-work` had never fired for the same reason |
 | scaffold-env-and-tests | [`mvp`](../skills/mvp/SKILL.md) | 2026-08-03 | below threshold on direct instruction |
 
 **Status:** `staged` accumulating · `rejected` kept with its reason so it is never

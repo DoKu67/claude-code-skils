@@ -31,6 +31,8 @@ Rules for this stage:
 - **Write the out-of-scope list.** It is what stops stage 2 from sprawling, and it is where "we'll need this later" goes to wait its turn.
 - Do not ask **the user** for a planning document or ticket. If one exists, mine it for the capability list and ignore the rest.
 
+**Offer [`prior-work`](../prior-work/SKILL.md) once the capability list is agreed**, before the rough plan, while the approach is still free to change. Name what it costs — a few minutes of search — and let the user decide. It is an offer, not a gate, and a declined offer is a fine outcome. Skip it only when the thing being built is unambiguously specific to this repo. Surveying how others solved the problem *after* the shape is settled is how you discover the shape was wrong.
+
 ### The rough plan
 
 Once the capability list is agreed and the open choices are settled, write it down: the list, the decisions and why they went that way, the components in build order with the checkpoint each stops at, and the one risk most likely to invalidate the whole thing. A page, not a specification.
