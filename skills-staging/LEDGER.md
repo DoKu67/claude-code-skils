@@ -12,7 +12,7 @@ Written by [`reflect`](../skills/reflect/SKILL.md), promoted by
 |---|---|---|---|---|---|
 | [load-companion-skill-at-its-trigger](load-companion-skill-at-its-trigger.md) | `tune-loop` | **2 / 1** | correction | staged — **ready** | 2026-08-03 |
 | [name-the-path-of-written-records](name-the-path-of-written-records.md) | `notes` | 2 / 3 | correction | staged | 2026-08-03 |
-| [commit-at-checkpoints](commit-at-checkpoints.md) | `mvp` | 2 / 3 | correction | staged — **conflicts with a harness default** | 2026-08-03 |
+| [commit-at-checkpoints](commit-at-checkpoints.md) | **new skill** `checkpoint-commits` | 2 / 3 | correction | **promoted** 2026-08-03 — below threshold, on direct instruction; overrides a harness default | 2026-08-03 |
 | [consistency](consistency.md) | **new skill** | 1 / 1 | direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [prior-work](prior-work.md) | **new skill** | 1 / 1 | explicit + direct request | **promoted** 2026-08-03 | 2026-08-03 |
 | [build-complete-not-phased](build-complete-not-phased.md) | `mvp` | 1 / 3 | correction | staged — **deferred** pending `mvp` experience | 2026-08-03 |
