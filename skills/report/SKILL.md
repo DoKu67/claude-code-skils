@@ -37,7 +37,7 @@ Five sections, always all five, in this order, numbered.
 colon where the slot has one. Exactly these five lines, exactly this form:
 
 ```markdown
-# 1. Title: LoRA rank was never the constraint; the learning rate was
+# 1. Title: The learning rate was the constraint, not LoRA rank
 ## 2. Abstract
 ## 3. Background
 ## 4. Method: Paired-seed sweep at fixed rank
@@ -67,11 +67,37 @@ it** — the title goes in the parent, the detail goes underneath.
 A reader should be able to read only the bold title bullets, top to bottom, and get the
 argument. That is the test for whether the split was done in the right place.
 
+### Every title is ten words or fewer
+
+Four things in a report carry a title, and the cap is the same for all of them:
+
+| Title | Says | Not |
+|---|---|---|
+| **Report** (slot 1) | The finding | The topic — `Report on report formats` |
+| **Method** (slot 4) | The approach taken | The subject it was applied to — `Method: Tuning` |
+| **Figure** | What the picture shows | What section it sits in — `Figure 2: Diagram` |
+| **Table** | What the rows hold | A restatement of the column headers |
+
+Ten words is a forcing function, not a style preference. A title that needs fifteen is
+carrying a caveat, a qualifier or a second claim — and every one of those reads better one
+line down, in the Abstract or the caption description, where it has room. **Cut the
+qualifier, keep the claim.**
+
+```
+Existing markdown report formats record authorship but not derivation     9 — good
+A survey of how existing markdown report formats handle metadata,
+  and what they fail to record about generation                         21 — two claims
+Report formats                                                            2 — a topic
+```
+
+The report title is also the filename slug, so a long title becomes a filename nobody can
+scan in a directory listing.
+
 ### 1. Title
 
 `# 1. Title: Composable report format for saved command output` — not `# 1. Title: Report`.
 Where the report has a finding, the title states it rather than naming the topic:
-`# 1. Title: LoRA rank was never the constraint; the learning rate was`. A reader scanning a
+`# 1. Title: The learning rate was the constraint, not LoRA rank`. A reader scanning a
 directory of reports should collect the conclusions from the filenames.
 
 ### 2. Abstract
@@ -220,7 +246,7 @@ not.
 
 <div align="center" style="display:flex; flex-direction:column; align-items:center;">
 
-**Figure 2: A diagram that survives**<br/>Code-block figures keep their own alignment; only the label centers.
+**Figure 2: A code-block figure and its centered label**<br/>Code-block figures keep their own alignment; only the label centers.
 
 </div>
 ```
@@ -304,8 +330,9 @@ the point; a report may quote one but does not replace it.
 
 All five headings are present in order and each is labelled with its slot name and number —
 `Title:` and `Method:` carrying their values, `References:` carrying a count that matches the
-list below it; `None` and a reason appear wherever a section is empty; the title states the
-finding rather than the topic; the Abstract leads with Goal, Estimated Work Time and
+list below it; `None` and a reason appear wherever a section is empty; every title — report,
+method, figure and table — is ten words or fewer and states its claim rather than its topic;
+the Abstract leads with Goal, Estimated Work Time and
 Potential Blockers as bullets and every blocker names its unblocker; section 4 is titled
 bullets with indented sub-bullets and no bullet wraps past two lines; every figure and table
 has a numbered ID, a title and a description **below** it, with object and label wrapped
