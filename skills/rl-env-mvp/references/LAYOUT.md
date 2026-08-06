@@ -175,8 +175,9 @@ eval:
 
 logging:                         # per ml_logging
   wandb_project: <project>
-  wandb_mode: <online | offline | disabled>
+  wandb_mode: online             # always; offline/disabled are the automatic fallback, not a choice
   tags: [<what the run is>, <what it ran on>]
+  progress: auto                 # auto | plain | off — console rate + ETA
   results_dir: output/runs
   configs_dir: output/configs
 ```

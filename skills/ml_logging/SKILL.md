@@ -1,6 +1,6 @@
 ---
 name: ml_logging
-description: Standardize experiment logging for machine learning runs — run naming, the W&B metric vocabulary, config capture, and reproducibility fields. Use whenever writing or modifying a training, fine-tuning, evaluation, or RL script; whenever wiring up wandb, a HuggingFace Trainer, or a TRL trainer; and whenever the user asks why two runs can't be compared or where a run's hyperparameters went.
+description: Standardize experiment logging for machine learning runs — run naming, the W&B metric vocabulary, config capture, reproducibility fields, and console progress reporting. Use whenever writing or modifying a training, fine-tuning, evaluation, or RL script; whenever wiring up wandb, a HuggingFace Trainer, or a TRL trainer; whenever the user wants a progress bar, a step rate, or an ETA on a running job; and whenever the user asks why two runs can't be compared or where a run's hyperparameters went.
 ---
 
 # ml_logging
@@ -162,6 +162,7 @@ logging:
   tags: [ablation, kl-sweep, 8xh100]
   group: grpo-kl-sweep        # null → ungrouped
   job_type: train             # train | eval | sweep | debug
+  progress: auto              # auto | plain | off — console progress; see below
 ```
 
 `tags` is a flat list of short slugs, and it is the only place tags are set. The
@@ -286,6 +287,56 @@ trainer then attaches to the existing run instead of creating its own. Set
 `run_name` on `TrainingArguments` to the same name. Then map the trainer's
 emitted names onto the vocabulary — `METRIC_SPEC.md` has the translation table.
 
+## Progress display
+
+A run longer than a few minutes gets one line on the terminal answering *how fast* and
+*how much longer*. The bar is a **view of numbers already going to `metrics.jsonl`** —
+never a second source of them, and never something a metric is read back out of. Its rate
+is `train/step_time_s`; no ETA metric is logged, because it is derivable and a logged ETA
+is a prediction that ages badly on a dashboard.
+
+It is driven from `log_metrics`, not a fifth method on the logger — the same call that
+appends the line advances the bar, so a step that reached disk and a step the user saw
+cannot disagree.
+
+**One bar, and its total is the run's total optimizer steps.** A bar totalling the epoch
+or `len(dataloader)` reports the ETA for a fraction of the run, and that number is the one
+the user actually reads. Where the total is genuinely unknown — a streaming dataset, RL
+run to a reward threshold — run it untotalled, showing rate and elapsed and no ETA, rather
+than showing an ETA against a guess.
+
+**The postfix carries at most three numbers**: the headline metric, the learning rate, and
+throughput. Bar plus postfix must fit one terminal width — a wrapping bar re-renders as
+accumulating garbage, which is worse than no bar.
+
+**Nothing else writes to the stream.** Prints and log records inside the loop go through
+the bar's write method, or the bar is shredded every line and the scrollback is unusable.
+Inner bars — eval, generation — erase themselves on completion (`leave=False`); nested
+bars that persist turn a long run into thousands of stale lines.
+
+**Bar to stderr, so redirecting stdout leaves it visible and `> log.txt` stays clean.**
+
+**Interactive and non-interactive are different modes, and the stream decides which** —
+`sys.stderr.isatty()`, not a config default. Under `nohup`, Slurm, or CI, a bar emits a
+fresh line per update and produces a multi-megabyte log; there, print one progress line
+every N steps carrying the same fields (step/total, percent, rate, elapsed, ETA). The
+config's `logging.progress` only overrides that decision — `plain` forces the periodic
+line, `off` silences it — and defaults to `auto`, which makes it from the stream.
+
+**The bar closes on every exit path**, in the same `__exit__` that calls `finish()`. An
+unclosed bar leaves the cursor hidden and the terminal mangled after a Ctrl-C, which is
+how a clean interrupt gets misread as a crash.
+
+**When you do not own the loop, use the trainer's own bar.** HF `Trainer` and TRL ship one
+(`disable_tqdm`); a second bar beside it produces two ETAs that disagree. Add what it
+lacks through the callback's postfix instead.
+
+**Read the ETA against the preflight projection.** Once the rate has stabilized — past
+warmup and the first eval — a live ETA that disagrees materially with the wall-clock
+projection from [`tune-preflight`](../tune-preflight/SKILL.md) means one of them is wrong,
+and it is usually the projection's step-time estimate. That is a reason to re-check the
+budget mid-run rather than at the end of it.
+
 ## Exit status
 
 Set `run/status` in a `finally` block: `completed`, `crashed`, `oom`, or
@@ -319,3 +370,7 @@ comes from `METRIC_SPEC.md` with `/` separators; the core pack plus the task's
 pack are all declared; `run/status` is set on every exit path; and killing W&B
 auth mid-run leaves training unaffected with metrics still landing in
 `metrics.jsonl`.
+
+Progress: the run shows rate and remaining time against the **whole** run's step total on a
+terminal, degrades to a periodic line when stderr is not one, and a Ctrl-C leaves the
+terminal usable.
