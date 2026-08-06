@@ -19,8 +19,39 @@ The test for where something goes: *notes.md* is what you would tell a collabora
 the problem, *learnings.md* is what you would tell them to save them a day, *experiments.md*
 is what you would show them to prove it.
 
-If the project also has a plan document, decisions and their rationale stay there. Notes
-are not a place to re-decide things.
+### The boundary with the plan, in both directions
+
+If the project has a plan document, the split is not a nicety — it is what keeps either file
+readable. **Notes are not a place to re-decide things, and the plan is not a place to record
+results.** The second half is violated far more often, because every result feels worth putting
+where people will see it.
+
+| Content | Home |
+|---|---|
+| What a run produced, with its numbers | `experiments.md` |
+| What a result *means*; what changed because of it | `notes.md` |
+| A trap that cost time | `learnings.md` |
+| What was decided, and the reason | the plan |
+| What is still unknown | the plan |
+| That a step closed, and which way it went | the plan, as one row pointing back here |
+
+The test in each direction:
+
+- **Toward the plan:** if the text would need rewriting after the next run, it is a result and
+  belongs in a journal file. A number is a result. *"We chose softmax because raw log-probability
+  is length-biased"* is a decision and stays in the plan.
+- **Toward the journal:** if the text settles a question rather than reporting one, it is a
+  decision. Recording it only in a note means the next session re-argues it.
+
+Two failure modes worth naming, because one sentence of guidance does not prevent them:
+
+- **A plan that accumulates result sections** grows until nobody reads it, and then constrains
+  nothing. Watch for a heading named after one specific step — that is the tell.
+- **Two documents both numbering things** collide silently, because each reads consistently on
+  its own. **Steps are numbered in the plan only**; a queue here orders and annotates them and
+  never invents its own.
+
+See [`plan-doc`](../plan-doc/SKILL.md) for the plan's shape.
 
 ## notes.md
 

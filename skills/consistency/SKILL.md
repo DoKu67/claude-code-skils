@@ -1,6 +1,6 @@
 ---
 name: consistency
-description: Sweep for everything a change should have touched and did not — stale references, docs describing the old behaviour, tests and config still on the old name, comments explaining a rationale that no longer applies. Use after any edit that ripples across files: a rename, a signature or default change, swapping the method or library used for something, a documentation update, or any change touching more than one file. Run it before reporting a multi-file change as done.
+description: Sweep for everything a change should have touched and did not — stale references, docs describing the old behaviour, tests and config still on the old name, comments explaining a rationale that no longer applies. Use after any edit that ripples across files: a rename, a signature or default change, swapping the method or library used for something, a documentation update, or any change touching more than one file. Also use when a *result* rather than an edit invalidates a written claim — a run that falsifies a documented assumption, a measurement that contradicts a quoted number, a plan step that closed — because those leave no diff to sweep from. Run it before reporting a multi-file change as done.
 ---
 
 # consistency
@@ -33,6 +33,35 @@ git diff                    # or `git diff HEAD~1` if already committed
 
 If there is no VCS, work from a file listing and timestamps. The point is an external
 record of what moved, not a recollection of it.
+
+### When a result is the change, there is no diff
+
+The diff rule has one blind spot, and it is the one that produces the most confident lies: **a
+run can invalidate a written claim without touching a single line.** Nothing edited the sentence
+quoting the old baseline; a measurement simply made it false. `git diff` is empty, so a
+diff-driven sweep never starts, and the stale claim survives indefinitely because it looks
+untouched.
+
+So there is a second entry point. Sweep whenever any of these happens, regardless of the diff:
+
+| Trigger | What to search for |
+|---|---|
+| A falsifier fired, or a step closed | every document asserting that step is pending, or "the next thing", or written in future tense |
+| A measurement contradicts a quoted number | that number, as a literal string, everywhere |
+| An assumption was disproved | prose that argues *from* the assumption, which will not contain the number |
+| A plan was superseded | references to it as current, and its own status line |
+| A run revealed a data or environment fact | the auto-loaded context file, which a fresh session believes without checking |
+
+**Grep for the number.** A stale figure is the cheapest survivor to find and the most damaging
+to leave: quote it as a literal and check every hit, including the ones inside prose. Then do
+the semantic pass for the sentences that *argue* from the old value without naming it — those
+are invisible to grep and are where the confident errors live.
+
+The two most valuable targets are the ones nobody edits on purpose: **the plan document**, whose
+status line and open questions go stale on every result, and **the auto-loaded context file**,
+where a stale claim is read at the start of every future session and acted on. See
+[`plan-doc`](../plan-doc/SKILL.md) and [`project-brief`](../project-brief/SKILL.md) for what each
+is supposed to assert.
 
 ---
 
