@@ -1,6 +1,6 @@
 ---
 name: sprint-tasks
-description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields. Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, or asks for a backlog from a goal. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Does not produce a formal justification/proof per task; that is a separate, not-yet-written skill.
+description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value. Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, or asks for a backlog from a goal. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Each task's Proof of value section is produced by following `proof-of-value`, not written inline from scratch.
 ---
 
 # sprint-tasks
@@ -67,6 +67,12 @@ Out of scope:
 
 - [...]
 
+## Proof of value
+
+[Produced by following proof-of-value's shape in full — Discharges, Claim, Premises,
+Argument, Attempted counterexample, Falsifier, Verdict. Never a paragraph substituted in its
+place.]
+
 ## References
 
 - Design:
@@ -84,7 +90,8 @@ Out of scope:
 
 **Every heading appears in every task, in this order, even when a section is short.** A
 missing *Out of scope* reads as "nothing was excluded" when it usually means nobody thought
-about the boundary.
+about the boundary. *Proof of value* is never abbreviated to a sentence — see
+[`proof-of-value`](../proof-of-value/SKILL.md) for its own fixed shape.
 
 ---
 
@@ -119,6 +126,7 @@ Read the plan; do not invent what it does not say.
 | Decided | Requirements and Context — settled reasoning is restated, never re-argued |
 | The plan's own out-of-scope items | Inherited into each task's Out of scope, never contradicted |
 | Open questions | Dependencies and constraints, flagged as blocking until resolved — never silently resolved here |
+| This task's own Requirements and Acceptance criteria, plus the specific plan element they target | Proof of value — see [`proof-of-value`](../proof-of-value/SKILL.md) |
 
 If the input isn't in this repo's [`plan-doc`](../plan-doc/SKILL.md) shape — a PRD, a design
 doc, a paragraph of goals in a message — the same mapping still applies: find the
@@ -177,6 +185,12 @@ every field that invites a placeholder:
   steps, so a task refers to that number rather than inventing a competing one.
 - **References → Related issues lists sibling tasks from the same batch**, so the set is
   traceable to itself, not just to the plan.
+- **Proof of value is not optional and not decorative.** Run
+  [`proof-of-value`](../proof-of-value/SKILL.md) against this task's own Acceptance criteria
+  before calling the task finished. An Open verdict means the Acceptance criteria are
+  missing something — add it and re-run, rather than writing a Proof of value section that
+  glosses over the gap. A Conditional verdict's assumption must also appear in this task's
+  own Dependencies and constraints.
 
 When a scope boundary is genuinely ambiguous in the plan — not merely unwritten, but
 unresolvable without a decision only the user can make — stop and ask, per
@@ -226,12 +240,15 @@ Out of scope:
 
 - Requests are counted per API key over a rolling 60-second window.
 - A key over quota receives HTTP 429 with a `Retry-After` header in seconds.
-- Compliant callers (under quota) see no added latency beyond the counting overhead.
+- Compliant callers (under quota) see no added latency beyond the counting overhead, and
+  that overhead adds no more than 5ms to p99 latency.
 
 ## Acceptance criteria
 
 - Given a key under its quota, when it makes a request, then the request succeeds with no
   added latency beyond counting overhead.
+- Given a key under its quota, when p99 latency is measured under load, then the added
+  overhead is no more than 5ms.
 - Given a key over its quota, when it makes a request, then it receives 429 with a
   `Retry-After` header.
 - Errors and edge cases: a key with no requests in the last 60s resets to full quota; the
@@ -253,6 +270,36 @@ Out of scope:
   5ms — measure before merging the flag on.
 - Depends on nothing; unblocks "Emit rate-limit metrics to the dashboard."
 
+## Proof of value
+
+**Discharges:** Plan → Next step 1 — "p99 latency for compliant callers must not regress
+more than 5ms"
+
+**Claim:** If every acceptance criterion of this task holds, then p99 latency for compliant
+callers regresses by at most 5ms.
+
+**Premises:**
+1. A compliant caller's request succeeds with no added latency beyond counting overhead —
+   source: this task's Acceptance criteria.
+2. That counting overhead adds no more than 5ms to p99 latency — source: this task's
+   Acceptance criteria.
+
+**Argument:**
+1. From Premise 1, a compliant caller's added latency equals the counting overhead exactly.
+2. From Premise 2, that overhead is bounded at 5ms p99.
+3. Therefore p99 added latency for compliant callers is at most 5ms — the claim holds.
+
+**Attempted counterexample:** A counting-store implementation with p99 lookup latency above
+5ms would violate Premise 2 directly, so it cannot satisfy this task's own acceptance
+criteria — no scenario satisfies the criteria while breaching the target.
+
+**Falsifier:** A production measurement showing p99 overhead above 5ms while Premise 2's
+acceptance criterion is reported as passing — would mean the test measuring Premise 2 is
+wrong, not that the plan's bar changed.
+
+**Verdict:** Proved — every premise sources to this task's own Acceptance criteria, and no
+counterexample was found.
+
 ## References
 
 - Design:
@@ -273,11 +320,11 @@ Out of scope:
 
 ## Out of scope
 
-**A formal justification that a task is worth doing — a proof, mathematical or otherwise,
-that it's the right unit of work — is not produced here.** That belongs to a separate,
-not-yet-written skill. Until it exists, do not fabricate a justification to fill the gap;
-the plan's own Objective and Decided sections already carry the reasoning for why the work
-is worth doing, and this skill's job is only to reference that, not to re-argue it.
+**Whether the plan's objective itself is the right objective.** Proof of value proves that a
+task's acceptance criteria discharge a specific plan element, not that the element belongs
+in the plan — that judgment is settled in the plan's own Objective and Decided sections, per
+[`plan-doc`](../plan-doc/SKILL.md), and this skill's job is only to reference it, not to
+re-argue it.
 
 **Creating the tickets in a tracker** (Linear, Jira, GitHub Issues) is a separate step from
 producing their content. Produce the tasks in this format first; create them in a connected
@@ -296,9 +343,13 @@ the plan; it does not simulate a planning-poker session.
 ## Done when
 
 A manifest table precedes the batch, naming every task, its parent plan step, its
-dependencies and its priority; every task has all nine headings in order; every requirement
+dependencies and its priority; every task has all ten headings in order; every requirement
 has a matching acceptance criterion and vice versa; Out of scope names things a reader would
 otherwise assume are in; Errors and edge cases names a real one; `[environment]` is filled
 in; Estimate and Sprint are sourced or `TBD`; Parent epic matches the plan's own step
-numbering; References → Related issues lists sibling tasks from the batch; and nothing in
-any task asserts a boundary, priority, or justification the plan doesn't support.
+numbering; References → Related issues lists sibling tasks from the batch; every task's
+Proof of value follows [`proof-of-value`](../proof-of-value/SKILL.md) in full, reached
+Proved or Conditional (with its assumption echoed into Dependencies and constraints) before
+the task is called finished, and any Open verdict was resolved by adding the missing
+acceptance criterion rather than left standing; and nothing in any task asserts a boundary,
+priority, or justification the plan doesn't support.
