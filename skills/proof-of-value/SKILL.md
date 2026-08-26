@@ -69,6 +69,12 @@ is not a proof — it is the argument's author grading their own homework.
 | **Falsifier** | What would prove this proof wrong later, even after a Proved verdict | Without it, "Proved" becomes permanent and unrevisitable |
 | **Verdict** | One of exactly three states, each with a required consequence — see below | A verdict that doesn't change what happens next isn't a verdict |
 
+**A premise that is itself an algorithmic-correctness claim** ("the dedup logic actually
+removes all duplicates", "this migration is idempotent") is not proved here — that is
+[`code-proof`](../code-proof/SKILL.md)'s job. Run it on that specific claim and cite its
+Verdict as a Premise here, tagged `source: code-proof`. This skill proves that acceptance
+criteria discharge a plan's bar; it does not itself verify that an algorithm is correct.
+
 ---
 
 ## The three verdicts, and what each one obligates
