@@ -1,6 +1,6 @@
 ---
 name: sprint-tasks
-description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value. Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, or asks for a backlog from a goal. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Each task's Proof of value section is produced by following `proof-of-value`, not written inline from scratch.
+description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual, numbered sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value — preceded by a manifest and a parallel execution plan showing which tasks can be worked simultaneously (e.g. by separate Claude instances acting as parallel developers). Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, asks for a backlog from a goal, or wants to know what can be run in parallel. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Each task's Proof of value section is produced by following `proof-of-value`, not written inline from scratch.
 ---
 
 # sprint-tasks
@@ -23,7 +23,7 @@ for this skill to make quietly — see [Out of scope](#out-of-scope).
 Every task uses this shape, unchanged in section order and headings:
 
 ```markdown
-# [Outcome-focused title]
+# Task [N] — [Outcome-focused title]
 
 ## User story
 
@@ -97,20 +97,68 @@ about the boundary. *Proof of value* is never abbreviated to a sentence — see
 
 ## Before the tickets: a manifest
 
+**Every task gets a number, assigned once, for the whole batch — sequential, starting at 1,
+never reused or renumbered within it.** The number is what the title carries (`# Task
+[N] — ...`), what `Depends on` references, and what a person hands to a developer or a
+parallel Claude instance as the whole instruction: "take Task 3."
+
 Produce a manifest table before the individual tasks, so the batch can be scanned before
-anyone reads eleven tickets end to end:
+anyone reads eleven tickets end to end. `Depends on` references task numbers, not titles —
+numbers don't need renaming when a title is later reworded, and a number makes the parallel
+plan below mechanically derivable instead of read by eye:
 
 ```markdown
-| Task | Parent plan step | Depends on | Priority |
-|---|---|---|---|
-| Rate-limit the public API by API key | Next step 2 | — | High |
-| Add a 429 response with Retry-After | Next step 2 | Rate-limit the public API by API key | High |
-| Emit rate-limit metrics to the dashboard | Next step 2 | Rate-limit the public API by API key | Medium |
+| # | Task | Parent plan step | Depends on | Priority |
+|---|---|---|---|---|
+| 1 | Public API requests are rate-limited per API key | Next step 1 | — | High |
+| 2 | Emit rate-limit metrics to the dashboard | Next step 1 | 1 | Medium |
+| 3 | Add configurable per-tenant quotas | Next step 3 | — | Medium |
 ```
 
 The manifest is what makes the dependency graph visible at a glance and catches the two
 failure modes early: a task with no parent step (scope invented, not decomposed), and two
 tasks silently claiming the same in-scope item.
+
+## Before the tickets: a parallel execution plan
+
+Group the manifest's tasks into waves — the tasks in one wave share no dependency on each
+other and can be handed to separate developers, or separate Claude instances, to work at the
+same time:
+
+```markdown
+| Wave | Tasks | Blocked by |
+|---|---|---|
+| 1 | 1, 3 | — |
+| 2 | 2 | Wave 1 |
+```
+
+**The rule that generates this table, mechanically, from the manifest's `Depends on`
+column:**
+
+> Wave(task) = 1 if `Depends on` is empty; otherwise 1 + max(Wave(d)) over every d it depends
+> on.
+
+Tasks land in the same wave only because the formula says so, never because they "feel"
+independent — read `Depends on`, don't guess. A task in wave *k* cannot start until every
+task it depends on (necessarily in an earlier wave) is done; two tasks in the same wave have
+no ordering constraint between them at all.
+
+**The largest wave's size is the maximum useful parallelism this backlog supports.** Assign
+that many developers or agents at once; assigning more doesn't shorten the critical path,
+because there is nothing left in that wave for the extra hands to pick up. In the example
+above, at most 2 things can happen at once — a third developer would sit idle in Wave 1 and
+still be waiting when Wave 2 opens.
+
+**If computing a task's wave requires walking through the task itself, the dependency graph
+has a cycle.** That's a modeling error, not a valid schedule — two tasks that each need the
+other to finish first cannot both be independently shippable, which the
+[splitting rule](#splitting-a-plan-step-into-tasks) already requires. Fix the split; don't
+force a wave number onto a cycle.
+
+A backlog that resolves to one task per wave, in one long chain, is a signal worth noticing
+too — it means the split produced a strictly serial pipeline with no parallelism available at
+all, which is often a sign the tasks were sliced by technical layer rather than as vertical
+slices. Revisit the split before accepting that shape as final.
 
 ---
 
@@ -184,7 +232,8 @@ every field that invites a placeholder:
   the loop back to the plan — per [`plan-doc`](../plan-doc/SKILL.md), only the plan numbers
   steps, so a task refers to that number rather than inventing a competing one.
 - **References → Related issues lists sibling tasks from the same batch**, so the set is
-  traceable to itself, not just to the plan.
+  traceable to itself, not just to the plan — cite them by number ("Task 2"), the same way
+  the manifest's `Depends on` column does.
 - **Proof of value is not optional and not decorative.** Run
   [`proof-of-value`](../proof-of-value/SKILL.md) against this task's own Acceptance criteria
   before calling the task finished. An Open verdict means the Acceptance criteria are
@@ -207,12 +256,32 @@ Plan excerpt (from a `plan-doc`-shaped `PLAN.md`):
 ## Next steps
 1. Rate-limit the public API per key, 429 with Retry-After, so far-below-quota tenants
    never notice. Falsifier: p99 latency for compliant callers regresses more than 5ms.
+3. Let large customers set their own per-tenant quota above the default.
 ```
+
+Manifest and parallel execution plan for this batch (see the two sections above — Task 2
+and Task 3 aren't written out in full here, only Task 1 is):
+
+```markdown
+| # | Task | Parent plan step | Depends on | Priority |
+|---|---|---|---|---|
+| 1 | Public API requests are rate-limited per API key | Next step 1 | — | High |
+| 2 | Emit rate-limit metrics to the dashboard | Next step 1 | 1 | Medium |
+| 3 | Add configurable per-tenant quotas | Next step 3 | — | Medium |
+
+| Wave | Tasks | Blocked by |
+|---|---|---|
+| 1 | 1, 3 | — |
+| 2 | 2 | Wave 1 |
+```
+
+Tasks 1 and 3 share no dependency — hand them to two developers (or two Claude instances) at
+once. Task 2 needs Task 1's counting mechanism to emit metrics from, so it waits for Wave 1.
 
 Resulting task:
 
 ```markdown
-# Public API requests are rate-limited per API key
+# Task 1 — Public API requests are rate-limited per API key
 
 ## User story
 
@@ -268,7 +337,7 @@ Out of scope:
 
 - Falsifier from the plan: p99 latency for compliant callers must not regress more than
   5ms — measure before merging the flag on.
-- Depends on nothing; unblocks "Emit rate-limit metrics to the dashboard."
+- Depends on: none (Wave 1). Unblocks Task 2.
 
 ## Proof of value
 
@@ -304,13 +373,13 @@ counterexample was found.
 
 - Design:
 - Technical specification:
-- Related issues: "Emit rate-limit metrics to the dashboard", "Add configurable per-tenant
-  quotas"
+- Related issues: Task 2 — Emit rate-limit metrics to the dashboard; Task 3 — Add
+  configurable per-tenant quotas
 
 ## Delivery
 
 - Owner:
-- Priority: High (Next step 1 of 3)
+- Priority: High
 - Estimate: TBD
 - Sprint: TBD
 - Parent epic: Next step 1 — Rate-limit the public API
@@ -342,14 +411,17 @@ the plan; it does not simulate a planning-poker session.
 
 ## Done when
 
-A manifest table precedes the batch, naming every task, its parent plan step, its
-dependencies and its priority; every task has all ten headings in order; every requirement
-has a matching acceptance criterion and vice versa; Out of scope names things a reader would
+A manifest table precedes the batch, naming every task by number, its parent plan step, its
+dependencies (by number) and its priority; a parallel execution plan table follows it, with
+every task's wave computed from `Depends on` by the stated formula rather than eyeballed,
+and the largest wave named as the batch's maximum useful parallelism; every task's title
+carries its number; every task has all ten headings in order; every requirement has a
+matching acceptance criterion and vice versa; Out of scope names things a reader would
 otherwise assume are in; Errors and edge cases names a real one; `[environment]` is filled
 in; Estimate and Sprint are sourced or `TBD`; Parent epic matches the plan's own step
-numbering; References → Related issues lists sibling tasks from the batch; every task's
-Proof of value follows [`proof-of-value`](../proof-of-value/SKILL.md) in full, reached
-Proved or Conditional (with its assumption echoed into Dependencies and constraints) before
-the task is called finished, and any Open verdict was resolved by adding the missing
+numbering; References → Related issues lists sibling tasks from the batch by number; every
+task's Proof of value follows [`proof-of-value`](../proof-of-value/SKILL.md) in full,
+reached Proved or Conditional (with its assumption echoed into Dependencies and constraints)
+before the task is called finished, and any Open verdict was resolved by adding the missing
 acceptance criterion rather than left standing; and nothing in any task asserts a boundary,
 priority, or justification the plan doesn't support.
