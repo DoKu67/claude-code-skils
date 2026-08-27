@@ -54,7 +54,7 @@ per machine; it is idempotent, so re-running it after a `git pull` is safe.
 
 | Category | Skills | What the category covers |
 |---|---|---|
-| [Development](#development) | `mvp`, `coding-standards`, `consistency`, `explain`, `call-tree`, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, the house rules, and the sweeps that say a change is actually done |
+| [Development](#development) | `mvp`, `implement-feature`, `coding-standards`, `consistency`, `explain`, `call-tree`, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, the house rules, and the sweeps that say a change is actually done |
 | [Version control](#version-control) | `checkpoint-commits` | Keeping work safe as it is made, and deciding what shape the history ends up in |
 | [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr`, `report` | Finding out what already exists, keeping the written record of what was tried and what it meant, and turning any of it into a durable document |
 | [Fine-tuning and RL](#fine-tuning-and-reinforcement-learning) | `sft-env-mvp`, `rl-env-mvp`, `tune-loop`, `tune-preflight`, `run-triage`, `tune-report`, `hparam-priors`, `escalate` | A pipeline: scaffold an environment, prove it works, then run the hyperparameter search as a recorded loop |
