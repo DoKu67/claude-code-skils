@@ -27,8 +27,8 @@ anything else:
 ### Input is a sprint-tasks ticket
 
 A `Task [N]` document in the [`sprint-tasks`](../sprint-tasks/SKILL.md) shape. Its
-**Acceptance criteria** and **Definition of Done** *are* the spec — do not re-derive a
-capability list from scratch or re-negotiate its Scope. Read Context and Dependencies and
+**Acceptance criteria** and **Definition of Done** *are* the bar for this ticket — do not
+re-derive a capability list from scratch or re-negotiate its Scope. Read Context and Dependencies and
 constraints for the reasoning behind the boundary, then go straight to Stage 1.
 
 If the ticket's Dependencies and constraints names another task as a blocker, confirm it is
@@ -159,7 +159,7 @@ this is the stage that finds them before a reviewer does.
 
 ---
 
-## Stage 4 — Verify against the spec
+## Stage 4 — Verify against the bar
 
 Check the outcome against whatever Stage 0 established as the bar:
 
@@ -167,6 +167,11 @@ Check the outcome against whatever Stage 0 established as the bar:
   explicitly — pass/fail, not a general "looks good." An unmet criterion is unfinished work,
   not a follow-up ticket, unless the user agrees to defer it.
 - **Feature described directly**: walk the Stage 0 capability list the same way.
+- **A `SPEC.md` in the repo is a bar on top of that one**, whatever the ticket says. Run the
+  conformance suite, and report the result alongside `git diff --exit-code` over the suite's
+  directory — a pass only counts if the suite is unchanged. A requirement the feature cannot
+  meet is a spec change request for the user, never an edit to the spec or its tests. See
+  [`spec-doc`](../spec-doc/SKILL.md).
 
 Only report the feature done once every criterion is checked, the consistency sweep is clean,
 and the existing suite plus the new tests are green.

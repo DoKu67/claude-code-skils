@@ -119,6 +119,7 @@ The single most common way a plan doubles in size.
 | What was decided, and why | **the plan**, under *Decided* |
 | What is still unknown | **the plan**, under *Open* |
 | That a step ran, and whether its falsifier fired | **the plan**, under *Previous steps* — one row, one clause |
+| What the system must do, whatever else changes | `SPEC.md` — see [`spec-doc`](../spec-doc/SKILL.md) |
 
 The test: **if the text would need rewriting after the next run, it does not belong in the
 plan.** A number is a result. "We chose softmax over raw log-probability because raw is
@@ -131,6 +132,30 @@ detail belongs in the journal and the row should point at it instead.
 Where a plan must reference a result, reference it — one clause and a run name — rather than
 restating it. See [`notes`](../notes/SKILL.md) for the journal's own shape.
 
+## The plan is the route; the spec is the contract
+
+A plan changes every time a result lands — that is what it is for. A specification does not:
+it states what the system must do whatever the route turns out to be, and it is written and
+changed by **the human alone**. See [`spec-doc`](../spec-doc/SKILL.md) for its shape and for
+the rule that a failing requirement is fixed in the code or escalated, never edited away.
+
+The boundary is one question: **would this sentence still be true if the plan were thrown
+away and the project restarted from scratch?**
+
+- Yes → it is a requirement, and belongs in `SPEC.md`.
+- It would need rewriting after the next run → journal.
+- Otherwise → the plan.
+
+**A *Decided* entry that describes system behaviour has outgrown the plan.** "We chose
+softmax over raw log-probability because raw is length-biased" is a working decision and
+stays. "Scores SHALL be length-invariant" is an obligation on the system — propose it to the
+user as a requirement, and leave the plan entry as a one-clause pointer to the ID once they
+accept it. Claude never writes it into the spec unilaterally.
+
+Where a next step exists to satisfy a requirement, name the ID in the step. That is what
+makes it visible when a step closes ✅ and its requirement is still ❌ in the conformance
+table — the step delivered something, but not the obligation it claimed.
+
 ## Only the plan numbers steps
 
 If two documents both number things, they collide, and the collision is silent because each
@@ -139,6 +164,12 @@ file reads consistently on its own.
 **Steps are numbered in the plan. Everywhere else refers to those numbers.** A journal queue
 orders and annotates the plan's steps; it does not name new ones. When the queue wants an item
 the plan lacks, the answer is to add it to the plan, not to invent a number.
+
+Three documents number things, and they number different things: the plan numbers **steps**,
+the spec numbers **requirements** (`R-4`), and [`sprint-tasks`](../sprint-tasks/SKILL.md)
+numbers **tasks**. Always write the prefix — *step 3*, `R-3` and *Task 3* are three different
+objects, and a bare "3" is a collision that reads correctly in every file and means the wrong
+thing across them.
 
 ## Superseding a plan
 

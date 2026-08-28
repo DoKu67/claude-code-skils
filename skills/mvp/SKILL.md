@@ -30,6 +30,7 @@ Rules for this stage:
 - **Keep it to a handful of lines.** If it is growing into a specification document, you have left this stage.
 - **Write the out-of-scope list.** It is what stops stage 2 from sprawling, and it is where "we'll need this later" goes to wait its turn.
 - Do not ask **the user** for a planning document or ticket. If one exists, mine it for the capability list and ignore the rest.
+- **If the repo has a `SPEC.md`, the capability list may not contradict it.** Requirements there are the user's obligations on the system, not suggestions — read them, and if the MVP cannot meet one, raise it now rather than discovering it at stage 2. See [`spec-doc`](../spec-doc/SKILL.md); Claude never edits that file.
 
 **Offer [`prior-work`](../prior-work/SKILL.md) once the capability list is agreed**, before the rough plan, while the approach is still free to change. Name what it costs — a few minutes of search — and let the user decide. It is an offer, not a gate, and a declined offer is a fine outcome. Skip it only when the thing being built is unambiguously specific to this repo. Surveying how others solved the problem *after* the shape is settled is how you discover the shape was wrong.
 

@@ -24,6 +24,11 @@ Read `CODING_STANDARDS.md` before the first edit of a session, and again after a
 
 Tiers do not appear in your output while writing. They are a review instrument; here they are simply how much a rule binds you. Satisfy Blocking rules without comment. Where a Should-fix rule loses to something local, say so when the work is reviewed rather than in a code comment.
 
+**Never edit `SPEC.md` or the conformance suite.** Where a repo has them, they are the user's
+statement of what the system must do and Claude only proposes changes to them — a failing
+requirement is fixed in the module or escalated, never edited away. See
+[`spec-doc`](../spec-doc/SKILL.md).
+
 **The existing repo wins, until you're told otherwise.** Where a standard and an established convention in the surrounding code disagree, follow the surrounding code. A file written half in one style and half in another is worse than either style.
 
 On the first such conflict in a repo, name it and ask which way it goes: **abide** — the repo's convention holds here and the standard yields, or **convert** — the repo moves to the standard, as its own deliberate piece of work rather than smuggled into an unrelated change. Until the user answers, follow the repo.

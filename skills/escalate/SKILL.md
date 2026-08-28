@@ -47,6 +47,7 @@ threshold is visible rather than remembered.
 | **Second OOM in a block** after a mitigation | The estimate is wrong in a way another guess will not fix |
 | **Cost or disk about to overrun** | Both fail in ways that look like training bugs |
 | **Anything irreversible** — deleting checkpoints, overwriting a run directory, pushing weights, publishing | Not recoverable by trying again |
+| **A requirement in `SPEC.md` cannot be met by any change to the code** | Only the user may change a requirement. Continuing means lowering a gate, which is the one exit that does not exist — raise a spec change request in [`spec-doc`](../spec-doc/SKILL.md)'s shape |
 
 ### Stop at the end of the current run
 

@@ -88,6 +88,12 @@ place.]
 - Parent epic:
 ```
 
+**Where the repo has a `SPEC.md`, Acceptance criteria cite the requirements they discharge by
+ID** — `Discharges R-4` — rather than restating the requirement in the ticket's own words. A
+restated requirement is a second copy that drifts; an ID is a pointer that cannot. The
+requirement itself is the user's and neither this skill nor the developer may reword it. See
+[`spec-doc`](../spec-doc/SKILL.md).
+
 **Every heading appears in every task, in this order, even when a section is short.** A
 missing *Out of scope* reads as "nothing was excluded" when it usually means nobody thought
 about the boundary. *Proof of value* is never abbreviated to a sentence — see
