@@ -1,6 +1,6 @@
 ---
 name: implement-feature
-description: Implement one feature into an existing codebase — MVP-inspired but scoped to a codebase that already exists, so orientation replaces setup and integration replaces scaffolding from zero. Always applies coding-standards while writing and consistency before calling the change done. Accepts a sprint-tasks ticket (implements its Acceptance criteria and Definition of Done directly) or a plan (asks the user the questions needed to turn it into a sprint-tasks sprint first, with the same requirements, then implements that). Use when the user says "implement this feature", "add this to the codebase", "build this in", "wire this up", hands over a Task N ticket or a PLAN.md and asks for it built, or asks for a feature added to code that already exists. Distinct from `mvp`, which is for a new project, component, or codebase built from scratch — this skill is for extending one that is already there.
+description: Implement one feature into an existing codebase — MVP-inspired but scoped to a codebase that already exists, so orientation replaces setup and integration replaces scaffolding from zero. Always applies coding-standards while writing and consistency before calling the change done. Accepts a sprint-tasks ticket (implements its Acceptance criteria and Definition of Done directly) or a plan (asks the user the questions needed to turn it into a sprint-tasks sprint first, with the same requirements, then implements that). Use when the user says "implement this feature", "add this to the codebase", "build this in", "wire this up", hands over a Task N ticket or a PLAN.md and asks for it built, or asks for a feature added to code that already exists. Requires a `SPEC.md`: stage 0 finds the requirement the feature makes true and stage 4 verifies against it, so a feature with no requirement behind it goes back to the user rather than getting built. Distinct from `mvp`, which is for a new project, component, or codebase built from scratch — this skill is for extending one that is already there.
 ---
 
 # implement-feature
@@ -21,12 +21,28 @@ either is skipping this skill, not a shortcut through it.
 
 ## Stage 0 — Establish what's being built
 
-What arrives determines how this stage runs. Identify which of the three before doing
-anything else:
+**First, before the input shape matters at all: find the requirement.** A feature is built
+to make something in `SPEC.md` true, and that requirement is the bar this skill verifies
+against in Stage 4 — the ticket, the plan and the description are all routes to it.
+
+- **No `SPEC.md` in the repo?** Stop and say so. Draft one with the user in
+  [`spec-doc`](../spec-doc/SKILL.md)'s shape, get it accepted, then start. Building first
+  and writing the obligation afterwards produces a spec shaped like the code, which gates
+  nothing.
+- **A spec exists but the feature maps to no requirement?** That is scope with no mandate.
+  Ask the user whether a requirement should be added; do not add one yourself, and do not
+  build on the assumption that one would have been approved.
+- **The requirement exists but is ambiguous for this feature?** Raise it as a
+  `[NEEDS CLARIFICATION: …]` question and wait. Picking the plausible reading and building
+  it is how a guess becomes an obligation nobody chose.
+
+Record the IDs, then identify which of the three input shapes arrived:
 
 ### Input is a sprint-tasks ticket
 
 A `Task [N]` document in the [`sprint-tasks`](../sprint-tasks/SKILL.md) shape. Its
+`Satisfies` field names the requirements — those are the bar; the ticket is how it is
+reached this week. Its
 **Acceptance criteria** and **Definition of Done** *are* the bar for this ticket — do not
 re-derive a capability list from scratch or re-negotiate its Scope. Read Context and Dependencies and
 constraints for the reasoning behind the boundary, then go straight to Stage 1.

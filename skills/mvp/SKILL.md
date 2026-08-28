@@ -1,6 +1,6 @@
 ---
 name: mvp
-description: Build software MVP-first — agree what the minimum version must do, sketch a rough plan of decisions and build order, implement the simplest thing that works, verify it with unit then integration tests at interactive checkpoints, strip it to something a human can read, then optimize toward a scalable design using measured evidence. Use whenever starting a new project, feature, or component from scratch, for research or proof-of-concept work where the shape of the problem is not yet known, when the user says "MVP", "get it working first", "barebones version", "proof of concept", or "iterate on this", or when a task would otherwise invite a large up-front design. This is the default development style; it is not for throwaway code.
+description: Build software MVP-first — agree what the minimum version must do, sketch a rough plan of decisions and build order, implement the simplest thing that works, verify it with unit then integration tests at interactive checkpoints, strip it to something a human can read, then optimize toward a scalable design using measured evidence. Use whenever starting a new project, feature, or component from scratch, for research or proof-of-concept work where the shape of the problem is not yet known, when the user says "MVP", "get it working first", "barebones version", "proof of concept", or "iterate on this", or when a task would otherwise invite a large up-front design. Requires a `SPEC.md` before stage 2 — the MVP's capability list is a selection from its requirements, and if no spec exists this skill writes a first one with the user and waits for them to accept it. This is the default development style; it is not for throwaway code.
 ---
 
 # mvp
@@ -13,7 +13,20 @@ Often the work is unfamiliar — research, a proof of concept, a technique not u
 
 ## Stage 1 — Requirements
 
-Write down what the minimum version must **do**. Concrete and checkable:
+**Start from `SPEC.md`.** The MVP exists to make some of its requirements true; the
+capability list is a selection from them, not an invention alongside them. Name the
+requirement IDs this MVP targets, and say which ones it explicitly defers.
+
+**If the repo has no spec, write one before stage 2** — with the user, in
+[`spec-doc`](../spec-doc/SKILL.md)'s shape, and wait for them to accept it. This is not the
+big-design-up-front this style exists to avoid: a first spec is small, and it may be little
+more than the capability list below promoted into `R-n` sentences with scenarios. The point
+is not to predict the design. It is that "done" means something the next stage cannot
+quietly redefine, and that the user owns that definition rather than the code discovering
+it. A spec can grow as the problem's shape emerges — a requirement is added by the user when
+a behaviour becomes settled, and until then the unknown belongs in the plan's *Open*.
+
+Then write down what the minimum version must **do**. Concrete and checkable:
 
 ```
 MVP must:
@@ -121,9 +134,14 @@ At the end of a stage, report in this shape:
 
 **State:** <what runs now, in one sentence>
 **Evidence:** <actual command output, or before/after numbers in stage 3>
+**Conformance:** <R-n ✅ / R-m ❌, and the conformance suite's diff is clean>
 **Surprises:** <what contradicted the expectation>
 **Next:** <the single next stage or component>
 ```
+
+**The Conformance line is not optional once a spec exists**, and a green suite only counts
+alongside a clean `git diff` over it. An MVP is finished when its targeted requirements are
+✅ — not when the code runs, and not when the author is satisfied with it.
 
 Lead with anything that disproved an assumption. That is the highest-value output of working this way, and it is worth nothing if it arrives late.
 

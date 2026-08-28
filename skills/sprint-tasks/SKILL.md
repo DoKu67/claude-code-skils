@@ -1,6 +1,6 @@
 ---
 name: sprint-tasks
-description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual, numbered sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value — preceded by a manifest and a parallel execution plan showing which tasks can be worked simultaneously (e.g. by separate Claude instances acting as parallel developers). Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, asks for a backlog from a goal, or wants to know what can be run in parallel. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Each task's Proof of value section is produced by following `proof-of-value`, not written inline from scratch.
+description: Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual, numbered sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value — preceded by a manifest and a parallel execution plan showing which tasks can be worked simultaneously (e.g. by separate Claude instances acting as parallel developers). Use when the user says "break this plan into tasks", "turn this into tickets", "decompose this into sprint tasks", hands over a plan/PRD and asks what the tickets look like, asks for a backlog from a goal, or wants to know what can be run in parallel. Requires a `SPEC.md`: every task names the requirements it discharges, and a sprint is measured by which requirements it turns green, so if no spec exists this skill stops and drafts one with the user first. Distinct from `plan-doc`, which owns the plan itself — this skill only reads it. Each task's Proof of value section is produced by following `proof-of-value`, not written inline from scratch.
 ---
 
 # sprint-tasks
@@ -9,12 +9,41 @@ A plan says what the project is for and what happens next. It does not say what 
 picks up on Monday, reviews in one pull request, and closes by Friday. This skill is the
 bridge: one plan goes in, a set of independently workable tickets comes out, each in the
 same fixed shape so a reader never has to guess where the acceptance bar or the owner is
-written down.
+written down. And each of them points at the same target — a requirement in `SPEC.md` that
+is not true yet.
 
 **This skill decomposes; it does not decide.** Every task's scope, requirement and
 dependency must trace back to something the plan already says. If the plan is silent or
 contradictory on a boundary a task needs, that is a gap in the plan, not a judgment call
 for this skill to make quietly — see [Out of scope](#out-of-scope).
+
+---
+
+## The spec is the precondition
+
+**A sprint exists to move requirements from ❌ or `unbound` to ✅.** That is the unit of
+progress. The plan supplies the *route* — which requirements to attack, in what order, and
+what would falsify the approach — and the tickets supply the *work*, but the thing being
+delivered is always a requirement in `SPEC.md` becoming true.
+
+**This skill does not run without a spec.** If the repo has no `SPEC.md`, stop before
+writing any ticket and say so: the sprint has no definition of done that outlives the
+sprint, and the tickets would be a list of activities rather than a list of obligations
+discharged. Draft one with the user first — [`spec-doc`](../spec-doc/SKILL.md) owns its
+shape — and wait for them to accept it. Requirements are theirs; drafting is not accepting.
+
+Three consequences, each of which invalidates a batch that breaks it:
+
+- **Every task discharges at least one requirement**, named by ID. A task that discharges
+  nothing is either work the user never asked for, or a requirement nobody wrote down. Both
+  are answered by going back to the user, not by shipping the ticket.
+- **A task never restates, reinterprets or narrows a requirement.** Acceptance criteria may
+  make a requirement *checkable in this ticket's context*; they may not make it smaller. If
+  a requirement is too large for one ticket, split the ticket, never the obligation.
+- **A requirement is never edited to fit the decomposition.** Discovering during
+  decomposition that a requirement is wrong, ambiguous or unachievable is a valuable result
+  — raise it as a spec change request and let the user decide. It is not a licence to
+  reword.
 
 ---
 
@@ -24,6 +53,8 @@ Every task uses this shape, unchanged in section order and headings:
 
 ```markdown
 # Task [N] — [Outcome-focused title]
+
+**Satisfies:** R-n, R-m — the requirements this task makes true.
 
 ## User story
 
@@ -56,6 +87,8 @@ Out of scope:
 ## Definition of Done
 
 - All acceptance criteria pass.
+- Every requirement in `Satisfies` is ✅ in the spec's conformance table, with the
+  conformance suite unchanged (`git diff --exit-code` over it is clean).
 - Code is reviewed and merged.
 - Appropriate automated and manual tests pass.
 - Accessibility, security, and performance requirements are met.
@@ -88,11 +121,15 @@ place.]
 - Parent epic:
 ```
 
-**Where the repo has a `SPEC.md`, Acceptance criteria cite the requirements they discharge by
-ID** — `Discharges R-4` — rather than restating the requirement in the ticket's own words. A
+**The `Satisfies` field names requirements by ID; Acceptance criteria make those requirements
+checkable in this ticket's context** — never by restating them in the ticket's own words. A
 restated requirement is a second copy that drifts; an ID is a pointer that cannot. The
-requirement itself is the user's and neither this skill nor the developer may reword it. See
+requirement itself is the user's, and neither this skill nor the developer may reword it. See
 [`spec-doc`](../spec-doc/SKILL.md).
+
+The two fields are not the same thing: **`Satisfies` names requirements** in `SPEC.md`, while
+*Proof of value*'s own **Discharges names the plan element** the ticket serves. One is the
+obligation; the other is the route to it.
 
 **Every heading appears in every task, in this order, even when a section is short.** A
 missing *Out of scope* reads as "nothing was excluded" when it usually means nobody thought
@@ -114,16 +151,35 @@ numbers don't need renaming when a title is later reworded, and a number makes t
 plan below mechanically derivable instead of read by eye:
 
 ```markdown
-| # | Task | Parent plan step | Depends on | Priority |
-|---|---|---|---|---|
-| 1 | Public API requests are rate-limited per API key | Next step 1 | — | High |
-| 2 | Emit rate-limit metrics to the dashboard | Next step 1 | 1 | Medium |
-| 3 | Add configurable per-tenant quotas | Next step 3 | — | Medium |
+| # | Task | Satisfies | Parent plan step | Depends on | Priority |
+|---|---|---|---|---|---|
+| 1 | Public API requests are rate-limited per API key | R-4 | Next step 1 | — | High |
+| 2 | Emit rate-limit metrics to the dashboard | R-5 | Next step 1 | 1 | Medium |
+| 3 | Add configurable per-tenant quotas | R-4, R-9 | Next step 3 | — | Medium |
 ```
 
-The manifest is what makes the dependency graph visible at a glance and catches the two
-failure modes early: a task with no parent step (scope invented, not decomposed), and two
-tasks silently claiming the same in-scope item.
+The manifest is what makes the dependency graph visible at a glance and catches three
+failure modes early: a task with no parent step (scope invented, not decomposed), two tasks
+silently claiming the same in-scope item, and an empty `Satisfies` cell (work with no
+mandate behind it).
+
+### And the coverage table, read the other way
+
+The manifest is read task-first. Read it requirement-first and it answers the question the
+user actually has — *what does this sprint make true?*
+
+```markdown
+| Req | Status now | Tasks | Status if the sprint lands |
+|---|---|---|---|
+| R-4 | ❌ | 1, 3 | ✅ |
+| R-5 | unbound | 2 | ✅ |
+| R-9 | ❌ | 3 | ❌ — partial, needs a follow-up sprint |
+```
+
+**A requirement the sprint targets but does not finish must say so in that last column.**
+A sprint that closes every ticket and leaves R-9 red is not a failed sprint; a sprint that
+closes every ticket while implying R-9 went green is a false report, and it is the one this
+table exists to prevent.
 
 ## Before the tickets: a parallel execution plan
 
@@ -174,6 +230,7 @@ Read the plan; do not invent what it does not say.
 
 | Plan content | Feeds into |
 |---|---|
+| **`SPEC.md` requirements** (not plan content — the bar the plan is a route to) | **Satisfies, and the Acceptance criteria that make each cited requirement checkable here** |
 | The objective / problem statement | Context, and the benefit clause of User story |
 | Constraints | Dependencies and constraints, and any Requirement they force |
 | Next steps (or equivalent deliverables list) | The set of tasks — one step commonly becomes 1–4 tasks |
@@ -216,6 +273,9 @@ A plan step is strategy; a task is a unit of execution. They are not required to
 Each of these mirrors a rule elsewhere in this skill set — specificity over vagueness, in
 every field that invites a placeholder:
 
+- **A task with an empty `Satisfies` is not a task.** Before writing the ticket, name the
+  requirement it makes true. If none exists, the honest output is a question to the user —
+  "this work has no requirement behind it; should there be one?" — not a ticket.
 - **A user story names a real actor, not "a user."** If the plan's actor is a system (a CI
   pipeline, a cron job, an on-call engineer), name that system. A generic actor means the
   plan was not read closely enough to find the real one.
@@ -269,11 +329,17 @@ Manifest and parallel execution plan for this batch (see the two sections above 
 and Task 3 aren't written out in full here, only Task 1 is):
 
 ```markdown
-| # | Task | Parent plan step | Depends on | Priority |
-|---|---|---|---|---|
-| 1 | Public API requests are rate-limited per API key | Next step 1 | — | High |
-| 2 | Emit rate-limit metrics to the dashboard | Next step 1 | 1 | Medium |
-| 3 | Add configurable per-tenant quotas | Next step 3 | — | Medium |
+| # | Task | Satisfies | Parent plan step | Depends on | Priority |
+|---|---|---|---|---|---|
+| 1 | Public API requests are rate-limited per API key | R-4 | Next step 1 | — | High |
+| 2 | Emit rate-limit metrics to the dashboard | R-5 | Next step 1 | 1 | Medium |
+| 3 | Add configurable per-tenant quotas | R-4, R-9 | Next step 3 | — | Medium |
+
+| Req | Status now | Tasks | Status if the sprint lands |
+|---|---|---|---|
+| R-4 | ❌ | 1, 3 | ✅ |
+| R-5 | unbound | 2 | ✅ |
+| R-9 | ❌ | 3 | ❌ — partial, needs a follow-up sprint |
 
 | Wave | Tasks | Blocked by |
 |---|---|---|
@@ -288,6 +354,8 @@ Resulting task:
 
 ```markdown
 # Task 1 — Public API requests are rate-limited per API key
+
+**Satisfies:** R-4.
 
 ## User story
 
@@ -332,6 +400,8 @@ Out of scope:
 ## Definition of Done
 
 - All acceptance criteria pass.
+- Every requirement in `Satisfies` is ✅ in the spec's conformance table, with the
+  conformance suite unchanged (`git diff --exit-code` over it is clean).
 - Code is reviewed and merged.
 - Appropriate automated and manual tests pass.
 - Accessibility, security, and performance requirements are met.

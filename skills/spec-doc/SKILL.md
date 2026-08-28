@@ -292,10 +292,12 @@ outgrown the format:
 
 - [`plan-doc`](../plan-doc/SKILL.md) — the plan's steps work toward requirements; the spec
   does not schedule anything.
-- [`sprint-tasks`](../sprint-tasks/SKILL.md) — a task's acceptance criteria cite the
-  requirements it discharges, by ID, rather than restating them.
-- [`implement-feature`](../implement-feature/SKILL.md) — the definition of done includes the
-  conformance suite green with the suite unchanged.
+- [`sprint-tasks`](../sprint-tasks/SKILL.md) — a ticket's `Satisfies` field names the
+  requirements it makes true, by ID, and a sprint is measured by which requirements it turns
+  green. It will not decompose a plan without a spec to decompose it toward.
+- [`implement-feature`](../implement-feature/SKILL.md) and [`mvp`](../mvp/SKILL.md) — both
+  find the requirement before building and verify against it after; definition of done is the
+  conformance suite green with the suite unchanged, not "the code runs".
 - [`test-plan`](../test-plan/SKILL.md) — conformance is the floor; sufficiency is its job.
 - [`escalate`](../escalate/SKILL.md) — the spec change request is one of its triggers.
 - [`consistency`](../consistency/SKILL.md) — a requirement renamed or retired ripples into
