@@ -68,6 +68,11 @@ QUIET_SECONDS=${QUIET_SECONDS:-3600}
 # floor and not the signal filter — `reflect` does the real filtering.
 MIN_TURNS=${MIN_TURNS:-5}
 
+# Longer than PASS_SECONDS, so a pass killed mid-flight releases its lock to the
+# next timer rather than wedging the loop until someone notices.
+STALE_AFTER=${STALE_AFTER:-2400}
+PASS_SECONDS=${PASS_SECONDS:-1800}
+
 LIMIT=8
 MODE=run
 
@@ -95,10 +100,28 @@ mkdir -p "$LOCKDIR"
 # incrementing the same candidate file is how a count ends up wrong, and a wrong
 # count is what promotes a rule.
 if [ "$MODE" = run ] || [ "$MODE" = mark ]; then
-  exec 9>"${LOCKDIR}/reflect.lock"
-  if ! flock -n 9; then
-    log "another reflect pass is already running; nothing to do"
-    exit 0
+  if command -v flock >/dev/null 2>&1; then
+    exec 9>"${LOCKDIR}/reflect.lock"
+    if ! flock -n 9; then
+      log "another reflect pass is already running; nothing to do"
+      exit 0
+    fi
+  else
+    # macOS has no flock(1). mkdir is atomic on every POSIX filesystem. Stale
+    # after longer than a pass can take, so a killed run cannot wedge the loop.
+    REFLECT_LOCK="${LOCKDIR}/reflect.lock.d"
+    if ! mkdir "$REFLECT_LOCK" 2>/dev/null; then
+      held="$(stat -f %m "$REFLECT_LOCK" 2>/dev/null || stat -c %Y "$REFLECT_LOCK" 2>/dev/null)"
+      if [ -n "$held" ] && [ $(( $(date +%s) - held )) -gt "$STALE_AFTER" ]; then
+        log "removing a stale reflect lock (older than ${STALE_AFTER}s)"
+        rmdir "$REFLECT_LOCK" 2>/dev/null
+        mkdir "$REFLECT_LOCK" 2>/dev/null || { log "could not take the reflect lock"; exit 0; }
+      else
+        log "another reflect pass is already running; nothing to do"
+        exit 0
+      fi
+    fi
+    trap 'rmdir "$REFLECT_LOCK" 2>/dev/null' EXIT
   fi
 fi
 
@@ -266,11 +289,33 @@ if [ "$MODE" = dry ]; then
   exit 0
 fi
 
+# macOS ships no timeout(1), and an unbounded `claude -p` here would hold the
+# lock past the next timer. Watchdog: run the pass in the background, kill it if
+# it outlives PASS_SECONDS, and report the same non-zero status either way.
+run_pass() {
+  claude -p "$PROMPT" \
+    --permission-mode acceptEdits \
+    --add-dir "$CLAUDE_HOME" \
+    2>&1 &
+  local pass=$!
+  ( sleep "$PASS_SECONDS"; kill -0 "$pass" 2>/dev/null && kill "$pass" 2>/dev/null ) &
+  local watchdog=$!
+  wait "$pass"; local status=$?
+  kill "$watchdog" 2>/dev/null
+  wait "$watchdog" 2>/dev/null
+  return $status
+}
+
 log "invoking claude"
-if timeout 1800 claude -p "$PROMPT" \
-     --permission-mode acceptEdits \
-     --add-dir "$CLAUDE_HOME" \
-     2>&1; then
+if command -v timeout >/dev/null 2>&1; then
+  timeout "$PASS_SECONDS" claude -p "$PROMPT" \
+    --permission-mode acceptEdits \
+    --add-dir "$CLAUDE_HOME" \
+    2>&1
+else
+  run_pass
+fi
+if [ $? -eq 0 ]; then
   printf '%s\n' "$BATCH" | while IFS=$'\t' read -r sid project path lines from verdict; do
     record "$sid" "$path" "$lines" processed "$project"
   done
