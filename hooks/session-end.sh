@@ -16,6 +16,12 @@ SESSION="$(printf '%s' "$SESSION" | tr -c 'A-Za-z0-9._-' '_')"
 
 # Detached, so ending a session never waits on git or the network. sync-skills.sh
 # takes its own lock, so this racing the timer is harmless.
-setsid "${CLAUDE_HOME}/scripts/sync-skills.sh" >>"${CLAUDE_HOME}/hooks/sync.log" 2>&1 &
+# macOS has no setsid(1); nohup detaches well enough here, since all this needs
+# is to outlive the exiting session rather than lead a new session group.
+if command -v setsid >/dev/null 2>&1; then
+  setsid "${CLAUDE_HOME}/scripts/sync-skills.sh" >>"${CLAUDE_HOME}/hooks/sync.log" 2>&1 &
+else
+  nohup "${CLAUDE_HOME}/scripts/sync-skills.sh" >>"${CLAUDE_HOME}/hooks/sync.log" 2>&1 &
+fi
 
 exit 0
