@@ -11,3 +11,4 @@
 !/hooks/
 skills/**/.backups/
 hooks/*.log
+skills/synced/

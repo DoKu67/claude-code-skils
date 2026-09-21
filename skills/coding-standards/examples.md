@@ -377,6 +377,54 @@ counter += 1
 counter += 1
 ```
 
+### Long explanation lives in the docstring, not inline
+
+```python
+# Violation — a five-line rationale wedged in the middle of the body
+def run_vllm(model_name: str, port: int) -> None:
+    # We use subprocess.Popen here instead of subprocess.run because Modal's
+    # web_server decorator needs this function to return immediately so it can
+    # start polling the port; a blocking call would make Modal think startup
+    # hung and time out after startup_timeout. vllm serve blocks forever once
+    # it starts, so it has to be launched as a detached background process.
+    subprocess.Popen(f"vllm serve {model_name} --host 0.0.0.0 --port {port}", shell=True)
+
+# Fix — the rationale moves to the docstring; the body stays uninterrupted
+def run_vllm(model_name: str, port: int) -> None:
+    """Launches vLLM as a detached background process.
+
+    Must return immediately, not block: Modal's web_server decorator polls
+    the port after this function returns, and vllm serve never returns on
+    its own.
+    """
+    subprocess.Popen(f"vllm serve {model_name} --host 0.0.0.0 --port {port}", shell=True)
+```
+
+### Docstrings are capped at 4 lines
+
+```python
+# Violation — 11 lines of rationale, most of it not load-bearing
+def log_weave_evaluation(run_name: str, evaluation_name: str, result) -> None:
+    """Replays one Braintrust `EvalResultWithSummary` into Weave as a real `weave.Evaluation`,
+    so it shows up in Weave's comparison table and Leaderboard. Call only when `wandb_mode`
+    is `"online"` and `weave.init()` has already run (`eval_logger.py`'s own gate) — otherwise
+    this is a harmless no-op (weave ops silently skip publishing without an active client, the
+    same behavior `model_client.py`'s `call_model()` already relies on).
+
+    `evaluation_name` (`EvalLogger.next_weave_eval_name()`, shaped `<run_id>_weave_<n>`) is
+    forced onto `evaluation_name=`, which Weave uses (see its own
+    `default_evaluation_display_name`) as this call's display name in the UI — without it,
+    Weave picks its own random `eval-<date>-<adjective>-<noun>` name, unrelated to the run_id
+    this run's W&B Run and `RunManifest` both use."""
+
+# Fix — the essential why survives; the rest was restating the caller's own gate
+def log_weave_evaluation(run_name: str, evaluation_name: str, result) -> None:
+    """Replays one Braintrust result into Weave as a real weave.Evaluation. Only called
+    when online and weave.init() has run — otherwise a harmless no-op. `evaluation_name`
+    (`<run_id>_weave_<n>`) is forced onto `evaluation_name=` so Weave's display name
+    matches this run's own id, instead of picking its own unrelated random name."""
+```
+
 ### A performance change cites its measurement
 
 ```

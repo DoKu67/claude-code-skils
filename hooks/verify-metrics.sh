@@ -29,7 +29,14 @@ generic="$HOME/.claude/hooks/verify_metrics_generic.py"
 
 # The ml_logging contract: every run owns a directory containing metrics.jsonl. Any project
 # following it is covered without configuring anything.
-mapfile -t fresh < <(find "$project_dir" -maxdepth 6 -name metrics.jsonl -newermt '-10 minutes' 2>/dev/null | head -20)
+#
+# A plain read loop rather than `mapfile` — this machine's /usr/bin/env bash resolves to the
+# stock macOS bash (3.2, pre-GPLv3), which has no `mapfile` (added in bash 4). Under `set -u`
+# that failed silently into "problems on every command" instead of "nothing to check".
+fresh=()
+while IFS= read -r line; do
+  fresh+=("$line")
+done < <(find "$project_dir" -maxdepth 6 -name metrics.jsonl -newermt '-10 minutes' 2>/dev/null | head -20)
 [ "${#fresh[@]}" -gt 0 ] || exit 0
 
 verifier="$project_dir/scripts/verify_metrics.py"

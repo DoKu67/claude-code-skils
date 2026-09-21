@@ -1,6 +1,6 @@
 ---
 name: tldr
-description: Summarize where something stands in a fixed five-section format — Summary, Goal, Blockers, Next Steps, Figures. Use when the user says "tldr", "summarize", "recap", "where are we", "give me the short version", or asks for a status update; when handing work off or closing out a long session; and when a thread has grown long enough that the current state is no longer obvious from reading it.
+description: Summarize where something stands in a fixed five-section format — Summary, Goal, Blockers, Next Steps, Figures. Use when the user says "tldr", "where are we", "give me the short version", or asks for a status update on ongoing work; when handing work off or closing out a long session; and when a thread has grown long enough that the current state is no longer obvious from reading it. For condensing arbitrary content (a document, a topic, prior output) rather than reporting task status, use /recap instead.
 ---
 
 # tldr

@@ -124,6 +124,14 @@ Once the code works and the interface has settled, reach for the shared word for
 **Comments explain why.**
 Rationale, tradeoffs considered, the reason the obvious approach fails here. A comment explaining *what* the code does is a naming failure — rename, then delete the comment. What-comments also rot silently, because nothing breaks when they stop being true.
 
+**Long explanation lives in the docstring, not inline.**
+A rationale that runs more than two lines belongs in the function's docstring, not as a comment dropped in the middle of the body. The docstring is the first thing a reader — and a diff — sees; a multi-line aside buried between statements interrupts the one thing a reader is doing at that point, which is tracing control flow, and it outweighs its own importance by sitting there. Keep inline comments to a line or two, pointing at the one statement they annotate.
+*Doesn't apply when:* the rationale is tied to one specific statement buried deep in the body — a workaround for a bug in a particular call, three branches in — where hoisting it to the top would orphan it from the code it explains. That's the exception, reserved for real edge cases, not the default home for long comments.
+
+**Docstrings are capped at 4 lines.**
+Beyond 4 lines, a docstring is ranting, not documenting — cut to the essential why, and move real detail to a design doc/report the docstring can point at.
+*Doesn't apply when:* a public API's full parameter/return contract genuinely needs the space — rare, and still trimmed of anything not load-bearing.
+
 **A performance change cites its measurement.**
 Before/after numbers and the workload they came from. Optimization without a measurement is a guess that also costs readability. Correctness first, then measure, then optimize what the measurement pointed at.
 

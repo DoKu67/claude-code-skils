@@ -216,6 +216,14 @@ output collapses into confident, plausible prose.
 
 ## Out of scope
 
+**Implementing a fix.** This skill's deliverable is the Verdict, not a patch — even when the
+request bundles both in one sentence ("check X and fix it" / "and solve this bug"). A
+Disproved verdict names the counterexample; an Unresolved one names the missing lemma or
+technique; neither is an instruction to then write code. Report what a fix would need to
+change if it's obvious from the proof, but stop there — implementing it is a separate,
+explicit ask the caller makes after seeing the Verdict, not part of this skill's job in the
+same turn.
+
 **Whether the claim is worth proving.** Choosing which property matters enough to formalize
 is the caller's decision, or `proof-of-value`'s when the context is a sprint ticket. This
 skill only proves the property once it has been chosen.

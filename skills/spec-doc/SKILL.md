@@ -50,15 +50,113 @@ not a failure to finish.
 
 **Status · <date> · <n requirements, k failing, m unbound>.**
 
+## Requirement levels  the tree: which guarantee each requirement serves, plus the module map
 ## Purpose          what this system must do, in a paragraph a newcomer can read
-## Requirements     R-1…R-n, each a SHALL sentence plus its scenarios
+## Requirements     R-1…R-n, each a SHALL sentence plus its scenarios, in numeric order
 ## Not required     behaviour deliberately excluded, with the reason
 ## Clarifications   [NEEDS CLARIFICATION: …] — open questions that block work
 ## Conformance      the table: requirement → module → test → status
 ```
 
-All five sections appear even when nearly empty. `None` is a legitimate entry — an absent
+All six sections appear even when nearly empty. `None` is a legitimate entry — an absent
 *Not required* reads as "nothing was excluded" when it usually means nobody wrote down why.
+
+*Requirement levels* comes **first, before Purpose**, because it is the only view that shows
+what each requirement is *for*. Everything after it is read against that tree.
+
+---
+
+## Requirement levels
+
+A flat list of requirements answers "what must be true" and hides "what breaks if this one
+doesn't". Two requirements can look equally important on a flat list while one of them exists
+solely to make the other true — and the day they disagree is the day that matters. The tree is
+what makes that visible before it costs anything.
+
+> **A level says what rests on a requirement, not how strongly it binds.**
+
+Every requirement is an obligation at every level. There is no weak level and nothing is
+optional lower down. Get this wrong and the section becomes a priority list, which is the one
+thing it must not be — a "Level 3" nobody implements because it sounded minor is exactly the
+failure the hierarchy exists to prevent.
+
+- **Level 1** — a guarantee the system makes to a person. Nothing else in the spec exists to
+  serve it.
+- **Level 2** — an obligation a Level 1 guarantee rests on. Break it and its parent is
+  unproven, however green the parent's own tests are.
+- **Level 3** — an obligation a Level 2 requirement rests on, at one further remove.
+
+Deeper than three is a sign the spec is modelling a call graph rather than a set of
+obligations. Stop at three and use *also serves* notes for the rest.
+
+### The tree
+
+A fenced block, one line per requirement, module on the right. Children indent under the
+parent they serve:
+
+```
+R-1   A run's whole life is recorded                        core.pipeline
+├── R-7    The code that produced a run is recoverable       core.snapshot
+└── R-8    A run is one deployment                           core.pipeline
+    └── R-16  The deployed file is declared as configuration core.models
+
+R-4   The record is append-only                              core.schema
+└── R-6    The live database has every declared guard        core.db
+```
+
+- **Every requirement appears exactly once**, at its primary parent. A requirement serving
+  more than one parent gets an *also serves* note in its byline, not a second line in the tree.
+- **A Level 1 with no children is normal** and needs no apology — it means nothing else in the
+  spec exists to hold it up.
+- **A reserved number does not appear; a deferred one appears marked.** A reserved ID has no
+  obligation to place. A deferred one has a real obligation that is not binding yet, and hiding
+  it is how the gap gets rediscovered later — show it with `— DEFERRED` on its line.
+
+### The module map
+
+Read down a module's column to see every obligation it carries, and at which level:
+
+```markdown
+| Module | Level 1 | Level 2 | Level 3 |
+|---|---|---|---|
+| `core.pipeline` | `R-1` | `R-8` | `R-16` |
+| `core.schema` | `R-4` | — | — |
+| `core.db` | — | `R-6` | — |
+```
+
+A Level 1 entry is a guarantee that module owns outright; a Level 2 or 3 entry is one it owes
+to the requirement above it. Where nothing is built yet, the column names the *planned
+component* in the spec's own domain terms — never a filename, which would put implementation
+back into the one document that must survive it.
+
+### Name where the levels do real work
+
+Close the section by naming the one or two parent/child pairs where the hierarchy earns its
+place — the pair where the parent can be green while resting on nothing:
+
+> `R-4` is what the record's immutability means, but a guarantee declared in the schema is not
+> a guarantee the connected database makes. `R-6` is what makes `R-4` true in practice, so
+> `R-4` green with `R-6` red is a claim resting on nothing.
+
+This is the sentence a reviewer uses. Without it the tree is decoration; with it, a red child
+is known to invalidate a green parent, and the conformance table stops being readable
+row-by-row in isolation.
+
+### What it changes downstream
+
+- **Each requirement carries a byline** under its heading: its level, its module, the parent it
+  serves, and any *also serves* note — `*Level 2 · `core.db` · serves `R-4` · applies it to the
+  live database*`. This is what carries the hierarchy into the Requirements section, and it is
+  why that section does not need rearranging to show it.
+- **The Requirements section stays in numeric order, and so does the conformance table.** Both
+  are lookups. The tree is the one place the structure lives; a document that also *orders* by
+  it has two orderings of one list, which is how the two drift apart and how a reader loses the
+  ability to find `R-13` by scanning.
+- **Heading depth is uniform.** Every requirement at the same level of heading, scenarios one
+  deeper. Depth cannot encode the tree once the section is in numeric order — a `####` child
+  sitting above its `###` parent reads as a mistake — so the byline encodes it instead.
+- **A requirement is still readable alone.** The byline names the parent; it does not assume the
+  reader has just read it.
 
 ---
 
@@ -285,6 +383,8 @@ outgrown the format:
 | Scenarios enumerating inputs | a property — hand it to [`test-plan`](../test-plan/SKILL.md) |
 | Rationale, alternatives, history | the plan's *Decided* or the journal |
 | Requirements about how, not what | design; see [`mvp`](../mvp/SKILL.md) stage 3 |
+| A tree deeper than three levels | a call graph, not a set of obligations — flatten it and use *also serves* |
+| Every requirement at Level 1 | the tree was filled in mechanically; nothing was asked about what rests on what |
 
 ---
 
@@ -316,10 +416,15 @@ or [`mvp`](../mvp/SKILL.md). Proving code correct beyond its scenarios —
 
 ## Done when
 
-All five sections are present; every requirement is one SHALL sentence with at least one
-Given/When/Then scenario a human could check by hand; no requirement names a technology,
-file or class; every underspecified point is a `[NEEDS CLARIFICATION: …]` marker rather than
-a guess; requirement IDs are prefixed and never reused; every scenario has exactly one
+All six sections are present, with *Requirement levels* first; every requirement appears
+exactly once in the tree, at no deeper than Level 3, carrying a byline naming its level, its
+module and the parent it serves; the module map has a row per module and the section names the
+pair where a green parent would rest on a red child; the Requirements section and the
+conformance table are both in numeric order, with heading depth uniform and the hierarchy
+carried by the bylines; every requirement is one SHALL sentence
+with at least one Given/When/Then scenario a human could check by hand; no requirement names a
+technology, file or class; every underspecified point is a `[NEEDS CLARIFICATION: …]` marker
+rather than a guess; requirement IDs are prefixed and never reused; every scenario has exactly one
 conformance test named for its requirement; the conformance table shows a row per
 requirement with `unbound` where nothing has taken it on; no spec or conformance test was
 edited by Claude without the human accepting it; any pass reported was reported alongside a
