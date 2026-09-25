@@ -1,5 +1,5 @@
 {
-  "name": "claude-code-skils",
+  "name": "a",
   "version": "0.1.0",
   "description": "Personal skill set covering software development, ML experimentation, and a self-improvement loop. Works in Claude Code (clone to ~/.claude) and as a Devin plugin.",
   "keywords": ["skills", "development", "machine-learning", "fine-tuning"],

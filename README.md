@@ -62,7 +62,7 @@ always-on rule that tells Devin which skill to reach for and when.
 | Devin CLI / Desktop | `devin plugins install DoKu67/claude-code-skils` |
 
 Skills then load exactly as in Claude Code — automatically when a task matches a skill's
-`description`, or explicitly as `/claude-code-skils:<skill>` (e.g. `/claude-code-skils:mvp`).
+`description`, or explicitly as `/a:<skill>` (e.g. `/a:mvp`).
 
 What does **not** carry over: `install.sh`, the sync timer, the hooks and the reflect pass
 assume a persistent `~/.claude` checkout with Claude Code installed. Devin sessions run on
