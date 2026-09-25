@@ -230,7 +230,8 @@ Rules that survive the move into a script:
   rotation — search the web *and* internal sources across several angles, second round with
   the vocabulary the first taught, return mechanisms with links labelled by origin. Its
   prompt must name both; left unsaid, agents default to grepping the repo and come back with
-  nothing from outside it.
+  nothing from outside it. Tell it to fire its searches concurrently, not one at a time — it
+  is the slowest generator and sets the wall-clock of the whole Diverge phase.
 - **No generator sees another's output, and none of them rank.** If a generator returns a
   recommendation, drop the ranking and keep the options.
 - **Scale the fleet to the stakes**: three axes for an ordinary question, five or six when the
