@@ -23,7 +23,7 @@ minutes.
 | Search first | Skip it |
 |---|---|
 | Designing a system, format, protocol or workflow | The task is mechanical and the shape is settled |
-| Choosing between two approaches with real consequences | The domain is genuinely private — internal data, one repo's conventions |
+| Choosing between two approaches with real consequences | The question is purely about internal facts — what one repo does, what a config is set to — with no general problem underneath |
 | About to invent something that sounds like it should exist | You have already surveyed this in the same session |
 | A named technique you have not implemented before | The user has said to skip it |
 
@@ -35,19 +35,22 @@ an input to it.
 
 ## Searching
 
-**Search the internet.** This skill is a web search, not a repo search. Use the harness's
-web search and page-fetch tools (Devin: `web_search` / `web_fetch` and the browser; Claude
-Code: `WebSearch` / `WebFetch`) for every angle below. Local repos, Slack, Notion and
-internal docs may tell you *what the thing is* — use them to ground the subject and learn
-its internal names — but they cannot tell you how the rest of the world solved it, which is
-the whole point. If the web tools are unavailable, say so in the write-up rather than
-substituting internal sources and calling it a survey.
+**Search two places, always: the internet and the internal sources.** They answer
+different questions and neither substitutes for the other.
 
-Internal subjects are not an exception. When the user names something private (a codebase,
-an internal model, a team's technique), first work out what *general problem* it is an
-instance of, then search the web for that. "Compare our rankers A and B" becomes a survey
-of how the field ranks under that constraint; the internal names only appear in the final
-recommendation.
+| Where | Tools | What it answers |
+|---|---|---|
+| **Internet** | Devin: `web_search` / `web_fetch` and the browser; Claude Code: `WebSearch` / `WebFetch` | How the rest of the world has solved the *general* problem — the convergence and gaps tables come from here |
+| **Internal** | Repos on disk, Slack, Notion, Linear, internal docs, past sessions — whatever the harness exposes | What the subject *is* here, what has already been tried in-house, what constraints and vocabulary the team uses — the recommendation is grounded here |
+
+Do the internal pass first when the subject has internal names: work out what *general
+problem* it is an instance of, then take that to the web. "Compare our rankers A and B"
+becomes a web survey of how the field ranks under that constraint, plus an internal survey
+of what A and B actually do and what was tried before them. Both appear in the write-up,
+labelled as such. Skipping the web pass turns the survey into a description of the status
+quo; skipping the internal pass produces advice that ignores what the team already knows.
+If either set of tools is unavailable, say so in the write-up rather than quietly reporting
+half a survey as a whole one.
 
 **Search several angles.** Each surfaces things the others structurally cannot, and one
 angle alone reliably produces a confident, partial picture.
@@ -74,8 +77,9 @@ mechanisms you had not seen, keep going.
 The angles are independent, so round one fans out. **When three or more angles apply, run
 each in its own subagent** (Devin: `run_subagent`; Claude Code: the Task/Agent tool), all
 concurrently, each told: the problem in the reframed general terms, exactly one angle, and
-to return sources with a one-line mechanism each and no recommendation. Keeping the angles
-in separate contexts is also what stops the first angle's framing from colouring the rest.
+to return sources with a one-line mechanism each and no recommendation. The internal pass
+is one more angle and gets its own subagent on the same terms. Keeping the angles in
+separate contexts is also what stops the first angle's framing from colouring the rest.
 
 Round two stays with you: it depends on the vocabulary round one produced, so collect the
 results, pick the terms, and either search yourself or fan out once more with the new
@@ -154,8 +158,8 @@ adoption: all larger exercises that start where this one ends.
 
 ## Done when
 
-The web was searched — not only local repos or internal channels — with the subject
-restated as the general problem it instances; at least two angles were searched, in
+Both the web and the internal sources were searched and each is labelled in the write-up,
+with the subject restated as the general problem it instances for the web pass; at least two angles were searched, in
 separate subagents when three or more applied, and a second round used the vocabulary the first one
 taught; the convergence table has a link per row; the gaps table names what every
 implementation shares as a weakness; the write-up says what to take and what to diverge from
