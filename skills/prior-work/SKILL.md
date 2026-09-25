@@ -23,7 +23,7 @@ minutes.
 | Search first | Skip it |
 |---|---|
 | Designing a system, format, protocol or workflow | The task is mechanical and the shape is settled |
-| Choosing between two approaches with real consequences | The domain is genuinely private — internal data, one repo's conventions |
+| Choosing between two approaches with real consequences | The question is purely about internal facts — what one repo does, what a config is set to — with no general problem underneath |
 | About to invent something that sounds like it should exist | You have already surveyed this in the same session |
 | A named technique you have not implemented before | The user has said to skip it |
 
@@ -34,6 +34,23 @@ an input to it.
 ---
 
 ## Searching
+
+**Search two places, always: the internet and the internal sources.** They answer
+different questions and neither substitutes for the other.
+
+| Where | Tools | What it answers |
+|---|---|---|
+| **Internet** | Devin: `web_search` / `web_fetch` and the browser; Claude Code: `WebSearch` / `WebFetch` | How the rest of the world has solved the *general* problem — the convergence and gaps tables come from here |
+| **Internal** | Repos on disk, Slack, Notion, Linear, internal docs, past sessions — whatever the harness exposes | What the subject *is* here, what has already been tried in-house, what constraints and vocabulary the team uses — the recommendation is grounded here |
+
+Do the internal pass first when the subject has internal names: work out what *general
+problem* it is an instance of, then take that to the web. "Compare our rankers A and B"
+becomes a web survey of how the field ranks under that constraint, plus an internal survey
+of what A and B actually do and what was tried before them. Both appear in the write-up,
+labelled as such. Skipping the web pass turns the survey into a description of the status
+quo; skipping the internal pass produces advice that ignores what the team already knows.
+If either set of tools is unavailable, say so in the write-up rather than quietly reporting
+half a survey as a whole one.
 
 **Search several angles.** Each surfaces things the others structurally cannot, and one
 angle alone reliably produces a confident, partial picture.
@@ -54,6 +71,26 @@ empty on a well-studied problem.
 **Stop when two consecutive sources add no new mechanism.** Not when you have read
 everything — that never happens — and not after a fixed count. If sources keep introducing
 mechanisms you had not seen, keep going.
+
+### Parallelising — the default, not an option
+
+**Never run the angles one after another.** The angles and the two sources are independent
+of each other, so everything in round one should be in flight at the same time; the user is
+waiting on wall-clock, and a survey that takes ten sequential searches when it could take
+one round has failed on the cost side whatever it found. Choose the mechanism per case:
+
+| Mechanism | Use when | How |
+|---|---|---|
+| **Parallel tool calls** from your own context | Queries are known up front and results are short — a batch of web searches, a Slack search, a repo grep | Emit them all in one turn (Devin: several calls in one response or a `scripted_tools` batch with `asyncio.gather`; Claude Code: multiple tool calls in one message). Cheapest; no handoff |
+| **Parallel subagents**, one per angle | Three or more angles apply, an angle needs several dependent steps (search → open → read → follow links), or results would swamp one context | Devin: `run_subagent`; Claude Code: the Task/Agent tool. Each gets the reframed problem, exactly one angle, and returns sources + one-line mechanism, no recommendation. Also the only way to keep angles from colouring each other |
+
+Mixing is normal: web angles in subagents while you run the internal Slack/repo queries as
+parallel tool calls yourself. What is not acceptable is a single context searching angle
+one, reading, then searching angle two.
+
+Round two stays with you: it depends on the vocabulary round one produced, so collect the
+results, pick the terms, and fire the second round the same way — all at once. Synthesis —
+the two tables and the recommendation — is never delegated.
 
 ---
 
@@ -124,8 +161,11 @@ adoption: all larger exercises that start where this one ends.
 
 ## Done when
 
-At least two angles were searched and a second round used the vocabulary the first one
-taught; the convergence table has a link per row; the gaps table names what every
-implementation shares as a weakness; the write-up says what to take and what to diverge from
-with a reason for each divergence; unverified claims are marked as claims; and if the survey
+Both the web and the internal sources were searched and each is labelled in the write-up,
+with the subject restated as the general problem it instances for the web pass; at least two
+angles were searched, all of round one in flight concurrently (parallel tool calls or
+subagents, never sequential), and a second round used the vocabulary the first one taught;
+the convergence table has a link per row; the gaps table names what every implementation
+shares as a weakness; the write-up says what to take and what to diverge from with a reason
+for each divergence; unverified claims are marked as claims; and if the survey
 changed nothing, that is stated rather than hidden.

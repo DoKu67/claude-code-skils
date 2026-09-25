@@ -97,10 +97,13 @@ Scale the fleet to the stakes: three agents for an ordinary question, five or si
 decision is expensive or hard to reverse.
 
 **One of them is the prior-art scout**, running [`prior-work`](../prior-work/SKILL.md)'s
-method against the reframed problem: search several angles, run a second round with the
-vocabulary the first taught, and return **mechanisms with links** — what implementations
-converge on, and what they all fail at. It returns options like any other generator, and its
-findings enter the same dedupe. Two things make it worth a slot of its own:
+method against the reframed problem: **search both the internet and the internal sources**
+— the web (Devin: `web_search` / `web_fetch`; Claude Code: `WebSearch` / `WebFetch`) for
+how the world solved the general problem, and repos, Slack, Notion and docs for what has
+already been tried in-house — across several angles, second round with the vocabulary the
+first taught, returning **mechanisms with links** labelled by where they came from.
+It returns options like any other generator, and its findings enter the same dedupe. Two
+things make it worth a slot of its own:
 
 - the mechanisms it brings back are ones no amount of rotation would have produced, because
   they came from someone hitting the problem in reality rather than from a prompt
@@ -224,8 +227,11 @@ return { options: attacked.filter(Boolean), dropped: raw.length - kept.options.l
 Rules that survive the move into a script:
 
 - **The prior-art scout is one of the `axes`**, given `prior-work`'s method rather than a
-  rotation — search several angles, second round with the vocabulary the first taught, return
-  mechanisms with links.
+  rotation — search the web *and* internal sources across several angles, second round with
+  the vocabulary the first taught, return mechanisms with links labelled by origin. Its
+  prompt must name both; left unsaid, agents default to grepping the repo and come back with
+  nothing from outside it. Tell it to fire its searches concurrently, not one at a time — it
+  is the slowest generator and sets the wall-clock of the whole Diverge phase.
 - **No generator sees another's output, and none of them rank.** If a generator returns a
   recommendation, drop the ranking and keep the options.
 - **Scale the fleet to the stakes**: three axes for an ordinary question, five or six when the
