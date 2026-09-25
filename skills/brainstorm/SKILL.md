@@ -97,10 +97,13 @@ Scale the fleet to the stakes: three agents for an ordinary question, five or si
 decision is expensive or hard to reverse.
 
 **One of them is the prior-art scout**, running [`prior-work`](../prior-work/SKILL.md)'s
-method against the reframed problem: search several angles, run a second round with the
-vocabulary the first taught, and return **mechanisms with links** — what implementations
-converge on, and what they all fail at. It returns options like any other generator, and its
-findings enter the same dedupe. Two things make it worth a slot of its own:
+method against the reframed problem: **search the internet** with the harness's web tools
+(Devin: `web_search` / `web_fetch`; Claude Code: `WebSearch` / `WebFetch`) across several
+angles, run a second round with the vocabulary the first taught, and return **mechanisms
+with links** — what implementations converge on, and what they all fail at. Local repos and
+internal channels are not prior art; they only tell you what the problem is called in-house.
+It returns options like any other generator, and its findings enter the same dedupe. Two
+things make it worth a slot of its own:
 
 - the mechanisms it brings back are ones no amount of rotation would have produced, because
   they came from someone hitting the problem in reality rather than from a prompt
@@ -224,8 +227,9 @@ return { options: attacked.filter(Boolean), dropped: raw.length - kept.options.l
 Rules that survive the move into a script:
 
 - **The prior-art scout is one of the `axes`**, given `prior-work`'s method rather than a
-  rotation — search several angles, second round with the vocabulary the first taught, return
-  mechanisms with links.
+  rotation — web-search several angles, second round with the vocabulary the first taught,
+  return mechanisms with links. Its prompt must say to use web search; without that, agents
+  default to grepping the repo and come back with nothing from outside it.
 - **No generator sees another's output, and none of them rank.** If a generator returns a
   recommendation, drop the ranking and keep the options.
 - **Scale the fleet to the stakes**: three axes for an ordinary question, five or six when the

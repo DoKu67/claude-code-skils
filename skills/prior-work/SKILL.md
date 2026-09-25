@@ -35,6 +35,20 @@ an input to it.
 
 ## Searching
 
+**Search the internet.** This skill is a web search, not a repo search. Use the harness's
+web search and page-fetch tools (Devin: `web_search` / `web_fetch` and the browser; Claude
+Code: `WebSearch` / `WebFetch`) for every angle below. Local repos, Slack, Notion and
+internal docs may tell you *what the thing is* — use them to ground the subject and learn
+its internal names — but they cannot tell you how the rest of the world solved it, which is
+the whole point. If the web tools are unavailable, say so in the write-up rather than
+substituting internal sources and calling it a survey.
+
+Internal subjects are not an exception. When the user names something private (a codebase,
+an internal model, a team's technique), first work out what *general problem* it is an
+instance of, then search the web for that. "Compare our rankers A and B" becomes a survey
+of how the field ranks under that constraint; the internal names only appear in the final
+recommendation.
+
 **Search several angles.** Each surfaces things the others structurally cannot, and one
 angle alone reliably produces a confident, partial picture.
 
@@ -54,6 +68,22 @@ empty on a well-studied problem.
 **Stop when two consecutive sources add no new mechanism.** Not when you have read
 everything — that never happens — and not after a fixed count. If sources keep introducing
 mechanisms you had not seen, keep going.
+
+### Parallelising
+
+The angles are independent, so round one fans out. **When three or more angles apply, run
+each in its own subagent** (Devin: `run_subagent`; Claude Code: the Task/Agent tool), all
+concurrently, each told: the problem in the reframed general terms, exactly one angle, and
+to return sources with a one-line mechanism each and no recommendation. Keeping the angles
+in separate contexts is also what stops the first angle's framing from colouring the rest.
+
+Round two stays with you: it depends on the vocabulary round one produced, so collect the
+results, pick the terms, and either search yourself or fan out once more with the new
+words. Synthesis — the two tables and the recommendation — is never delegated.
+
+One or two angles do not warrant subagents; search them directly. Firing several tool calls
+at once from a single context is *not* parallelising in this sense — it saves wall-clock but
+not the anchoring.
 
 ---
 
@@ -124,7 +154,9 @@ adoption: all larger exercises that start where this one ends.
 
 ## Done when
 
-At least two angles were searched and a second round used the vocabulary the first one
+The web was searched — not only local repos or internal channels — with the subject
+restated as the general problem it instances; at least two angles were searched, in
+separate subagents when three or more applied, and a second round used the vocabulary the first one
 taught; the convergence table has a link per row; the gaps table names what every
 implementation shares as a weakness; the write-up says what to take and what to diverge from
 with a reason for each divergence; unverified claims are marked as claims; and if the survey
