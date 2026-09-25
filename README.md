@@ -64,12 +64,13 @@ always-on rule that tells Devin which skill to reach for and when.
 Skills then load exactly as in Claude Code — automatically when a task matches a skill's
 `description`, or explicitly as `/a:<skill>` (e.g. `/a:mvp`).
 
-What does **not** carry over: `install.sh`, the sync timer, the hooks and the reflect pass
-assume a persistent `~/.claude` checkout with Claude Code installed. Devin sessions run on
-fresh machines, so the self-improvement loop needs a Devin-native equivalent (skills that
-open a PR to this repo, and a scheduled Automation for the mining pass). Until that exists,
-`reflect` / `codify` / `skill-audit` still run inside a Devin session, but what they stage
-does not leave the machine.
+What does **not** carry over: `install.sh`, the sync timer, the hooks and the 6-hourly
+reflect pass assume a persistent `~/.claude` checkout with Claude Code installed. Devin
+sessions run on fresh machines, so the write path back is different: `reflect` and `codify`
+work in a fresh clone (see `skills/skills-repo-access`) and hand the result to
+`scripts/publish-pr.sh`, which pushes a branch and opens a PR that the repository owner
+merges. Same loop, same "you approve a diff" gate — as a PR instead of a timer commit.
+The unattended mining pass has no Devin equivalent yet; `/reflect` is run per session.
 
 ## The skills
 

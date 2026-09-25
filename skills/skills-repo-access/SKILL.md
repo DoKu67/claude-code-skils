@@ -30,18 +30,14 @@ export GIT_ASKPASS=~/.local/bin/doku67-askpass GIT_TERMINAL_PROMPT=0
 git -c credential.helper= clone https://GitHub.com/DoKu67/claude-code-skils.git ~/skills-direct
 cd ~/skills-direct
 
-# 3. branch, edit, commit, push
-git checkout -b devin/<slug>
+# 3. edit, then publish: commits to devin/<date>-<slug>, pushes, opens the PR
 # ... edit skills/<name>/SKILL.md, skills-staging/..., etc.
-git add <paths> && git commit -m "<what and why>"
-git -c credential.helper= push -u origin HEAD
-
-# 4. open the PR through the API (the builtin PR tool cannot see this repo)
-curl -sS -X POST https://api.github.com/repos/DoKu67/claude-code-skils/pulls \
-  -H "Authorization: Bearer $DOKU67_SKILLS_GITHUB_TOKEN" -H "Accept: application/vnd.github+json" \
-  -d "$(jq -n --arg t "<title>" --arg h "devin/<slug>" --arg b "<body>" '{title:$t,head:$h,base:"main",body:$b}')" \
-  | jq -r .html_url
+scripts/publish-pr.sh <slug> "<title>" [commit-body-file]
 ```
+
+`publish-pr.sh` does steps 1–2 itself when `DOKU67_SKILLS_GITHUB_TOKEN` is set, refuses to
+commit on `main`, reuses an already-open PR for the same branch, and prints the PR URL.
+The builtin PR tools cannot see this repo, so the PR is opened through the GitHub API.
 
 The exec tool must bind the secret explicitly:
 `env: {"DOKU67_SKILLS_GITHUB_TOKEN": "secret:session:DOKU67_SKILLS_GITHUB_TOKEN"}`.

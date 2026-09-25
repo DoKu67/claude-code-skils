@@ -242,6 +242,13 @@ Commit message: `codify: <id> → <target skill>`. The body carries the full occ
 with its verbatim quotes and session ids — since the candidate file is deleted on promotion,
 this commit is the only surviving record of what the rule was built on.
 
+**In Devin** the checkout is a fresh clone (see
+[`skills-repo-access`](../skills-repo-access/SKILL.md)) and the commit goes out as a PR:
+write the commit body to a file, then `scripts/publish-pr.sh codify-<id> "codify: <id> →
+<target>" <body-file>`. The user's in-session approval of the diff still comes first; the
+PR merge is the second, recorded approval. Rejections are pushed the same way so the
+`status: rejected` file reaches `main` and future sessions see it.
+
 ---
 
 ## Out of scope
