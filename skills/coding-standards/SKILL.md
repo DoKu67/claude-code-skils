@@ -5,7 +5,7 @@ description: Apply this repo's house rules while writing or changing code. Use w
 
 # Coding Standards
 
-The rules live in [`CODING_STANDARDS.md`](CODING_STANDARDS.md), beside this file in `~/.claude/skills/coding-standards/` — **the single source of truth**, applying to every project. This skill governs when they get applied and how they grow. It never restates a rule; a rule stated twice drifts.
+The rules live in [`CODING_STANDARDS.md`](CODING_STANDARDS.md), beside this file — **the single source of truth**, applying to every project. This skill governs when they get applied and how they grow. It never restates a rule; a rule stated twice drifts.
 
 `code-review` applies these standards to a finished diff. This skill applies them *while the code is being written*, so the review has less to find.
 

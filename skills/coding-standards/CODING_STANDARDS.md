@@ -4,7 +4,7 @@ Code has two audiences: the machine that runs it and the human who debugs it at 
 
 Worked examples and fixes for every rule: [`examples.md`](examples.md), beside this file.
 
-These standards are global — they live in `~/.claude/skills/coding-standards/` and apply to every project, without exception. There is no per-repo override file. A repo that seems to need one is either revealing a rule that should change globally, or a convention that belongs in that repo's `CLAUDE.md` as context rather than as a competing standard.
+These standards are global — they live beside this file in `skills/coding-standards/` and apply to every project, without exception. There is no per-repo override file. A repo that seems to need one is either revealing a rule that should change globally, or a convention that belongs in that repo's `CLAUDE.md` or `AGENTS.md` as context rather than as a competing standard.
 
 ## Stage
 

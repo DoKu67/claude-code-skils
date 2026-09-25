@@ -50,6 +50,27 @@ git remote set-url origin git@github.com:<you>/claude-code-skils.git
 Requires `git`, `bash`, and either systemd (Linux) or launchd (macOS). Run `install.sh` once
 per machine; it is idempotent, so re-running it after a `git pull` is safe.
 
+## Using with Devin
+
+The repository is also an installable [Devin plugin](https://docs.devin.ai/product-guides/plugins):
+`.devin-plugin/plugin.json` is the manifest, `skills/` loads as-is, and `AGENTS.md` is a short
+always-on rule that tells Devin which skill to reach for and when.
+
+| Where | How |
+|---|---|
+| Devin Cloud | **Customize → Plugins → Add plugin → From repository** → `DoKu67/claude-code-skils`, at personal, organization or enterprise scope |
+| Devin CLI / Desktop | `devin plugins install DoKu67/claude-code-skils` |
+
+Skills then load exactly as in Claude Code — automatically when a task matches a skill's
+`description`, or explicitly as `/claude-code-skils:<skill>` (e.g. `/claude-code-skils:mvp`).
+
+What does **not** carry over: `install.sh`, the sync timer, the hooks and the reflect pass
+assume a persistent `~/.claude` checkout with Claude Code installed. Devin sessions run on
+fresh machines, so the self-improvement loop needs a Devin-native equivalent (skills that
+open a PR to this repo, and a scheduled Automation for the mining pass). Until that exists,
+`reflect` / `codify` / `skill-audit` still run inside a Devin session, but what they stage
+does not leave the machine.
+
 ## The skills
 
 | Category | Skills | What the category covers |

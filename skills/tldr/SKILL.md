@@ -90,7 +90,7 @@ alike. This changes what you read *before* writing, not how much you write.
 | `git status --short`, `git log --oneline` | what landed versus what is still uncommitted |
 | Background tasks and monitors | what is still running, however finished it feels |
 | `PLAN.md` and the project's journal | the *Goal* in the user's own words; the numbers for *Figures* |
-| `~/.claude/skills-staging/LEDGER.md` | decisions waiting on the user — *Blockers* they have not seen |
+| `skills-staging/LEDGER.md` in the skills repo | decisions waiting on the user — *Blockers* they have not seen |
 
 Not every source exists in every project, and a missing one is not a gap. **Inferring a
 source's contents instead of opening it is.** The two that change the output most:

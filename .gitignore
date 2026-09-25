@@ -3,6 +3,8 @@
 /*
 !/.gitignore
 !/README.md
+!/AGENTS.md
+!/.devin-plugin/
 !/install.sh
 !/skills/
 !/skills-staging/
