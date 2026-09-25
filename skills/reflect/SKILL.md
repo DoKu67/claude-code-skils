@@ -192,6 +192,24 @@ more urgent problem than a rule that is missing.
 
 ---
 
+## Running in Devin
+
+Devin sessions run on a fresh machine with no `~/.claude`, no transcript on disk and no sync
+timer, so three of the paths above change. Everything else — the boundary, the signal table,
+the thresholds — is identical.
+
+| Claude Code | Devin |
+|---|---|
+| `~/.claude/projects/<slug>/*.jsonl` | The session itself. User turns are the `received_chat_message` records; skill text, tool results, `<system_note>`/`<system_guidance>` blocks and attachments are not. Say in the report that the pass was read from context, not from a file |
+| `~/.claude/skills-staging/` | `skills-staging/` in a fresh clone made per [`skills-repo-access`](../skills-repo-access/SKILL.md) (`~/skills-direct`). Never the materialised plugin under `/opt/.devin/plugins` — it is read-only and not a checkout |
+| `sync-skills.sh` on a timer | `scripts/publish-pr.sh <slug> "<title>"` from the clone, once the pass is done. It commits `skills-staging/` to a branch and opens a PR; the owner merging it is what lands the candidates |
+
+One PR per reflection, titled `reflect: <n> candidates from session <id>`, body = the report.
+A session that produced no candidates opens nothing. Anything already open for the same
+branch is reused, so re-running is safe.
+
+---
+
 ## Out of scope
 
 Editing skills, promoting candidates, and creating new skills — all
