@@ -1,6 +1,6 @@
 ---
 name: outline
-description: Produce a flat, one-table-per-file inventory of a file or folder's main classes/functions/constants, each with a one-line "what it does". Use when the user asks for a "simplified structure", "just the main objects/methods and what they do", "what's in this file", an overview of a folder without the full nested call graph, or is new to a codebase and wants to get oriented fast. Distinct from /call-tree (nested call graph, every function, inputs/outputs, callees, file:line refs) and /explain (deep single-subject narrative walkthrough) — outline is breadth-first and flat: one row per notable definition, grouped by file, no nesting.
+description: Produce a flat, one-table-per-file inventory of a file or folder's main classes/functions/constants, each with a one-line "what it does". Use when the user asks for a "simplified structure", "just the main objects/methods and what they do", "what's in this file", an overview of a folder without the full nested call graph, or is new to a codebase and wants to get oriented fast. Not a nested call graph and not a deep single-subject walkthrough — outline is breadth-first and flat: one row per notable definition, grouped by file, no nesting.
 ---
 
 # outline

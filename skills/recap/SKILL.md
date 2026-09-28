@@ -1,6 +1,6 @@
 ---
 name: recap
-description: Condense arbitrary input — the previous output, a pasted document, a topic, a file, a search result — into a fixed four-section digest: Summary, Key Points, Table, Interesting Notes. Use when the user says "recap", "digest this", "give me the short version of that", "use the previous output", "tell me about X", or hands over content/a topic with no further instruction on shape. Distinct from /tldr, which reports project or task STATUS in Summary/Goal/Blockers/Next-Steps form — recap has no notion of task state, blockers, or next actions; it condenses content, it does not report progress.
+description: Condense arbitrary input — the previous output, a pasted document, a topic, a file, a search result — into a fixed four-section digest: Summary, Key Points, Table, Interesting Notes. Use when the user says "recap", "digest this", "give me the short version of that", "use the previous output", "tell me about X", or hands over content/a topic with no further instruction on shape. Not for reporting where WORK stands — recap has no notion of task state, blockers, or next actions; it condenses content, it does not report progress.
 ---
 
 # recap

@@ -1,6 +1,6 @@
 ---
 name: report
-description: Write the current work up as a markdown report in a fixed five-section research-paper format — Title, Abstract, Background, Method, References — with numbered figures and tables. Use when the user says "report", "write this up", "save this as a report", "make a report out of that"; and whenever the output of another command (/prior-work, /explain, /tldr, a debugging session) needs to become a durable file rather than scrollback.
+description: Write the current work up as a markdown report in a fixed five-section research-paper format — Title, Abstract, Background, Method, References — with numbered figures and tables. Use when the user says "report", "write this up", "save this as a report", "make a report out of that"; and whenever the output of another command (a prior-art survey, a walkthrough, a status summary, a debugging session) needs to become a durable file rather than scrollback.
 ---
 
 # report
