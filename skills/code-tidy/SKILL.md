@@ -1,6 +1,6 @@
 ---
 name: code-tidy
-description: Declutter code that's grown messy or bloated after a writing session — remove dead/antiquated code, strip comments and docstrings down to what earns its place, and cut unnecessary abstraction — by running coding-standards (the house-rules lens), simplify (the actual cleanup pass), code-proof (scoped only to cuts whose safety isn't self-evident), and consistency (sweeping for what the cleanup itself should have touched and didn't) in sequence. Use when the user says "clean this up", "this feels bloated", "get rid of dead code", "tidy this up", after a large or multi-file coding session before calling it done, or whenever code you just wrote reads as messier or more complicated than the problem warranted.
+description: Declutter code that's grown messy or bloated after a writing session — remove dead/antiquated code, strip comments and docstrings down to what earns its place, and cut unnecessary abstraction — by applying the house style rules, a cleanup pass, a safety argument for any cut whose safety isn't self-evident, and a final sweep for what the cleanup itself should have touched and didn't, in sequence. Use when the user says "clean this up", "this feels bloated", "get rid of dead code", "tidy this up", after a large or multi-file coding session before calling it done, or whenever code you just wrote reads as messier or more complicated than the problem warranted.
 ---
 
 # code-tidy

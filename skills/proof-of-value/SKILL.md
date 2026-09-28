@@ -1,6 +1,6 @@
 ---
 name: proof-of-value
-description: Prove, or fail to prove, that a task's acceptance criteria actually discharge the specific plan element (an objective's bar, a constraint, a decision) it claims to serve — numbered premises each tagged with a source, an explicit attempt to construct a counterexample, and a verdict of Proved / Conditional / Open. Use when the user says "prove this task is worth doing", "justify this ticket", asks for a proof of value per component, or when `sprint-tasks` is producing a task's Proof of value section. Never used to argue that a plan's objective itself is the right objective — that is `plan-doc`'s and the user's call, not provable here.
+description: Prove, or fail to prove, that a task's acceptance criteria actually discharge the specific plan element (an objective's bar, a constraint, a decision) it claims to serve — numbered premises each tagged with a source, an explicit attempt to construct a counterexample, and a verdict of Proved / Conditional / Open. Use when the user says "prove this task is worth doing", "justify this ticket", asks for a proof of value per component, or when a sprint task's Proof of value section is being produced. Never used to argue that a plan's objective itself is the right objective — that is the plan author's and the user's call, not provable here.
 ---
 
 # proof-of-value

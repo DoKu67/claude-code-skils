@@ -1,6 +1,6 @@
 ---
 name: notes
-description: Keep a project's written record — notes.md for reasoning and brainstorming, learnings.md for traps that cost time, experiments.md for the run log. Use whenever a result needs interpreting, a surprise needs recording, an idea is worth keeping for later, or the user says "note that", "record this", "add to notes", "write this down". Also use when a claim is being made about a project and it is not clear which experiment produced it.
+description: Keep a project's written record — notes.md for reasoning and idea generation, learnings.md for traps that cost time, experiments.md for the run log. Use whenever a result needs interpreting, a surprise needs recording, an idea is worth keeping for later, or the user says "note that", "record this", "add to notes", "write this down". Also use when a claim is being made about a project and it is not clear which experiment produced it.
 ---
 
 # notes

@@ -1,6 +1,6 @@
 ---
 name: codify
-description: Promote a staged candidate into the skill set — as a small delta to an existing skill, or as a new budding skill — with the user's approval, a provenance line and a falsifiable prediction. Use when the user runs /codify, when reflect reports a candidate has reached its threshold, when the user says "make that a rule" or "add that to the skill", and whenever a staged candidate is being accepted, rejected or reworded. It is the only skill permitted to edit another skill.
+description: Promote a staged candidate into the skill set — as a small delta to an existing skill, or as a new budding skill — with the user's approval, a provenance line and a falsifiable prediction. Use when the user runs /codify, when a reflection pass reports a candidate has reached its threshold, when the user says "make that a rule" or "add that to the skill", and whenever a staged candidate is being accepted, rejected or reworded. It is the only skill permitted to edit another skill.
 ---
 
 # codify
