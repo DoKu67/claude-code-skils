@@ -1,6 +1,6 @@
 ---
 name: call-tree
-description: Prints a static function call tree for a file, folder, set of files/folders, or a whole repository — showing each function's inputs, outputs, and what it does. Use whenever the user asks for a call tree, call graph, "what calls what", the flow through a module, or a map of an unfamiliar codebase. Read-only: never modifies, imports, or runs the analyzed code.
+description: "Prints a static function call tree for a file, folder, set of files/folders, or a whole repository — showing each function's inputs, outputs, and what it does. Use whenever the user asks for a call tree, call graph, \"what calls what\", the flow through a module, or a map of an unfamiliar codebase. Read-only: never modifies, imports, or runs the analyzed code."
 ---
 
 # call-tree

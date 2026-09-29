@@ -1,6 +1,6 @@
 ---
 name: spec-doc
-description: Own SPEC.md — the human-authored contract that says what the system must do, and the conformance tests that prove a module meets it. The spec is a gate, never a reward term: when a module fails a requirement, the code changes, or the human changes the spec, and no other exit exists. Use whenever writing or revising a spec or a requirement, whenever a module is being built or changed against one, whenever a conformance test fails, whenever an agent is tempted to edit a test to make it pass, and whenever another skill needs to know what a module is obliged to do. Also use when the user says "spec", "requirements", "what must this do", "does this conform", or asks whether a change is allowed to alter the spec.
+description: "Own SPEC.md — the human-authored contract that says what the system must do, and the conformance tests that prove a module meets it. The spec is a gate, never a reward term: when a module fails a requirement, the code changes, or the human changes the spec, and no other exit exists. Use whenever writing or revising a spec or a requirement, whenever a module is being built or changed against one, whenever a conformance test fails, whenever an agent is tempted to edit a test to make it pass, and whenever another skill needs to know what a module is obliged to do. Also use when the user says \"spec\", \"requirements\", \"what must this do\", \"does this conform\", or asks whether a change is allowed to alter the spec."
 ---
 
 # spec-doc
