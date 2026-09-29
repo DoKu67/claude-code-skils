@@ -1,6 +1,6 @@
 ---
 name: hparam-priors
-description: Which hyperparameter to search first, what range to search it over, what it is coupled with, and what its failure looks like — per regime: supervised learning, SFT, preference methods (DPO/KTO/ORPO) and reward models, and policy RL (GRPO/PPO/RLOO/RLVR). Use when choosing the next axis to tune, when a starting value is needed for a knob nobody has set deliberately, when deciding whether two settings must move together, and when a result suggests a knob is at its edge. Reference only — it does not run the search.
+description: "Which hyperparameter to search first, what range to search it over, what it is coupled with, and what its failure looks like — per regime: supervised learning, SFT, preference methods (DPO/KTO/ORPO) and reward models, and policy RL (GRPO/PPO/RLOO/RLVR). Use when choosing the next axis to tune, when a starting value is needed for a knob nobody has set deliberately, when deciding whether two settings must move together, and when a result suggests a knob is at its edge. Reference only — it does not run the search."
 ---
 
 # hparam-priors

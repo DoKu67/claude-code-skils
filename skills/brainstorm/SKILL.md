@@ -1,6 +1,6 @@
 ---
 name: brainstorm
-description: Generate genuinely different options before evaluating any of them — reframe the problem, name the obvious answers and set them aside, rotate the axes, generate in parallel without cross-talk (one generator searching prior art), attack the survivors, then restate the goal and cut requirements until the scope is smaller than it started. Use when the shape of a problem is not settled: designing a reward function or RL environment, choosing how to structure something with no obvious right answer, when the same few ideas keep resurfacing, or when the user says "brainstorm", "what are my options", "what else could we do", "I'm stuck". Ends by handing off; it does not build or write files.
+description: "Generate genuinely different options before evaluating any of them — reframe the problem, name the obvious answers and set them aside, rotate the axes, generate in parallel without cross-talk (one generator searching prior art), attack the survivors, then restate the goal and cut requirements until the scope is smaller than it started. Use when the shape of a problem is not settled: designing a reward function or RL environment, choosing how to structure something with no obvious right answer, when the same few ideas keep resurfacing, or when the user says \"brainstorm\", \"what are my options\", \"what else could we do\", \"I'm stuck\". Ends by handing off; it does not build or write files."
 ---
 
 # brainstorm

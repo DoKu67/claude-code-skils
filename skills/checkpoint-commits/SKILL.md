@@ -1,6 +1,6 @@
 ---
 name: checkpoint-commits
-description: Commit work at each completed checkpoint without being asked, then offer — without blocking — to keep those commits, squash a chosen set of them, or fold them into one. Use whenever work spans more than one checkpoint: a todo list with several large tasks, a build with staged components, a tuning loop recording runs, any session long enough that losing the last hour would hurt. It reshapes local history only, and never discards work.
+description: "Commit work at each completed checkpoint without being asked, then offer — without blocking — to keep those commits, squash a chosen set of them, or fold them into one. Use whenever work spans more than one checkpoint: a todo list with several large tasks, a build with staged components, a tuning loop recording runs, any session long enough that losing the last hour would hurt. It reshapes local history only, and never discards work."
 ---
 
 # checkpoint-commits

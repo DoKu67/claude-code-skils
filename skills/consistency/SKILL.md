@@ -1,6 +1,6 @@
 ---
 name: consistency
-description: Sweep for everything a change should have touched and did not — stale references, docs describing the old behaviour, tests and config still on the old name, comments explaining a rationale that no longer applies. Use after any edit that ripples across files: a rename, a signature or default change, swapping the method or library used for something, a documentation update, or any change touching more than one file. Also use when a *result* rather than an edit invalidates a written claim — a run that falsifies a documented assumption, a measurement that contradicts a quoted number, a plan step that closed — because those leave no diff to sweep from. Run it before reporting a multi-file change as done.
+description: "Sweep for everything a change should have touched and did not — stale references, docs describing the old behaviour, tests and config still on the old name, comments explaining a rationale that no longer applies. Use after any edit that ripples across files: a rename, a signature or default change, swapping the method or library used for something, a documentation update, or any change touching more than one file. Also use when a *result* rather than an edit invalidates a written claim — a run that falsifies a documented assumption, a measurement that contradicts a quoted number, a plan step that closed — because those leave no diff to sweep from. Run it before reporting a multi-file change as done."
 ---
 
 # consistency
