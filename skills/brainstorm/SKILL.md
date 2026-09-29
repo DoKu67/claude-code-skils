@@ -27,7 +27,7 @@ This ends in a decision, a shortened objective, and a handoff. Minutes, not a se
 | The shape of the problem is not settled | The approach is already chosen and the work is mechanical |
 | Several designs are plausible and the choice has consequences | The choice is cheap and reversible — just pick one |
 | The same three ideas keep coming back | Someone else has plainly solved this — [`prior-work`](../prior-work/SKILL.md) first |
-| A reward, objective, or evaluation is being designed | A capability list is what is actually needed — that is [`mvp`](../mvp/SKILL.md) stage 1 |
+| A reward, objective, or evaluation is being designed | A capability list is what is actually needed — that is [`build`](../build/SKILL.md) Stage 1 |
 | The user is stuck, or asks what else there is | The user has already decided and wants it built |
 
 Firing on a settled question is the way this skill becomes ceremony. If in doubt, say what
@@ -253,7 +253,7 @@ Then hand off, and stop:
 
 | Next | Skill |
 |---|---|
-| Build it | [`mvp`](../mvp/SKILL.md) — the pick becomes its stage 1 input |
+| Build it | [`build`](../build/SKILL.md) — the pick becomes its Stage 1 input |
 | Has anyone already built it | [`prior-work`](../prior-work/SKILL.md) |
 | Keep the reasoning | [`notes`](../notes/SKILL.md) → `notes.md`, ideas and what they meant |
 | Only the user can decide | [`escalate`](../escalate/SKILL.md) |
@@ -283,7 +283,7 @@ Then hand off, and stop:
 
 ## Out of scope
 
-Deciding *what to build* and building it — [`mvp`](../mvp/SKILL.md). The full prior-art
+Deciding *what to build* and building it — [`build`](../build/SKILL.md). The full prior-art
 survey as its own deliverable — [`prior-work`](../prior-work/SKILL.md), which stage 4 borrows
 the method of and which is the better first move on its own whenever the problem sounds
 common. Status of work already underway — [`tldr`](../tldr/SKILL.md), whose shape stage 7

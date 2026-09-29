@@ -266,9 +266,8 @@ normal, valuable outcome, and it is invisible to any process that stops at listi
   acceptance criteria would discharge the plan's bar. This skill proves, at build time, that
   a suite would discharge the contract. When the code serves a sprint ticket, that ticket's
   acceptance criteria are the claim list's starting point — they arrive already falsifiable.
-- **[`implement-feature`](../implement-feature/SKILL.md)** and
-  [`mvp`](../mvp/SKILL.md) call this before writing tests, so the tests written are the ones
-  the inventory names rather than the ones that were easy.
+- **[`build`](../build/SKILL.md)** calls this before writing tests, so the tests written are
+  the ones the inventory names rather than the ones that were easy.
 - **[`spec-doc`](../spec-doc/SKILL.md)** owns the conformance suite — one obvious test per
   `SPEC.md` scenario, and the floor this plan builds on. Those tests are the user's: they are
   a premise in the sufficiency proof, never an instrument this plan may reassign, weaken or

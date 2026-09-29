@@ -1,6 +1,6 @@
 ---
 id: build-complete-not-phased
-target: mvp
+target: build
 kind: rule
 signal: correction
 status: staged
@@ -30,3 +30,6 @@ cheap and pre-agreed.
 to get more experience with `/mvp`." Not rejected — held open deliberately until there is
 enough lived experience with `mvp`'s phasing to judge whether the rule is right. Do not
 propose this again until the user has run `mvp` on real work.
+
+**Retargeted 2026-09-29:** `mvp` was folded into `build`; the deferral carries over and now
+waits on lived experience with `build`.

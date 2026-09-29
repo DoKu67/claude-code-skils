@@ -40,7 +40,7 @@ killed it sit together.
 ## Entry gate
 
 Tuning cannot start until five things exist. If any is missing, that is the work — go to
-[`rl-env-mvp`](../rl-env-mvp/SKILL.md) for an RL project or [`mvp`](../mvp/SKILL.md)
+[`rl-env-mvp`](../rl-env-mvp/SKILL.md) for an RL project or [`build`](../build/SKILL.md)
 otherwise, and come back.
 
 | Required | Why the loop is meaningless without it |
@@ -84,7 +84,7 @@ the rest worth doing.
 **Keep the iteration visible as a tracked todo list** — one task per queue item, not one
 per step, moved to `in_progress` at step 1 and to `completed` only when step 6's entry is
 written. A task that closes at launch records the opposite of this skill's rule: an
-experiment whose read is unwritten is not done. See [`mvp`](../mvp/SKILL.md) for why the
+experiment whose read is unwritten is not done. See [`build`](../build/SKILL.md) for why the
 list is kept live rather than recalled.
 
 ### 1. Write the prediction before the run
@@ -316,7 +316,7 @@ default won by default."
 ## Out of scope
 
 The code being tuned — the trainer, environment, dataset and reward belong to
-[`rl-env-mvp`](../rl-env-mvp/SKILL.md) or [`mvp`](../mvp/SKILL.md). Resume policy,
+[`rl-env-mvp`](../rl-env-mvp/SKILL.md) or [`build`](../build/SKILL.md). Resume policy,
 checkpoint retention, and cluster scheduling are per-project decisions. Distributed
 training topology is not an axis this loop searches.
 

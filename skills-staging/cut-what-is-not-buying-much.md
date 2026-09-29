@@ -1,6 +1,6 @@
 ---
 id: cut-what-is-not-buying-much
-target: mvp
+target: build
 kind: rule
 signal: correction
 status: staged

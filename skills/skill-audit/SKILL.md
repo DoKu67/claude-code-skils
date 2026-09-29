@@ -10,7 +10,7 @@ skill set from an asset into a tax: stale rules mislead confidently, a bloated s
 its own trigger until it stops loading when needed, and contradictory rules make the whole
 set feel arbitrary.
 
-**This skill is the subtraction pass.** Like stage 2.5 of [`mvp`](../mvp/SKILL.md), it adds
+**This skill is the subtraction pass.** Like the *Make it readable* stage of [`build`](../build/SKILL.md), it adds
 nothing. If the audit's diff introduces a new rule, that rule belongs in staging and goes
 through [`codify`](../codify/SKILL.md) like anything else.
 

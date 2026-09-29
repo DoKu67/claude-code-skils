@@ -18,11 +18,11 @@ wrong tokens, a contaminated split, or a metric that was never sensitive to the 
 optimised. Every one of them produces a healthy-looking loss curve. The point of this skill
 is to make them visible before any budget is spent on top of them.
 
-This is [`mvp`](../mvp/SKILL.md) applied to a domain, and the sibling of
+This is [`build`](../build/SKILL.md) applied to a domain, and the sibling of
 [`rl-env-mvp`](../rl-env-mvp/SKILL.md) — read that one instead if the objective is
 GRPO, PPO, RLOO or RLVR. Read [`coding-standards`](../coding-standards/SKILL.md) before the
 first edit and [`ml_logging`](../ml_logging/SKILL.md) before naming a run or a metric. Where
-this skill and `mvp` appear to disagree, `mvp` wins on process and this one wins on what to
+this skill and `build` appear to disagree, `build` wins on process and this one wins on what to
 measure.
 
 ---

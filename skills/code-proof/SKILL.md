@@ -201,6 +201,12 @@ output collapses into confident, plausible prose.
 
 ## Where this connects to the rest of the skill set
 
+- [`build`](../build/SKILL.md) runs this as its feasibility gate, on "R-n is satisfiable
+  given the other requirements". Proved means build it; Disproved goes back to the user with
+  the counterexample; Unresolved goes back to the user to decide. This skill proves logical
+  feasibility only; whether something is fast enough or fits in memory is not provable here.
+- [`minimal-cover`](../minimal-cover/SKILL.md) asks this whether one item follows from the
+  rest, and deletes it only on Proved.
 - A claim inside a sprint ticket that is really an algorithmic-correctness question ("does
   this dedup logic actually work") is [`code-proof`](../code-proof/SKILL.md)'s job, not
   [`proof-of-value`](../proof-of-value/SKILL.md)'s — run this skill on that specific claim

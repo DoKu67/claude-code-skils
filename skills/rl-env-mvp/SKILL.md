@@ -18,10 +18,10 @@ experiment can be launched — [`tune-loop`](../tune-loop/SKILL.md) takes it fro
 project is lost to an environment that was wrong in a way nobody could see, and the fix is
 to make the environment measurable before it is trained.
 
-This is [`mvp`](../mvp/SKILL.md) applied to a specific domain. Read that skill for the
+This is [`build`](../build/SKILL.md) applied to a specific domain. Read that skill for the
 staging discipline; read [`coding-standards`](../coding-standards/SKILL.md) before the
 first edit; read [`ml_logging`](../ml_logging/SKILL.md) before naming a metric or a run.
-Where this skill and `mvp` appear to disagree, `mvp` wins on process and this one wins on
+Where this skill and `build` appear to disagree, `build` wins on process and this one wins on
 what to measure.
 
 Two reference files, read when their pointer fires:
