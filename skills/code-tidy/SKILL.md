@@ -124,10 +124,10 @@ asks whether it's bigger or messier than it needs to be.
 
 **Security issues.** `security-review`'s job, not this one.
 
-**Fresh-build simplicity.** [`mvp`](../mvp/SKILL.md) already has a "strip it to something a
-human can read" stage for code being written for the first time. This skill is for code that
-already exists and has drifted — a file, a module, or a session's output that's grown messy
-over time — not the first pass of a new build.
+**Fresh-build simplicity.** [`build`](../build/SKILL.md) already has a "make it readable"
+stage for code being written for the first time. This skill is for code that already exists
+and has drifted — a file, a module, or a session's output that's grown messy over time — not
+the first pass of a new build.
 
 **Deciding whether a "cut" is actually a redesign.** If cleanup turns up something that needs
 a real behavior change or a new abstraction to fix properly, that's a finding to raise with

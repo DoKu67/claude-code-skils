@@ -208,7 +208,7 @@ A constraint with no cost attached is a preference, and preferences belong in
 | Over ~120 lines | results have leaked in, or steps have accumulated past the cap |
 | A section about one specific step | that step's detail belongs in the journal or in the code |
 | Two sections covering the same ground | one is stale; find out which |
-| Module layout, class structure, file trees | design, not planning — see [`mvp`](../mvp/SKILL.md) stage 3 |
+| Module layout, class structure, file trees | design, not planning — see [`build`](../build/SKILL.md)'s *Make it scale* stage |
 
 Shortening a plan is not losing information: nearly everything cut is either already in the
 journal or reconstructible from git history.
@@ -216,7 +216,7 @@ journal or reconstructible from git history.
 ## Out of scope
 
 Judging whether the plan's *content* is right — that is the work. Writing the code the plan
-describes — [`mvp`](../mvp/SKILL.md). Recording what happened — [`notes`](../notes/SKILL.md).
+describes — [`build`](../build/SKILL.md). Recording what happened — [`notes`](../notes/SKILL.md).
 Reporting status to a person — [`tldr`](../tldr/SKILL.md), which reads the plan rather than
 editing it.
 

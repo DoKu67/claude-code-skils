@@ -176,7 +176,7 @@ estimate is wrong in a way another guess will not fix.
 
 Cluster scheduling, queueing and multi-node topology. Kernel-level or throughput
 optimization — this skill decides whether to launch, not how to make it fast; that is
-stage 3 of [`mvp`](../mvp/SKILL.md).
+the *Make it scale* stage of [`build`](../build/SKILL.md).
 
 ---
 

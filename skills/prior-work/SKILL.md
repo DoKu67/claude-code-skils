@@ -153,7 +153,7 @@ later reader check whether the source actually said what the design assumes it s
 
 ## Out of scope
 
-Deciding what to build — that is [`mvp`](../mvp/SKILL.md), and this feeds its stage 1.
+Deciding what to build — that is [`build`](../build/SKILL.md), and this feeds its Stage 1.
 Deep literature review, benchmarking existing implementations, or evaluating a library for
 adoption: all larger exercises that start where this one ends.
 

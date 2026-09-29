@@ -191,7 +191,7 @@ Rules that keep requirements human-readable, which is the whole point of writing
   preferences in [`coding-standards`](../coding-standards/SKILL.md).
 - **No implementation.** No tech stack, no schema, no function names, no file paths. A
   requirement that names a class is describing a design, and designs get replaced without
-  the obligation changing. The [`mvp`](../mvp/SKILL.md) stage 3 owns design.
+  the obligation changing. [`build`](../build/SKILL.md)'s *Make it scale* stage owns design.
 - **A human must be able to check a scenario by hand.** If checking it needs a script, the
   scenario is describing a property, not an example — see
   [`test-plan`](../test-plan/SKILL.md), which owns the harder instruments.
@@ -382,7 +382,7 @@ outgrown the format:
 | A requirement needing a paragraph | two requirements, or a design that wandered in |
 | Scenarios enumerating inputs | a property — hand it to [`test-plan`](../test-plan/SKILL.md) |
 | Rationale, alternatives, history | the plan's *Decided* or the journal |
-| Requirements about how, not what | design; see [`mvp`](../mvp/SKILL.md) stage 3 |
+| Requirements about how, not what | design; see [`build`](../build/SKILL.md)'s *Make it scale* stage |
 | A tree deeper than three levels | a call graph, not a set of obligations — flatten it and use *also serves* |
 | Every requirement at Level 1 | the tree was filled in mechanically; nothing was asked about what rests on what |
 
@@ -395,9 +395,9 @@ outgrown the format:
 - [`sprint-tasks`](../sprint-tasks/SKILL.md) — a ticket's `Satisfies` field names the
   requirements it makes true, by ID, and a sprint is measured by which requirements it turns
   green. It will not decompose a plan without a spec to decompose it toward.
-- [`implement-feature`](../implement-feature/SKILL.md) and [`mvp`](../mvp/SKILL.md) — both
-  find the requirement before building and verify against it after; definition of done is the
-  conformance suite green with the suite unchanged, not "the code runs".
+- [`build`](../build/SKILL.md) — finds the requirement before building and verifies against
+  it after; definition of done is the conformance suite green with the suite unchanged, not
+  "the code runs".
 - [`test-plan`](../test-plan/SKILL.md) — conformance is the floor; sufficiency is its job.
 - [`escalate`](../escalate/SKILL.md) — the spec change request is one of its triggers.
 - [`consistency`](../consistency/SKILL.md) — a requirement renamed or retired ripples into
@@ -408,9 +408,8 @@ outgrown the format:
 ## Out of scope
 
 Deciding **what the requirements should be** — that is the human's, and this skill will not
-quietly decide it for them. Writing the module — [`implement-feature`](../implement-feature/SKILL.md)
-or [`mvp`](../mvp/SKILL.md). Proving code correct beyond its scenarios —
-[`code-proof`](../code-proof/SKILL.md).
+quietly decide it for them. Writing the module — [`build`](../build/SKILL.md). Proving code
+correct beyond its scenarios — [`code-proof`](../code-proof/SKILL.md).
 
 ---
 

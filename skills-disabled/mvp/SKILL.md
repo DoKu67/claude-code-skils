@@ -5,6 +5,9 @@ description: Build software MVP-first — agree what the minimum version must do
 
 # mvp
 
+> **Disabled.** Superseded by `build` (skills/build/SKILL.md). Kept for reference; links
+> to sibling skills from here resolve only from the old `skills/` location.
+
 A development style, not an experiment. **The code written here is the code that ships.** It does not get thrown away — it gets simpler, then faster, then scalable, in that order, across the same files.
 
 The reason to work this way is not speed. It is that requirements move, and a design chosen before anything runs is a guess that every later decision has to honour. Working code tells you where the real constraints are. Nothing else does.

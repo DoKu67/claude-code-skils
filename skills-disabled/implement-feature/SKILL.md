@@ -5,6 +5,9 @@ description: "Implement one feature into an existing codebase — MVP-inspired b
 
 # implement-feature
 
+> **Disabled.** Superseded by `build` (skills/build/SKILL.md). Kept for reference; links
+> to sibling skills from here resolve only from the old `skills/` location.
+
 `mvp` answers "how do we build this for the first time." This skill answers "how do we add
 this to something that already runs." The difference changes almost every stage: there is no
 environment to scaffold, no test runner to stand up, and no clean slate to build components

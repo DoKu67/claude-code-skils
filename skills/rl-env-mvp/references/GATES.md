@@ -7,7 +7,7 @@ The ordering matters: each rung assumes the ones below it are green. Reading a p
 broken harness produces a confident, precise, wrong answer.
 
 **L0 and L1 are ordinary unit and integration tests** and are not detailed here — they work
-the same way in RL code as anywhere else, and [`mvp`](../../mvp/SKILL.md) already covers
+the same way in RL code as anywhere else, and [`build`](../../build/SKILL.md) already covers
 them. Two things to carry over from it: split them by what makes them fail (a unit test
 goes red when one component changes, an integration test when an interface between two
 moves), and never weaken an assertion to reach green.

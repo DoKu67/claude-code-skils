@@ -140,7 +140,7 @@ constraint — it goes in `PLAN.md` too, so the next loop uses it instead of ask
 ## Out of scope
 
 Routine progress reporting. Interactive checkpoints during a build — those belong to
-[`mvp`](../mvp/SKILL.md) and are a different thing: a checkpoint is scheduled and expected,
+[`build`](../build/SKILL.md) and are a different thing: a checkpoint is scheduled and expected,
 an escalation is triggered and unplanned.
 
 ---

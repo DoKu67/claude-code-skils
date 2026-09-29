@@ -62,7 +62,7 @@ always-on rule that tells Devin which skill to reach for and when.
 | Devin CLI / Desktop | `devin plugins install DoKu67/claude-code-skils` |
 
 Skills then load exactly as in Claude Code — automatically when a task matches a skill's
-`description`, or explicitly as `/a:<skill>` (e.g. `/a:mvp`).
+`description`, or explicitly as `/a:<skill>` (e.g. `/a:build`).
 
 What does **not** carry over: `install.sh`, the sync timer, the hooks and the 6-hourly
 reflect pass assume a persistent `~/.claude` checkout with Claude Code installed. Devin
@@ -76,7 +76,7 @@ The unattended mining pass has no Devin equivalent yet; `/reflect` is run per se
 
 | Category | Skills | What the category covers |
 |---|---|---|
-| [Development](#development) | `mvp`, `implement-feature`, `coding-standards`, `consistency`, `explain`, `call-tree`, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, the house rules, and the sweeps that say a change is actually done |
+| [Development](#development) | `build`, `experiment`, `minimal-cover`, `coding-standards`, `consistency`, `explain`, `call-tree`, `mvp` *(disabled)*, `implement-feature` *(disabled)*, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, running open questions as experiments, keeping requirement lists minimal, the house rules, and the sweeps that say a change is actually done |
 | [Version control](#version-control) | `checkpoint-commits` | Keeping work safe as it is made, and deciding what shape the history ends up in |
 | [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr`, `report` | Finding out what already exists, keeping the written record of what was tried and what it meant, and turning any of it into a durable document |
 | [Fine-tuning and RL](#fine-tuning-and-reinforcement-learning) | `sft-env-mvp`, `rl-env-mvp`, `tune-loop`, `tune-preflight`, `run-triage`, `tune-report`, `hparam-priors`, `escalate` | A pipeline: scaffold an environment, prove it works, then run the hyperparameter search as a recorded loop |
@@ -231,33 +231,71 @@ Check on it with `systemctl --user list-timers claude-reflect.timer` and
 
 # Development
 
-## mvp
+## build
 
 ### Description
-Build software MVP-first: agree the minimum capability list, sketch a rough plan, implement
-the simplest thing that works, verify it at interactive checkpoints, strip it readable, then
-optimize with measured evidence. The default development style.
+Build software whose requirements are known — a new project, a feature in an existing
+codebase, or an experiment harness — as one loop: requirements, a feasibility gate, a plan,
+optional tickets, then implement and test until every approved requirement passes. The
+default development style; replaces `mvp` and `implement-feature`.
 
 ### What it does
-Replaces up-front design with working code that tells you where the real constraints are.
-It is not throwaway work — the code written in stage 2 is the code that ships, made simpler,
-then faster, then scalable, across the same files.
+Assumes every requirement is buildable, and checks that assumption before planning rather
+than finding out halfway through. It never starts an experiment: a requirement that turns out
+to be an open question goes back to the user.
 
 ### How it works
-Five stages:
+- **Requirements.** `spec-doc` drafts or finds the R-ids, `minimal-cover` cuts them, the
+  user approves.
+- **Feasibility gate.** `code-proof` on each requirement whose buildability can be reasoned
+  about. Proved → build; Disproved → back to the user with the counterexample; Unresolved or
+  only knowable by running → the user chooses build anyway (marked user-assumed), drop, or
+  rewrite.
+- **Plan.** `plan-doc` for the route, cheapest disconfirming evidence first; `sprint-tasks`
+  only when decomposition pays. Existing code is oriented in before planning.
+- **Make it work.** Per piece: `test-plan`, code under `coding-standards`, run it,
+  `consistency` on the piece's diff, tests green, `checkpoint-commits`. Loop until every
+  requirement passes.
+- **Make it readable**, then **make it scale** only where a measurement points.
+- **Finish** with the conformance suite green and unchanged, and one `consistency` sweep over
+  the whole change.
 
-- **Stage 1 — Requirements.** A capability list plus an explicit out-of-scope list, then a
-  one-page plan naming the decisions, the build order, and the single risk most likely to
-  invalidate everything.
-- **Stage 2 — Make it work.** The simplest version, one component at a time, stopping at each
-  for review — hardcode freely, stay flat, run it constantly, and never wrap something you
-  don't understand in `try`/`except`.
-- **Stage 2.5 — Make it readable.** A subtraction-only pass: delete narration comments, dead
-  code, and any abstraction with one caller.
-- **Stage 3 — Make it scale.** Design, but only after measuring, and only where the
-  measurement points.
+## experiment
 
-Ordering rule throughout: build so the cheapest disconfirming evidence comes first.
+### Description
+Answer empirical questions — can we do X, does X work, what does changing X give us — by
+running them against a harness the user names, and report a verdict for each.
+
+### What it does
+Hypothesis cards with a typed answer (true/false, integer, float, category), the decision each
+answer leads to, a precondition, a measurement, and a time and cost budget. Refuted,
+Inconclusive and Cannot test are results, not defects. Ends at the verdict table; turning a
+verdict into a requirement is the user's call, via `build`.
+
+### How it works
+Write the cards, cut them with `minimal-cover`, propose an order the user approves, then ask
+explicitly what the harness is: the current codebase, a directory, or a new one requested from
+`build`. Validity checks run first, and a failed check is a harness bug sent back to `build`,
+never a Refuted. A baseline and noise floor are measured only if some card compares against
+one. Each card gets a prediction written before its run, one change, and a record tied to the
+run ID. The rules are generalized from the fine-tuning skills, which it does not call.
+
+## minimal-cover
+
+### Description
+Cut any list — requirements, hypotheses, specifications, tasks — to the smallest set that
+still covers its goals, so the user can read the whole list and change it.
+
+### What it does
+Treats too many items as a defect. Makes the goals explicit first, because "minimal" means
+nothing without them, and flags over-specific goals, tolerances and hard constraints with a
+recommendation each.
+
+### How it works
+A coverage table of items against goals, then a delete loop: an item goes if it covers
+nothing unique, or if `code-proof` proves it follows from the rest. It stops when removing
+any one more item would uncover a goal, then shows what deleting each remaining item would
+cost. The user approves or edits once, at the end, and edits trigger a rerun.
 
 ## coding-standards
 
@@ -332,6 +370,11 @@ unannotated tree, so the workflow runs `--list-undocumented`, writes one-line de
 into a JSON file in `/tmp`, and re-runs with `--annotations`. The skill is explicit about
 what static analysis cannot see — dynamic dispatch, `getattr`, registries, inheritance not in
 scope — which makes the tree an excellent map and a poor safety proof.
+
+## mvp *(disabled)* and implement-feature *(disabled)*
+
+Superseded by `build`, which merges the from-scratch and existing-codebase paths into one
+loop. Kept in `skills-disabled/` for reference.
 
 ## write-code *(disabled)*
 
