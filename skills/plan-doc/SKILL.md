@@ -208,7 +208,7 @@ A constraint with no cost attached is a preference, and preferences belong in
 | Over ~120 lines | results have leaked in, or steps have accumulated past the cap |
 | A section about one specific step | that step's detail belongs in the journal or in the code |
 | Two sections covering the same ground | one is stale; find out which |
-| Module layout, class structure, file trees | design, not planning — see [`build`](../build/SKILL.md)'s *Make it scale* stage |
+| Module layout, class structure, file trees | design, not planning — see [`build`](../build/SKILL.md)'s *Test at scale, then make it scale* stage |
 
 Shortening a plan is not losing information: nearly everything cut is either already in the
 journal or reconstructible from git history.

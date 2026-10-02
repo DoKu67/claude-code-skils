@@ -1,6 +1,6 @@
 ---
 name: build
-description: "Build software whose requirements are known — new code or a feature in an existing codebase — as one loop: requirements, a feasibility check on each one, a plan, optional tickets, then implement and test until every approved requirement passes. The house coding rules apply to every line written and a sweep for stale references runs before any task or the whole build is called done. Use when the user runs /build, says \"build this\", \"implement this feature\", \"add this to the codebase\", \"MVP\", \"get it working first\", \"proof of concept\", hands over a ticket or a PLAN.md to be built, or asks for a measurement harness to be built. The default development style. Not for open questions whose answer would change the plan (can we do X, does X change Y); those are answered by running them before anything is built."
+description: "Build software whose requirements are known — new code or a feature in an existing codebase — as one loop: requirements, a feasibility check on each one, a plan, tickets whose independent pieces run as parallel subagents, then implement and test on the smallest input that exercises each path until every approved requirement passes, and only then test at full scale. The house coding rules apply to every line written and a sweep for stale references runs before any task or the whole build is called done. Use when the user runs /build, says \"build this\", \"implement this feature\", \"add this to the codebase\", \"MVP\", \"get it working first\", \"proof of concept\", hands over a ticket or a PLAN.md to be built, or asks for a measurement harness to be built. The default development style. Not for open questions whose answer would change the plan (can we do X, does X change Y); those are answered by running them before anything is built."
 ---
 
 # build
@@ -122,10 +122,11 @@ what exists, where the feature attaches, and the order the pieces will land in.
 **New code: set up first.** A reproducible environment file and a test runner that runs an
 empty suite green, before the first component.
 
-**Decompose only when it pays.** When the work spans sessions or parallel developers, run
-[`sprint-tasks`](../sprint-tasks/SKILL.md) on the plan: numbered tickets, each naming the
-R-ids it turns green, each with a Proof of value. Confirm with the user which tickets, in
-what order. For one sitting's work, skip it; the plan's build order is the task list.
+**Decompose whenever pieces are independent.** When two or more pieces do not depend on
+each other, or the work spans sessions, run [`sprint-tasks`](../sprint-tasks/SKILL.md) on
+the plan: numbered tickets, each naming the R-ids it turns green, each with a Proof of value,
+grouped into dependency waves. Confirm with the user which tickets, in what order. Only a
+strictly serial chain skips it; then the plan's build order is the task list.
 
 **Track it live** with `TaskCreate`: one task per piece, plus one for the readability pass.
 Mark `completed` only when the piece's tests pass and its consistency sweep is clean.
@@ -134,7 +135,10 @@ Mark `completed` only when the piece's tests pass and its consistency sweep is c
 
 ## Stage 4 — Make it work, until every requirement passes
 
-The loop, once per piece or ticket, in the planned order:
+The loop, once per piece or ticket, in the planned order. **Pieces in the same wave run at
+the same time**, one subagent each, as [`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-waves)
+says; each subagent runs steps 1–5 on its piece and the coordinator merges. Never work
+through a wave one piece at a time in this session.
 
 1. **Choose the tests** with [`test-plan`](../test-plan/SKILL.md) for the R-ids this piece
    serves: the cheapest instrument that genuinely checks each claim.
@@ -146,10 +150,20 @@ The loop, once per piece or ticket, in the planned order:
    calling the piece done. Renames, changed defaults and moved boundaries leave stale
    references; they are cheapest to fix now.
 5. **Tests green, then [`checkpoint-commits`](../checkpoint-commits/SKILL.md).**
-6. **Stop and report**, then the next piece. Never present the whole thing finished.
+6. **Stop and report**, then the next piece or wave. Never present the whole thing finished.
 
 Loop until every approved requirement passes. Rules while building:
 
+- **Minimal input until Stage 6.** Every run in this stage uses the smallest input that
+  still exercises the path: 2 files, not 10,448; 2 workers, not 32 (two, so the parallel path
+  still runs); one feature's page, not the whole site. The code may be built for full scale
+  from the first line; only the run is small. Aim for a result the user can review within
+  about five minutes, and shrink a run that would take longer rather than wait on it.
+  Full-size and production-volume runs belong to Stage 6. *Why:* a 20-file smoke test and
+  a two-hour full regenerate each delayed the first reviewable result; "do the minimal amount
+  of work to test that it works so that we can get a mvp to test quickly." *Falsified if* the
+  user asks for a full-size run before Stage 6, or minimal runs keep passing while full runs
+  fail on correctness rather than scale.
 - **Simplest thing that works.** Flat over abstract; no base classes, injection or helpers
   with one caller. Hardcode freely, marking what will need lifting later.
 - **Small enough to hold in one head.** If it outgrows that, the requirement list was too
@@ -183,7 +197,14 @@ what it does.
 
 ---
 
-## Stage 6 — Make it scale, only when a requirement needs it
+## Stage 6 — Test at scale, then make it scale
+
+**Run this stage whenever a requirement names a volume, a throughput or a deadline, or the
+code was built to fan out**; skip it otherwise. Only after every requirement passes on
+minimal input, rerun on the real volume — the full dataset, the full worker count, the whole
+site — stepping up in size (10× at a time) so a failure points to the size where it began.
+What breaks here is a scale bug — rate limits, memory, file-count and request limits,
+stragglers, retries — and it is debugged here, not by going back to bigger Stage 4 runs.
 
 - **Measure before changing anything**, on the real path with real input. Record the numbers.
 - **Fix the largest measured cost first.** State what the change should buy, re-measure,

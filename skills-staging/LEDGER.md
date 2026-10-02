@@ -34,6 +34,8 @@ History only — the files are gone, the rules live in the skills below, and `gi
 
 | candidate | became | promoted | note |
 |---|---|---|---|
+| run-waves-as-parallel-subagents | [`sprint-tasks`](../skills/sprint-tasks/SKILL.md#running-the-waves) + [`build`](../skills/build/SKILL.md) Stages 3–4 pointer | 2026-10-01 | direct request; wave plans existed in two sessions and the work still ran serially until the user asked for subagents. `run_subagent` being a deferred Devin tool was why both sessions fell back to serial |
+| minimal-input-then-scale-test | [`build`](../skills/build/SKILL.md) Stage 4 rule + Stage 6 | 2026-10-01 | direct request; minimal input is about the *run*, not the scope, so it does not touch the deferred `build-complete-not-phased` |
 | verify-declared-metrics | [`ml_logging`](../skills/ml_logging/SKILL.md) + [`rl-env-mvp`](../skills/rl-env-mvp/references/LAYOUT.md) pointer | 2026-08-04 | direct request; "declare metrics up front" was a promise nothing checked, and three metrics in one session lied about what they measured. Enforcement is a global PostToolUse hook, not a rule — rules in this territory had already failed to fire twice |
 | tldr-reads-the-state | [`tldr`](../skills/tldr/SKILL.md) | 2026-08-03 | direct request; the format was general, its references were not, and nothing said where state lives |
 | refresh-coverage-with-every-row | [`tune-loop`](../skills/tune-loop/SKILL.md) | 2026-08-03 | below threshold (1/3) — went live as closing condition 3 of step 6 while the entry format was being written, rather than as its own promotion |
