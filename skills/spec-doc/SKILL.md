@@ -191,7 +191,7 @@ Rules that keep requirements human-readable, which is the whole point of writing
   preferences in [`coding-standards`](../coding-standards/SKILL.md).
 - **No implementation.** No tech stack, no schema, no function names, no file paths. A
   requirement that names a class is describing a design, and designs get replaced without
-  the obligation changing. [`build`](../build/SKILL.md)'s *Make it scale* stage owns design.
+  the obligation changing. [`build`](../build/SKILL.md)'s *Test at scale, then make it scale* stage owns design.
 - **A human must be able to check a scenario by hand.** If checking it needs a script, the
   scenario is describing a property, not an example — see
   [`test-plan`](../test-plan/SKILL.md), which owns the harder instruments.
@@ -382,7 +382,7 @@ outgrown the format:
 | A requirement needing a paragraph | two requirements, or a design that wandered in |
 | Scenarios enumerating inputs | a property — hand it to [`test-plan`](../test-plan/SKILL.md) |
 | Rationale, alternatives, history | the plan's *Decided* or the journal |
-| Requirements about how, not what | design; see [`build`](../build/SKILL.md)'s *Make it scale* stage |
+| Requirements about how, not what | design; see [`build`](../build/SKILL.md)'s *Test at scale, then make it scale* stage |
 | A tree deeper than three levels | a call graph, not a set of obligations — flatten it and use *also serves* |
 | Every requirement at Level 1 | the tree was filled in mechanically; nothing was asked about what rests on what |
 

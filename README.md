@@ -236,8 +236,9 @@ Check on it with `systemctl --user list-timers claude-reflect.timer` and
 ### Description
 Build software whose requirements are known — a new project, a feature in an existing
 codebase, or an experiment harness — as one loop: requirements, a feasibility gate, a plan,
-optional tickets, then implement and test until every approved requirement passes. The
-default development style; replaces `mvp` and `implement-feature`.
+tickets whose independent pieces run as parallel subagents, then implement and test on the
+smallest input that exercises each path until every approved requirement passes, then test at
+full scale. The default development style; replaces `mvp` and `implement-feature`.
 
 ### What it does
 Assumes every requirement is buildable, and checks that assumption before planning rather
@@ -252,11 +253,12 @@ to be an open question goes back to the user.
   only knowable by running → the user chooses build anyway (marked user-assumed), drop, or
   rewrite.
 - **Plan.** `plan-doc` for the route, cheapest disconfirming evidence first; `sprint-tasks`
-  only when decomposition pays. Existing code is oriented in before planning.
+  whenever pieces are independent, each wave run as parallel subagents. Existing code is oriented in before planning.
 - **Make it work.** Per piece: `test-plan`, code under `coding-standards`, run it,
-  `consistency` on the piece's diff, tests green, `checkpoint-commits`. Loop until every
-  requirement passes.
-- **Make it readable**, then **make it scale** only where a measurement points.
+  `consistency` on the piece's diff, tests green, `checkpoint-commits`. Every run uses the
+  smallest input that exercises the path. Loop until every requirement passes.
+- **Make it readable**, then **test at scale** on the real volume and make it scale only
+  where a measurement points.
 - **Finish** with the conformance suite green and unchanged, and one `consistency` sweep over
   the whole change.
 

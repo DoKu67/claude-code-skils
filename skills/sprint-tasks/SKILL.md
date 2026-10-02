@@ -1,6 +1,6 @@
 ---
 name: sprint-tasks
-description: "Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual, numbered sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value — preceded by a manifest and a parallel execution plan showing which tasks can be worked simultaneously (e.g. by separate Claude instances acting as parallel developers). Use when the user says \"break this plan into tasks\", \"turn this into tickets\", \"decompose this into sprint tasks\", hands over a plan/PRD and asks what the tickets look like, asks for a backlog from a goal, or wants to know what can be run in parallel. Requires a `SPEC.md`: every task names the requirements it discharges, and a sprint is measured by which requirements it turns green, so if no spec exists this skill stops and drafts one with the user first. This skill only reads the plan, it never writes or owns it. Each task's Proof of value section follows the dedicated value-proof procedure, not written inline from scratch."
+description: "Decompose a plan document (a PLAN.md, PRD, design doc, or any written statement of a goal) into individual, numbered sprint tasks, each in a fixed ticket shape — user story, context, scope, requirements, acceptance criteria, Definition of Done, dependencies, references, delivery fields, and a Proof of value — preceded by a manifest and a parallel execution plan showing which tasks can be worked simultaneously (e.g. by separate Claude instances acting as parallel developers). Use when the user says \"break this plan into tasks\", \"turn this into tickets\", \"decompose this into sprint tasks\", hands over a plan/PRD and asks what the tickets look like, asks for a backlog from a goal, or wants to know what can be run in parallel, and when a wave of tasks is about to be built — each wave goes to parallel subagents. Requires a `SPEC.md`: every task names the requirements it discharges, and a sprint is measured by which requirements it turns green, so if no spec exists this skill stops and drafts one with the user first. This skill only reads the plan, it never writes or owns it. Each task's Proof of value section follows the dedicated value-proof procedure, not written inline from scratch."
 ---
 
 # sprint-tasks
@@ -221,6 +221,28 @@ A backlog that resolves to one task per wave, in one long chain, is a signal wor
 too — it means the split produced a strictly serial pipeline with no parallelism available at
 all, which is often a sign the tasks were sliced by technical layer rather than as vertical
 slices. Revisit the split before accepting that shape as final.
+
+### Running the waves
+
+**A wave is dispatched, not just listed.** When the tasks are built, start one subagent per
+task in the wave at once; the coordinator does not work through the wave itself, one task at
+a time. While they run, the coordinator does its own work — the interfaces they share, long
+jobs, the next wave's prep — and merges each result as it returns, running the full suite
+after each merge. The next wave opens when its dependencies are merged.
+
+- **Isolation:** each subagent gets its own git worktree and branch and its own test file.
+- **Brief:** "take Task N", the ticket, and the interfaces it must match.
+  **Return:** branch, commit, test output, and anything that contradicted the ticket.
+- **Tree-shaped work** (a directory, a site of domains → features → pages): one agent per
+  child node, each child the root of its own children, recursively; each parent links its
+  children's results.
+- **In Devin, `run_subagent` is a deferred tool**: load it with tool search before
+  concluding there is none. Child sessions are the fallback; they run on separate machines,
+  so they push branches rather than share a worktree.
+
+*Why:* in two sessions the wave plan existed and the work still ran serially until the user
+asked "can you fan out subagents for each subtask?" *Falsified if* parallel runs lose more
+time to merge conflicts than they save.
 
 ---
 
