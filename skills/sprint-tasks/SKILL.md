@@ -5,6 +5,9 @@ description: "Decompose a plan document (a PLAN.md, PRD, design doc, or any writ
 
 # sprint-tasks
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 A plan says what the project is for and what happens next. It does not say what a person
 picks up on Monday, reviews in one pull request, and closes by Friday. This skill is the
 bridge: one plan goes in, a set of independently workable tickets comes out, each in the
