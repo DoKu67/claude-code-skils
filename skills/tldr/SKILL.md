@@ -5,6 +5,9 @@ description: Summarize where something stands in a fixed five-section format —
 
 # tldr
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 One format for any task — a refactor, an investigation, a migration, a training run —
 always the same five sections, in this order. The value is in the fixed shape —
 a reader who has seen one knows exactly where to look for the number, the blocker and the

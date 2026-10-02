@@ -5,6 +5,20 @@ description: Write the current work up as a markdown report in a fixed five-sect
 
 # report
 
+## Writing style
+
+Write and explain with ASD-STE100 at **80% compliance** as a writing target.
+Apply these rules to the prose this skill produces. Each skill uses its own target.
+
+- Use short sentences, one topic per sentence, and active voice. Give instructions as direct commands.
+- Use approved words with their approved meanings where possible. Use one term for each concept.
+- Keep necessary technical terms. Define unfamiliar terms once, then use them consistently.
+- Preserve technical meaning, code, identifiers, commands, equations, numbers, quotations, and required template labels, including `SHALL`.
+- Before delivery, review the prose. Remove filler, repetition, and ambiguous wording.
+
+The percentage is a writing target, not a measured score. Do not claim verified compliance without a check against the standard.
+Reference: [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/).
+
 A report is the durable form of something that would otherwise live in a scrollback and be
 gone. This skill does not produce the content — it takes whatever was just established and
 writes it to a file in one fixed shape.

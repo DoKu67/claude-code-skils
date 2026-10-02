@@ -5,6 +5,9 @@ description: Keep the plan document in a fixed shape — what the project is for
 
 # plan-doc
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 A plan is the answer to *"what is this project for, what has been settled, and what happens
 next"*. It is not a record of what happened — that is the journal — and it is not a
 specification.

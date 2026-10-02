@@ -5,6 +5,9 @@ description: "Produce a flat, one-table-per-file inventory of a file or folder's
 
 # outline
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 One table per file, one row per thing that matters in it. The value is in staying flat —
 a reader scanning several files at once needs "what's here and what's it for," not a call
 graph or a narrative. If they want the graph, that's `/call-tree`; if they want the story

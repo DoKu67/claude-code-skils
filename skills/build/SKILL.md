@@ -5,6 +5,9 @@ description: "Build software whose requirements are known — new code or a feat
 
 # build
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 One entry point for building software whose requirements are known ahead of time. It covers
 a new project, a new component, a feature added to an existing codebase, and an experiment
 harness. **The code written here is the code that ships**: it gets simpler, then faster,

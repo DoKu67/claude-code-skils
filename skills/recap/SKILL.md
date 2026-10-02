@@ -5,6 +5,9 @@ description: "Condense arbitrary input — the previous output, a pasted documen
 
 # recap
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 One format for condensing anything — a prior answer, a document, a topic you looked up,
 a paste with no context — always the same four sections, in this order. The value is in
 the fixed shape: a reader who has seen one knows exactly where the headline is, where the

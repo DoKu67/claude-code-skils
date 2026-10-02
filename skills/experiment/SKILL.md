@@ -5,6 +5,9 @@ description: "Answer empirical questions by running them — can we do X at all,
 
 # experiment
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 A build claim says "the system SHALL do X"; a failing check means the code is wrong. An
 experiment asks "does X hold?", and **Refuted or Inconclusive is a valid answer, not a
 defect.** This skill runs a few such questions against something that already exists and

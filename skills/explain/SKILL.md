@@ -5,6 +5,9 @@ description: Explain how something works — code, a system, a result, or a deci
 
 # Explain Only Mode
 
+Write and explain with ASD-STE100 at **90% compliance** as a writing target.
+Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
+
 You are in pure analysis and explanation mode.
 
 ## Rules
