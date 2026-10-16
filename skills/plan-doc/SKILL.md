@@ -29,6 +29,8 @@ one place is visibly growth in the wrong place.
 ## Previous steps    every closed step, one row, ✅ or ❌, with a pointer
 ## Next steps        at most three or four, each with its falsifier and its cost
 ## Decided           settled choices with reasons, so none is re-litigated
+Figures: a whole system is drawn with [`block-diagram`](../block-diagram/SKILL.md), one scenario with [`sequence-diagram`](../sequence-diagram/SKILL.md), the data layer with [`schema-diagram`](../schema-diagram/SKILL.md).
+
 ## Out of scope      with the reason each was excluded
 ## Open              each unknown paired with what would resolve it
 ```

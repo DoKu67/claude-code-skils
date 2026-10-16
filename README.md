@@ -79,6 +79,7 @@ The unattended mining pass has no Devin equivalent yet; `/reflect` is run per se
 | [Development](#development) | `build`, `experiment`, `minimal-cover`, `coding-standards`, `consistency`, `explain`, `call-tree`, `mvp` *(disabled)*, `implement-feature` *(disabled)*, `write-code` *(disabled)* | Writing, reading and finishing code — the default build style, running open questions as experiments, keeping requirement lists minimal, the house rules, and the sweeps that say a change is actually done |
 | [Version control](#version-control) | `checkpoint-commits` | Keeping work safe as it is made, and deciding what shape the history ends up in |
 | [Research and records](#research-and-records) | `prior-work`, `notes`, `ml_logging`, `tldr`, `report` | Finding out what already exists, keeping the written record of what was tried and what it meant, and turning any of it into a durable document |
+| [Diagrams](#diagrams) | `block-diagram`, `sequence-diagram`, `schema-diagram` | The three figures every design page carries: the running parts and the data flow between them, one scenario's order of calls, and the tables and stores with their relations — each as inline SVG in a self-contained HTML page |
 | [Fine-tuning and RL](#fine-tuning-and-reinforcement-learning) | `sft-env-mvp`, `rl-env-mvp`, `tune-loop`, `tune-preflight`, `run-triage`, `tune-report`, `hparam-priors`, `escalate` | A pipeline: scaffold an environment, prove it works, then run the hyperparameter search as a recorded loop |
 | [Self-improvement](#self-improvement) | `reflect`, `codify`, `skill-audit` | Turning corrections into durable rules, and pruning the ones that never fire |
 
@@ -495,6 +496,63 @@ absent *Blockers* section is ambiguous between "nothing is blocked" and "nobody 
 blocker must name what would unblock it; a next step starts with a verb and says who does
 it; the Figures table must carry information found nowhere else. Honesty rules separate done
 from believed-done and require failures at the same weight as successes.
+
+
+## Diagrams
+
+## block-diagram
+
+### Description
+Draw a system-design block diagram — the running parts of a system and how data moves
+between them, Hello Interview style in UML component notation — as inline SVG in a
+self-contained HTML page with a numbered title and a legend.
+
+### What it does
+Writes the flow as 3–6 numbered steps first, then draws only runtime components (5–12 boxes:
+callers, services, async channels as chevrons, worker pools, stores as cylinders, outside
+systems dashed) in columns left to right, every arrow labelled and going to the adjacent
+column, every queue with an arrow in and out, every store the flow touches drawn.
+
+### How it works
+Fourteen sessions of the same corrections — "way too specific", "don't put filenames",
+"nothing left to right", "only services writing to databases", "where do these arrows go" —
+became the rules and the five-line check before shipping. Never a file, class, table or
+library as a box; those are bullets inside the box they belong to.
+
+## sequence-diagram
+
+### Description
+Draw a UML sequence diagram of one happy path, with the tables and stores each step reads
+or writes named on the arrows, a subtitle saying what the path does, a numbered title and a
+legend, as inline SVG in a self-contained HTML page.
+
+### What it does
+Minimizes the set of paths to one per distinct execution mode, uses the block diagram's
+components as participants in the same order, and numbers and labels every message so the
+reader can list every table the path touches from the arrows alone.
+
+### How it works
+UML notation (synchronous, asynchronous, return, activation bars, `par`/`loop`/`alt`
+fragments only when the path needs them). Written for a reader who has the block diagram and
+is seeing the system for the first time.
+
+## schema-diagram
+
+### Description
+Draw a database schema diagram — every table as a card with columns, types and keys, the
+relations between tables as lines with cardinality ends, plus the S3, NoSQL and cache
+stores the schema points to — in the classic Supabase style, as inline SVG in a
+self-contained HTML page with a legend at the top and a numbered title.
+
+### What it does
+Shows every table in scope (37 tables means 37 cards), finds relations in application code
+when the database declares no foreign keys (ORM joins, query joins, write sites, lookups,
+key embedding), and records the evidence for each line.
+
+### How it works
+A seven-step evidence ladder from declared keys down to naming hints decides which lines are
+drawn; a diagram with no lines is treated as wrong, not minimal. A table guide under the
+figure gives each table's purpose in at most six words without repeating the cards.
 
 ## report
 

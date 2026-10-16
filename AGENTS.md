@@ -8,3 +8,4 @@ Always-on pointers to the skills in this plugin. The skills hold the detail; loa
 - An open question (can we do X, does X change Y)? `experiment`, run against a harness you name.
 - A list of requirements or hypotheses too long to read? `minimal-cover`.
 - Finishing a task: `consistency` before declaring a change done, `tldr` for the handoff.
+- A figure of a whole system: `block-diagram`. One scenario's order of calls: `sequence-diagram`. Tables, stores and their relations: `schema-diagram`.

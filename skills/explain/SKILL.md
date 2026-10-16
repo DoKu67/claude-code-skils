@@ -19,6 +19,8 @@ You are in pure analysis and explanation mode.
 - If you notice bugs, code smells, or possible improvements, list them at the end under **"Observations (not fixed)"**.
 - Do not implement or suggest code changes unless the user explicitly asks after the explanation.
 
+Figures: a whole system is drawn with [`block-diagram`](../block-diagram/SKILL.md), one scenario with [`sequence-diagram`](../sequence-diagram/SKILL.md), the data layer with [`schema-diagram`](../schema-diagram/SKILL.md).
+
 ## Instructions
 1. Read the relevant material thoroughly — the code, and whatever else carries the answer.
 2. Use the response structure from `template.md` where it applies.
