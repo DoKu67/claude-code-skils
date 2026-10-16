@@ -28,6 +28,29 @@ search over an SFT or RL run, use `tune-loop` instead; it owns that domain.
 
 ---
 
+## Written output is HTML
+
+Every document this skill writes is one self-contained HTML file: inline CSS, inline SVG
+figures, KaTeX for math, no script loaded from the network, no external image. Markdown is
+never the deliverable. The file opens in a browser and in a chat sidebar with every figure
+visible. *Why:* "please always use HTMLs", "I can't see the images", "just put it into an
+HTML I can view" — six sessions.
+
+- Files live in the project's `docs/` folder and are committed and pushed at every
+  checkpoint: one `docs/experiments/<slug>.html` per experiment that holds the
+  cards, the run log, the verdict table and the close-out, and is updated in place (never a
+  separate plan, status report and close-out: "we don't need a status report and a close
+  out, make them the same doc").
+- Each file has a table of contents at the top, a dated status line, and numbered figures
+  and tables, each with a title and a legend.
+- The procedure in the file is a numbered algorithm, never an arrow chain ("this is slop:
+  precondition → prediction → run → verdict"). Each card shows its failure example beside
+  it: card on the left, picture on the right. Column headers are short. The file stands
+  alone: it defines its terms and never points at another document for them.
+- A chat answer is still text in chat. The HTML is the durable record, not the reply.
+
+---
+
 ## Triggers
 
 - **Manual:** `/experiment`, optionally followed by the questions.

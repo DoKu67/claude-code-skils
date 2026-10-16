@@ -8,6 +8,10 @@ description: Keep the plan document in a fixed shape — what the project is for
 Write and explain with ASD-STE100 at **90% compliance** as a writing target.
 Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
 
+**File format.** When this document is written by `build` or `experiment`, it is a
+self-contained HTML file in the project's `docs/` folder (`docs/plan.html`), not markdown. The shape
+below is unchanged; only the format is. See `build` → *Written output is HTML*.
+
 A plan is the answer to *"what is this project for, what has been settled, and what happens
 next"*. It is not a record of what happened — that is the journal — and it is not a
 specification.

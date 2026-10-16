@@ -8,6 +8,10 @@ description: "Own SPEC.md — the human-authored contract that says what the sys
 Write and explain with ASD-STE100 at **90% compliance** as a writing target.
 Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
 
+**File format.** When this document is written by `build` or `experiment`, it is a
+self-contained HTML file in the project's `docs/` folder (`docs/spec.html`), not markdown. The shape
+below is unchanged; only the format is. See `build` → *Written output is HTML*.
+
 A spec is the answer to *"what must this system do, whatever else changes"*. It is not a
 plan — the plan is the volatile route and it is rewritten constantly. It is not a journal —
 the journal is what happened. **The spec is what we want to be true**, written by the human,

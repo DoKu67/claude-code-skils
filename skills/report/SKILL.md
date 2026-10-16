@@ -19,6 +19,10 @@ Apply these rules to the prose this skill produces. Each skill uses its own targ
 The percentage is a writing target, not a measured score. Do not claim verified compliance without a check against the standard.
 Reference: [ASD-STE100 Simplified Technical English](https://www.asd-ste100.org/).
 
+**File format.** When this document is written by `build` or `experiment`, it is a
+self-contained HTML file in the project's `docs/` folder (`docs/reports/<date>-<slug>.html`, with the same five sections), not markdown. The shape
+below is unchanged; only the format is. See `build` → *Written output is HTML*.
+
 A report is the durable form of something that would otherwise live in a scrollback and be
 gone. This skill does not produce the content — it takes whatever was just established and
 writes it to a file in one fixed shape.
@@ -297,8 +301,10 @@ supersedes:                  # prior report on the same subject, if any
 say what produced it and what it saw. Standard document formats record `author` and `date` and
 stop there, which is enough for a human-written memo and not enough for this.
 
-**Filename:** `reports/YYYY-MM-DD-HHMM-<slug>.md`, in the current project, slug from the
-title — `reports/2026-08-04-1432-composable-report-format.md`. The time is to the minute
+**Filename:** `docs/reports/YYYY-MM-DD-HHMM-<slug>.html`, in the current project, slug from the
+title — `docs/reports/2026-08-04-1432-composable-report-format.html`. The file is self-contained
+HTML (inline CSS and SVG, KaTeX for math); markdown source may be kept beside it but the HTML
+is the deliverable. The time is to the minute
 because more than one report a day on the same subject is normal, and a date-only name makes
 the second one a collision instead of a sequence. 24-hour clock, local time, matching the
 `date` field in the frontmatter.
