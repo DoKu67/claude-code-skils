@@ -408,6 +408,8 @@ outgrown the format:
 
 ---
 
+Figures: a whole system is drawn with [`block-diagram`](../block-diagram/SKILL.md), one scenario with [`sequence-diagram`](../sequence-diagram/SKILL.md), the data layer with [`schema-diagram`](../schema-diagram/SKILL.md).
+
 ## Out of scope
 
 Deciding **what the requirements should be** — that is the human's, and this skill will not

@@ -170,6 +170,8 @@ Refuted and Cannot test count as much as Supported. Then stop.
 
 ---
 
+Figures: a whole system is drawn with [`block-diagram`](../block-diagram/SKILL.md), one scenario with [`sequence-diagram`](../sequence-diagram/SKILL.md), the data layer with [`schema-diagram`](../schema-diagram/SKILL.md).
+
 ## Out of scope
 
 Writing or fixing code, including the harness. Editing `SPEC.md`, plans or docs, or
