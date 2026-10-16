@@ -122,6 +122,21 @@ place.]
 - Estimate:
 - Sprint:
 - Parent epic:
+- State: Proposed            # Proposed | Ready | In progress | Needs attention | Done | Dropped pending
+- Pause: before              # before | sample | done | none — several allowed, e.g. `before, sample`
+- Discovered from: —         # Task N, when this task was found while doing N
+- Go-aheads:                 # dated lines with the user's words: 2026-10-07 00:38 "ok let's start building"
+
+## Timeline
+
+| Date | Event | Link |
+|---|---|---|
+| | started / issue raised / resolved: <a–d> / finished | every document this task produced |
+
+## Finding
+
+[Empty until the task reaches Needs attention. Then: what happened, the evidence, what it
+changes, and the four resolutions with a recommendation — see Running the board.]
 ```
 
 **The `Satisfies` field names requirements by ID; Acceptance criteria make those requirements
@@ -154,12 +169,24 @@ numbers don't need renaming when a title is later reworded, and a number makes t
 plan below mechanically derivable instead of read by eye:
 
 ```markdown
-| # | Task | Satisfies | Parent plan step | Depends on | Priority |
-|---|---|---|---|---|---|
-| 1 | Public API requests are rate-limited per API key | R-4 | Next step 1 | — | High |
-| 2 | Emit rate-limit metrics to the dashboard | R-5 | Next step 1 | 1 | Medium |
-| 3 | Add configurable per-tenant quotas | R-4, R-9 | Next step 3 | — | Medium |
+| # | Task | Satisfies | Parent plan step | Depends on | Priority | State | Pause |
+|---|---|---|---|---|---|---|---|
+| 1 | Public API requests are rate-limited per API key | R-4 | Next step 1 | — | High | Done | none |
+| 2 | Emit rate-limit metrics to the dashboard | R-5 | Next step 1 | 1 | Medium | Needs attention | sample |
+| 2.1 | Decide what to emit for keys with no traffic | R-5 | Next step 1 | 2 | Medium | Proposed | before |
+| 3 | Add configurable per-tenant quotas | R-4, R-9 | Next step 3 | — | Medium | Ready | before |
 ```
+
+**The manifest is the board.** `State` and `Pause` are read before any task starts (see
+[Running the board](#running-the-board)). A task that grows gets children `N.1`, `N.2` … as
+new rows under it; IDs are never reused or renumbered. **Only the next wave is written as
+full tickets**; later tasks are one manifest row plus `Depends on` until their wave opens,
+because detail written before the earlier waves run is written against assumptions those
+waves will change.
+
+**One file per task.** The board (manifest, coverage table, waves) is one file; each ticket
+is its own file, `task-NN`. A build session is handed one task file and reads another only
+when its `Depends on` names it: "giving all the user stories at once doesn't work well".
 
 The manifest is what makes the dependency graph visible at a glance and catches three
 failure modes early: a task with no parent step (scope invented, not decomposed), two tasks
@@ -246,6 +273,62 @@ after each merge. The next wave opens when its dependencies are merged.
 *Why:* in two sessions the wave plan existed and the work still ran serially until the user
 asked "can you fan out subagents for each subtask?" *Falsified if* parallel runs lose more
 time to merge conflicts than they save.
+
+### Running the board
+
+A sprint assumes the tickets are right. They are not always right: a task finds that the
+data is not what it assumed, that the goal has moved, or that it needs work no ticket
+covers. These are unknown unknowns and no amount of planning removes them. The board is
+how the user takes control at that moment instead of the work rolling on to the next task.
+
+**States.** Every task is in exactly one: `Proposed` → `Ready` → `In progress` → `Done`,
+with two stop states, `Needs attention` and `Dropped pending`. Every move is a dated row in
+the task's Timeline.
+
+1. **Every task starts `Proposed`. Only the user moves it to `Ready`**, by saying so:
+   "start Task 3", "run wave 2". A plan, a sample, an answered question or "looks good" is
+   not a go-ahead. Write the go-ahead on the card (`Go-aheads`, with the date and the user's
+   words) so it is never lost and never asked for twice.
+2. **Work happens only on `Ready` tasks.** Tasks in one wave still run in parallel.
+3. **`Pause` says where the user wants to look.** `before`: write the ticket, then stop
+   until the user says start. `sample`: start, run on the smallest input that exercises the
+   path, show the output, stop. `done`: finish, report, stop before any dependent task
+   starts. `none`: run through. A task with no value is `before`. The decomposer proposes
+   a value per task; the user changes it on the manifest or at any time ("Task 5: pause
+   none"). **"Stop" or "wait" from the user overrides every value, at once.**
+4. **A task moves to `Needs attention` when any trigger fires:** a check fails twice; the
+   task needs work no ticket covers; a result contradicts the plan or a requirement; the
+   input or data is not what the ticket assumed; time or cost passes twice the estimate;
+   the user says stop; or the `Pause` value says stop here. **Finding new work always
+   triggers it**, whatever the `Pause` value says.
+5. **On `Needs attention`:** finish the current command. Write the **Finding** on the card:
+   what happened, the evidence, what it changes. **Start no task that depends on this one.**
+   Let unrelated tasks already running in the wave finish. Report, then wait.
+6. **The Finding offers four resolutions**, with a recommendation; the user picks one or
+   writes their own:
+   - **a. Extend** — children `N.1`, `N.2` … under this task, same requirement. For "we need
+     to walk through C.1, C.2 before D".
+   - **b. Add** — a new task `N+k` with `Discovered from: N`, same plan.
+   - **c. Re-plan** — [`plan-doc`](../plan-doc/SKILL.md) changes a Next step; every task
+     downstream of that step returns to `Proposed`; tasks the new step no longer needs go to
+     `Dropped pending`.
+   - **d. Re-spec** — a spec change request per [`spec-doc`](../spec-doc/SKILL.md); the user
+     edits the spec; affected tasks return to `Proposed`.
+   Each resolution is **one commit** that updates the spec, the plan and the board together,
+   plus a dated Timeline row on the card. A Finding is never resolved by continuing.
+7. **Dropping.** A task the work no longer needs goes to `Dropped pending` with a one-line
+   reason and waits. When the user confirms, **delete its file and its manifest row** in
+   that commit; git history and the parent task's Finding keep the record. Nothing dropped
+   stays in the documents: "keeping the task in the context window is a bad idea".
+8. **Time is tracked on the card.** Every side document a task produces (an experiment
+   file, a measurement, a report) is linked from its Timeline with the date, so the board
+   answers "where did the time go" without a separate status report.
+
+*Why:* 43 user turns across 20 sessions stopped the work by hand — "stop after every user
+story and ping me", "stop, I haven't read the sprint tasks yet", "we stop at each step",
+"let's just make a new task completely here", "so you deleted the spec for this specific
+task?" — and a multi-day converter rework was never a task on any board. *Falsified if* the
+user asks to remove the stops because they slow the work more than they save.
 
 ---
 
@@ -513,7 +596,8 @@ the plan; it does not simulate a planning-poker session.
 ## Done when
 
 A manifest table precedes the batch, naming every task by number, its parent plan step, its
-dependencies (by number) and its priority; a parallel execution plan table follows it, with
+dependencies (by number), its priority, its `State` and its `Pause`; every task starts
+`Proposed` and has its own file; only the next wave is written as full tickets; a parallel execution plan table follows it, with
 every task's wave computed from `Depends on` by the stated formula rather than eyeballed,
 and the largest wave named as the batch's maximum useful parallelism; every task's title
 carries its number; every task has all ten headings in order; every requirement has a

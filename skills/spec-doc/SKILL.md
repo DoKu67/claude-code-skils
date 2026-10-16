@@ -318,6 +318,10 @@ in scrollback is a request nobody answers.
 
 ---
 
+**Raised by:** Task N finding, <date> — when the request comes from the board
+(resolution *d. Re-spec* in [`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-board)).
+**Tasks affected:** the tasks that return to `Proposed` when the spec changes.
+
 ## The conformance table
 
 One table, kept in `SPEC.md`, so the state of the gate is visible without running anything:

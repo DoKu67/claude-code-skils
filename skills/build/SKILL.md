@@ -16,7 +16,11 @@ then scalable, in the same files.
 **The assumption `build` rests on: every requirement it builds against is buildable.** It
 does not investigate. When an item turns out to be a question ("can vLLM serve this model",
 "does 8,192 beat 4,096") it stops and hands the item back to the user, who decides. It
-never starts an experiment itself.
+never starts an experiment itself. **When that assumption fails in the middle of a task**,
+the task board ([`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-board)) is how the
+user takes control: the task goes to `Needs attention`, no dependent task starts, and the
+user decides whether to extend, add, re-plan or re-spec. `build` never absorbs a surprise
+silently.
 
 The test for which skill to use: **if every possible answer leads to the same next action,
 build it; if some answer would change the plan, it is an experiment** —
@@ -43,7 +47,7 @@ else.
 |---|---|
 | A goal or a feature described directly | Stage 1 drafts the requirements from it |
 | A `PLAN.md`, PRD or design doc | Stage 1 mines it for requirements; Stage 3 uses it as the route |
-| A sprint ticket (`Task N`) | Its `Satisfies` IDs are the requirements; its Acceptance criteria and Definition of Done are the bar. Confirm any blocking task is actually done, then go to Stage 3 |
+| A sprint ticket (`Task N`), as one task file | Read it and its board row only; other tickets only when `Depends on` names them. Its `Satisfies` IDs are the requirements; its Acceptance criteria and Definition of Done are the bar. Confirm its `State` is `Ready` and every `Depends on` is `Done`, then go to Stage 3 |
 | A harness request from an experiment | See [Building a harness](#building-a-harness); then Stage 1 |
 | A bug report against a harness | Reproduce the failed check as a failing test first, then Stage 4 |
 
@@ -153,10 +157,18 @@ through a wave one piece at a time in this session.
    calling the piece done. Renames, changed defaults and moved boundaries leave stale
    references; they are cheapest to fix now.
 5. **Tests green, then [`checkpoint-commits`](../checkpoint-commits/SKILL.md).**
-6. **Stop and report**, then the next piece or wave. Never present the whole thing finished.
+6. **Read the task's `Pause` and `State`, then stop where they say.** `sample`: show the
+   smallest-input run and wait. `done`: report and wait before any dependent starts. `none`:
+   report and continue. Any `Needs attention` trigger (a check fails twice; work no ticket
+   covers; a result contradicts the plan or a requirement; data not as assumed; time or cost
+   past twice the estimate) stops the task, writes the Finding, and starts nothing that
+   depends on it. Never present the whole thing finished.
 
 Loop until every approved requirement passes. Rules while building:
 
+- **A surprise is a Finding, not a detour.** Anything beyond a one-line bug fix that the
+  ticket did not ask for goes on the board as a Finding (extend / add / re-plan / re-spec),
+  never "I also did X".
 - **Minimal input until Stage 6.** Every run in this stage uses the smallest input that
   still exercises the path: 2 files, not 10,448; 2 workers, not 32 (two, so the parallel path
   still runs); one feature's page, not the whole site. The code may be built for full scale
@@ -275,6 +287,7 @@ At each checkpoint:
 **Conformance:** <R-n pass / R-m fail / R-k user-assumed; conformance suite diff clean>
 **Sweep:** <consistency: clean, or what it fixed>
 **Surprises:** <what contradicted the plan>
+**Board:** <Task N: state → state · Pause honoured: yes/no · Finding: none, or one line>
 **Next:** <the single next piece or stage>
 ```
 
