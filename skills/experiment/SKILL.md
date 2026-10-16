@@ -178,6 +178,20 @@ settle it: a budget exceeded, the same failure twice, a harness bug that blocks 
 or a card whose precondition the user must decide. Ask with the facts measured, two or three
 priced options and a recommendation, and say what happens if there is no answer.
 
+**Cards are board tasks.** Each `H-n` is a task on the project's board
+([`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-board)), default `Pause: done`: after
+each verdict, stop and wait — "once the experiment is done for that hypothesis then you stop
+running everything, and I'll look at the results and decide what next". A card goes to
+`Needs attention` on: a harness bug that blocks it, a precondition only the user can decide,
+its budget exceeded, the same failure twice, or an answer that changes which cards come
+next. Its Finding offers the same four resolutions (extend, add, re-plan, re-spec).
+
+**Iterative-fix cards** ("can we make the converter translate tables?") run as a loop: run →
+read the failures → fix through `build` → run again, each pass a dated Timeline row with its
+count. Stop rule, fixed before the first pass: no improvement after N passes → `Needs
+attention`. "We do not know if we can make them all true, so at some number of iterations,
+if we cannot improve the performance, we should stop."
+
 ## 8. Report the verdict table, then stop
 
 ```markdown
@@ -188,7 +202,9 @@ priced options and a recommendation, and say what happens if there is no answer.
 | H-3 SGLang loads model | true | n/a | n/a | Cannot test: needs custom kernel | — |
 ```
 
-Under it, list what was not run and why (dropped by minimal-cover, over budget, blocked).
+Under it, list what was not run and why (dropped by minimal-cover, over budget, blocked),
+and a **Board** list: the tasks or plan changes the verdicts suggest, written as `Proposed`
+cards for the user, never applied.
 Refuted and Cannot test count as much as Supported. Then stop.
 
 ---

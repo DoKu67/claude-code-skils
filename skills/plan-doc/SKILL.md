@@ -113,6 +113,12 @@ Symptoms that the cap is being broken:
 **Plan deeply only after a direction has survived contact with evidence.** Then the steps are
 about execution rather than discovery, and a longer sequence is honest. Until then, three.
 
+**Mid-sprint, a Next step changes only through a board Finding** (resolution *c. Re-plan* in
+[`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-board)). The replaced step gets a
+*Previous steps* row (❌, "re-planned at Task N finding, <date>"), downstream tasks return to
+`Proposed`, and tasks the new step no longer needs are dropped from the board. The status
+line points at the board.
+
 **When a step is removed, say whether it was reordered or dropped.** A step deleted because it
 assumed something now known to be false is a finding; silently disappearing it loses that.
 

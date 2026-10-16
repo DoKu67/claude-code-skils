@@ -320,6 +320,10 @@ Do not edit `SPEC.md`. If the request will outlive the session, record it under 
 *Open* section as one line pointing here — plans already own unknowns, and a request parked
 in scrollback is a request nobody answers.
 
+**Raised by:** Task N finding, <date> — when the request comes from the board
+(resolution *d. Re-spec* in [`sprint-tasks`](../sprint-tasks/SKILL.md#running-the-board)).
+**Tasks affected:** the tasks that return to `Proposed` when the spec changes.
+
 ---
 
 ## The conformance table
