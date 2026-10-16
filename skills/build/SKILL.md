@@ -33,6 +33,25 @@ Skipping either is skipping this skill, not a shortcut through it.
 
 ---
 
+## Written output is HTML
+
+Every document this skill writes is one self-contained HTML file: inline CSS, inline SVG
+figures, KaTeX for math, no script loaded from the network, no external image. Markdown is
+never the deliverable. The file opens in a browser and in a chat sidebar with every figure
+visible. *Why:* "please always use HTMLs", "I can't see the images", "just put it into an
+HTML I can view" — six sessions.
+
+- Files live in the project's `docs/` folder and are committed and pushed at every
+  checkpoint: `docs/spec.html`, `docs/plan.html`, `docs/tasks/board.html`, one
+  `docs/tasks/task-NN.html` per task, `docs/reports/<date>-<slug>.html`.
+- Each file has a table of contents at the top, a dated status line, and numbered figures
+  and tables, each with a title and a legend.
+- The shapes defined by [`spec-doc`](../spec-doc/SKILL.md), [`plan-doc`](../plan-doc/SKILL.md)
+  and [`sprint-tasks`](../sprint-tasks/SKILL.md) are unchanged; only the file format is.
+- A chat answer is still text in chat. The HTML is the durable record, not the reply.
+
+---
+
 ## Stage 0 — Route the input
 
 Say which of these arrived, and whether the code is **new** (no codebase yet) or

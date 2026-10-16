@@ -8,6 +8,10 @@ description: "Decompose a plan document (a PLAN.md, PRD, design doc, or any writ
 Write and explain with ASD-STE100 at **90% compliance** as a writing target.
 Apply the [writing rules](../report/SKILL.md#writing-style) to this skill's prose.
 
+**File format.** When this document is written by `build` or `experiment`, it is a
+self-contained HTML file in the project's `docs/` folder (`docs/tasks/board.html` and one `docs/tasks/task-NN.html` per task), not markdown. The shape
+below is unchanged; only the format is. See `build` → *Written output is HTML*.
+
 A plan says what the project is for and what happens next. It does not say what a person
 picks up on Monday, reviews in one pull request, and closes by Friday. This skill is the
 bridge: one plan goes in, a set of independently workable tickets comes out, each in the
